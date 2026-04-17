@@ -41,7 +41,7 @@ export default function LandingPage() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       <div className="w-full max-w-2xl px-4 space-y-8">
         <div className="text-center space-y-2">
-          <h1 className="text-5xl font-extrabold tracking-tight">Biascope</h1>
+          <h1 className="text-5xl font-extrabold tracking-tight">BiasScope</h1>
           <p className="text-lg text-gray-500 dark:text-gray-400">
             AI-powered News Intelligence Platform
           </p>
