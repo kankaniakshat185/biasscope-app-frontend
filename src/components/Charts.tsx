@@ -2,7 +2,12 @@
 
 import { Line, LineChart, BarChart, Bar, PieChart, Pie, Cell, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from "recharts"
 
-const COLORS = ['#ef4444', '#3b82f6', '#10b981']
+const COLORS: Record<string, string> = {
+  Left: '#3b82f6',           // blue
+  Center: '#10b981',         // green
+  Right: '#ef4444',          // red
+  Unclassified: '#9ca3af'    // gray
+}
 
 export function SentimentOverTime({ data }: { data: any[] }) {
   // Try to parse published_at and average sentiment per day
@@ -77,8 +82,8 @@ export function BiasDistribution({ data }: { data: { LEFT?: number, CENTER?: num
           dataKey="value"
         >
           {chartData.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-          ))}
+            <Cell key={`cell-${index}`} fill={COLORS[entry.name] || "#9ca3af"} />
+          ))} 
         </Pie>
         <Tooltip />
         <Legend />
