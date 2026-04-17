@@ -52,7 +52,7 @@ export default function LandingPage() {
             <Input 
               value={query} 
               onChange={(e) => setQuery(e.target.value)} 
-              placeholder="Enter a topic (e.g. Artificial Intelligence)" 
+              placeholder="Enter a topic" 
               className="w-full text-lg h-12"
             />
           </div>
@@ -67,6 +67,10 @@ export default function LandingPage() {
                 <SelectItem value="Business">Business</SelectItem>
                 <SelectItem value="Health">Health</SelectItem>
                 <SelectItem value="Science">Science</SelectItem>
+                <SelectItem value="World">World</SelectItem>
+                <SelectItem value="Sports">Sports</SelectItem>
+                <SelectItem value="Entertainment">Entertainment</SelectItem>
+                <SelectItem value="India">India</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -76,7 +80,7 @@ export default function LandingPage() {
         </form>
 
         <div className="mt-8 text-center text-sm text-gray-400 dark:text-gray-500 max-w-sm mx-auto">
-          Insights will be aggregated from major news outlets, analyzing coverage, sentiment, and bias in real-time.
+          Insights will be aggregated from major news outlets, analyzing coverage, sentiment, and assigning bias in real-time.
         </div>
       </div>
     </div>
