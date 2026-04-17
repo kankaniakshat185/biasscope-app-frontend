@@ -53,12 +53,13 @@ export function SourceDistribution({ data }: { data: Record<string, number> }) {
   )
 }
 
-export function BiasDistribution({ data }: { data: { LEFT: number, CENTER: number, RIGHT: number } }) {
+export function BiasDistribution({ data }: { data: { LEFT?: number, CENTER?: number, RIGHT?: number, UNKNOWN?: number } }) {
   const chartData = [
     { name: 'Left', value: data.LEFT || 0 },
     { name: 'Center', value: data.CENTER || 0 },
-    { name: 'Right', value: data.RIGHT || 0 }
-  ]
+    { name: 'Right', value: data.RIGHT || 0 },
+    { name: 'Unclassified Sources', value: data.UNKNOWN || 0 } // ✅ NEW
+  ].filter(item => item.value > 0); // optional: hides empty categories
 
   if (chartData.every(d => d.value === 0)) return null;
 
