@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { SentimentOverTime, BiasDistribution, SourceDistribution } from "@/components/Charts"
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card"
+import { Badge } from "../../../components/ui/badge"
+import { SentimentOverTime, BiasDistribution, SourceDistribution } from "../../../components/Charts"
 import { Loader2 } from "lucide-react"
 
 export default function DashboardPage() {
