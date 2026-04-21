@@ -19,7 +19,7 @@ export default function LandingPage() {
     setLoading(true)
     
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000"}/search`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/search`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -39,15 +39,15 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-      <div className="w-full max-w-2xl px-4 space-y-8">
-        <div className="text-center space-y-2">
+      <div className="flex flex-col w-full items-center py-8 space-y-8 min-h-screen justify-between">
+        <div className="flex flex-col justify-center items-center pb-4 text-center space-y-2 min-w-full border-b-4  border-black">
           <h1 className="text-5xl font-extrabold tracking-tight">BiasScope</h1>
           <p className="text-lg text-gray-500 dark:text-gray-400">
             AI-powered News Intelligence Platform
           </p>
         </div>
 
-        <form onSubmit={handleSearch} className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl flex flex-col sm:flex-row gap-4 border border-gray-100 dark:border-gray-700">
+        <form onSubmit={handleSearch} className="flex flex-row items-center justify-center max-w-2xl bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl flex flex-col sm:flex-row gap-4 border border-gray-100 dark:border-gray-700">
           <div className="flex-1">
             <Input 
               value={query} 
@@ -74,7 +74,7 @@ export default function LandingPage() {
               </SelectContent>
             </Select>
           </div>
-          <Button type="submit" disabled={!query || loading} className="h-12 px-8 font-semibold w-full sm:w-auto">
+          <Button type="submit" disabled={!query || loading} className="h-12 bg-blue-500 hover:bg-blue-400 px-8 font-semibold w-full sm:w-auto">
             {loading ? <Loader2 className="animate-spin w-5 h-5" /> : "Analyze"}
           </Button>
         </form>
