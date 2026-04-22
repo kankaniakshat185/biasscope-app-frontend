@@ -42,9 +42,7 @@ export default function LandingPage() {
       <div className="flex flex-col w-full items-center py-8 space-y-8 min-h-screen justify-between">
         <div className="flex flex-col justify-center items-center pb-4 text-center space-y-2 min-w-full border-b-4  border-black">
           <h1 className="text-5xl font-extrabold tracking-tight">BiasScope</h1>
-          <p className="text-lg text-gray-500 dark:text-gray-400">
-            AI-powered News Intelligence Platform
-          </p>
+          
         </div>
 
         <form onSubmit={handleSearch} className="flex flex-row items-center justify-center max-w-2xl bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl flex flex-col sm:flex-row gap-4 border border-gray-100 dark:border-gray-700">
