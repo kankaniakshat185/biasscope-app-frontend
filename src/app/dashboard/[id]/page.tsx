@@ -48,7 +48,7 @@ export default function DashboardPage() {
   }, {})
 
   return (
-    <div className="min-h-screen text-slate-900 dark:text-slate-100 p-8 space-y-8">
+    <div className="font-[family-name:var(--font-geist-sans)] min-h-screen text-slate-900 dark:text-slate-100 p-8 space-y-8">
       <div className="max-w-7xl mx-auto space-y-8">
         
         {/* Header */}
