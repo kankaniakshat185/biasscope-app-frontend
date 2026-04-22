@@ -31,7 +31,7 @@ export default function DashboardPage() {
   }, [id])
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen flex items-center justify-center text-gray-900 dark:text-gray-100">
       <Loader2 className="w-10 h-10 animate-spin text-blue-500" />
     </div>
   )
@@ -48,7 +48,7 @@ export default function DashboardPage() {
   }, {})
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 p-8 space-y-8">
+    <div className="min-h-screen text-slate-900 dark:text-slate-100 p-8 space-y-8">
       <div className="max-w-7xl mx-auto space-y-8">
         
         {/* Header */}
