@@ -54,7 +54,7 @@ export default function DashboardPage() {
         {/* Header */}
         <div>
           <h1 className="text-4xl font-bold tracking-tight">Intelligence Dashboard</h1>
-          <p className="text-gray-500 mt-2">
+          <p className="text-black-500 mt-2">
             Analysis for Topic: <span className="font-semibold text-blue-600">{data.query}</span> in <span className="capitalize">{data.category}</span>
           </p>
         </div>
@@ -64,29 +64,29 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-gray-500">Total Valid Articles</CardTitle>
+                <CardTitle className="text-sm font-medium text-black-500">Total Valid Articles</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold">{insights.validArticles}</div>
-                <p className="text-xs text-gray-400 mt-1">{insights.duplicatesRemoved} duplicates removed</p>
+                <p className="text-xs text-black-400 mt-1">{insights.duplicatesRemoved} duplicates removed</p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-gray-500">Avg Sentiment</CardTitle>
+                <CardTitle className="text-sm font-medium text-black-500">Avg Sentiment</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold">{Number(insights.avgSentiment).toFixed(2)}</div>
-                <p className="text-xs text-gray-400 mt-1">Scale between -1.0 to 1.0</p>
+                <p className="text-xs text-black-400 mt-1">Scale between -1.0 to 1.0</p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-gray-500">Data Quality Score</CardTitle>
+                <CardTitle className="text-sm font-medium text-black-500">Data Quality Score</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold text-green-500">{Number(insights.dataQualityScore * 100).toFixed(0)}%</div>
-                <p className="text-xs text-gray-400 mt-1">Based on text completeness & validity</p>
+                <p className="text-xs text-black-400 mt-1">Based on text completeness & validity</p>
               </CardContent>
             </Card>
           </div>
