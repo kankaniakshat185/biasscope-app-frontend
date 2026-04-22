@@ -55,7 +55,7 @@ export default function LandingPage() {
               <SelectTrigger className="h-12 w-full">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="font-[family-name:var(--font-oswald)]">
                 <SelectItem value="Politics">Politics</SelectItem>
                 <SelectItem value="Technology">Technology</SelectItem>
                 <SelectItem value="Business">Business</SelectItem>
