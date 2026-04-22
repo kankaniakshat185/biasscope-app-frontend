@@ -53,7 +53,7 @@ export default function DashboardPage() {
         
         {/* Header */}
         <div>
-          <h1 className="text-4xl font-bold tracking-tight">Intelligence Dashboard</h1>
+          <h1 className="text-4xl font-bold tracking-tight font-[family-name:var(--font-sekuya)]">Intelligence Dashboard</h1>
           <p className="text-black-500 mt-2">
             Analysis for Topic: <span className="font-semibold text-blue-600">{data.query}</span> in <span className="capitalize">{data.category}</span>
           </p>
@@ -140,13 +140,13 @@ export default function DashboardPage() {
 
         {/* Article Cards Grid */}
         <div className="space-y-4">
-          <h2 className="text-2xl font-bold tracking-tight">Analyzed Articles</h2>
+          <h2 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-sekuya)]">Analyzed Articles</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {articles.map((art: any) => (
               <Card key={art.id} className="hover:shadow-md transition-shadow">
                 <CardHeader className="pb-3">
                   <div className="flex justify-between items-start gap-4">
-                    <CardTitle className="text-lg leading-tight line-clamp-2">
+                    <CardTitle className="text-lg leading-tight line-clamp-2 font-[family-name:var(--font-oswald)]">
                       <a href={art.url} target="_blank" rel="noopener noreferrer" className="hover:underline">{art.title}</a>
                     </CardTitle>
                     <Badge variant={art.sentiment === "positive" ? "default" : art.sentiment === "negative" ? "destructive" : "secondary"}>
