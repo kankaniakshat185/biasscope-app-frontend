@@ -78,7 +78,7 @@ export default function LandingPage() {
         </form>
 
         <div className="mt-8 text-center text-md text-black dark:text-gray-500 mx-auto border-t-3 py-3 border-black w-full backdrop-blur-[0.2rem]">
-          Insights will be aggregated from major news outlets, analyzing coverage,<br /> sentiment, and assigning bias in real-time.
+          AI powered news Intelligence. Insights will be aggregated from major news outlets, analyzing coverage,<br /> sentiment, and assigning bias in real-time.
         </div>
       </div>
     </div>
