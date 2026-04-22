@@ -38,14 +38,10 @@ export default function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center text-gray-900 dark:text-gray-100">
-      <div className="flex flex-col w-full items-center space-y-8 min-h-screen justify-between">
-        <div className="flex flex-col justify-center items-center p-4 text-center space-y-2 min-w-full border-b-4 border-black backdrop-blur-[0.15rem]">
-          <h1 className="text-5xl font-extrabold tracking-tight">BiasScope</h1>
+    <div className="flex-1 flex flex-col items-center justify-center text-gray-900 dark:text-gray-100 p-8">
+      <div className="flex-1 flex flex-col w-full items-center justify-center space-y-8">
 
-        </div>
-
-        <form onSubmit={handleSearch} className="flex flex-row items-center justify-center max-w-2xl bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl flex flex-col sm:flex-row gap-4 border border-gray-100 dark:border-gray-700">
+        <form onSubmit={handleSearch} className="font-[family-name:var(--font-oswald)] flex flex-row items-center justify-center max-w-2xl bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl flex flex-col sm:flex-row gap-4 border border-gray-100 dark:border-gray-700">
           <div className="flex-1">
             <Input
               value={query}
@@ -77,8 +73,10 @@ export default function LandingPage() {
           </Button>
         </form>
 
-        <div className="mt-8 text-center text-md text-black dark:text-gray-500 mx-auto border-t-3 py-3 border-black w-full backdrop-blur-[0.2rem]">
-          AI powered news Intelligence. Insights will be aggregated from major news outlets, analyzing coverage,<br /> sentiment, and assigning bias in real-time.
+      </div>
+      <div className="mt-8 w-full">
+        <div className="text-center text-md text-black dark:text-gray-500 mx-auto border-t-[3px] py-3 border-black w-full max-w-[58rem] backdrop-blur-[0.2rem]">
+          See the story behind the story - AI analysis of news, sentiment, and bias.
         </div>
       </div>
     </div>

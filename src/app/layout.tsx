@@ -1,14 +1,20 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Sekuya, Geist_Mono, Oswald } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const sekuyaFont = Sekuya({
+  variable: "--font-sekuya",
   subsets: ["latin"],
+  weight: "400",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+const oswaldFont = Oswald({
+  variable: "--font-oswald",
   subsets: ["latin"],
 });
 
@@ -23,11 +29,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col landing-sec">{children}</body>
+    <html lang="en" className={`${sekuyaFont.variable} ${geistMono.variable} ${oswaldFont.variable} h-full antialiased`}>
+      <body className="min-h-full flex flex-col vox-bg">
+        <header className="w-full bg-[#FFF200] border-b-4 border-black px-6 py-4 flex items-center justify-center shadow-sm z-50">
+          <a href="/" className="text-3xl font-extrabold text-black tracking-tighter uppercase relative">
+            BiasScope
+          </a>
+        </header>
+        <main className="flex-1 flex flex-col relative w-full">
+          {children}
+        </main>
+      </body>
     </html>
   );
 }
