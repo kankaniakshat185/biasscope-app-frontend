@@ -128,3 +128,18 @@
     @apply font-sans;
   }
 }
+
+.landing-sec {
+  background-image: radial-gradient(circle, #999999 8%, transparent 1%);
+  background-size: 35px 35px;
+  animation: moveLeft 2s linear infinite;
+}
+
+@keyframes moveLeft {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 35px -35px;
+  }
+}

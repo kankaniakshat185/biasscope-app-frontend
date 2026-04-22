@@ -17,7 +17,7 @@ export default function LandingPage() {
     e.preventDefault()
     if (!query) return
     setLoading(true)
-    
+
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/search`, {
         method: "POST",
@@ -28,7 +28,7 @@ export default function LandingPage() {
       })
 
       if (!res.ok) throw new Error("Search failed")
-      
+
       const data = await res.json()
       router.push(`/dashboard/${data.search_id}`)
     } catch (error) {
@@ -38,19 +38,19 @@ export default function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-      <div className="flex flex-col w-full items-center py-8 space-y-8 min-h-screen justify-between">
-        <div className="flex flex-col justify-center items-center pb-4 text-center space-y-2 min-w-full border-b-4  border-black">
+    <div className="min-h-screen flex flex-col items-center justify-center text-gray-900 dark:text-gray-100">
+      <div className="flex flex-col w-full items-center space-y-8 min-h-screen justify-between">
+        <div className="flex flex-col justify-center items-center p-4 text-center space-y-2 min-w-full border-b-4 border-black backdrop-blur-[0.15rem]">
           <h1 className="text-5xl font-extrabold tracking-tight">BiasScope</h1>
-          
+
         </div>
 
         <form onSubmit={handleSearch} className="flex flex-row items-center justify-center max-w-2xl bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl flex flex-col sm:flex-row gap-4 border border-gray-100 dark:border-gray-700">
           <div className="flex-1">
-            <Input 
-              value={query} 
-              onChange={(e) => setQuery(e.target.value)} 
-              placeholder="Enter a topic" 
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Enter a topic"
               className="w-full text-lg h-12"
             />
           </div>
@@ -77,8 +77,8 @@ export default function LandingPage() {
           </Button>
         </form>
 
-        <div className="mt-8 text-center text-sm text-gray-400 dark:text-gray-500 max-w-sm mx-auto">
-          Insights will be aggregated from major news outlets, analyzing coverage, sentiment, and assigning bias in real-time.
+        <div className="mt-8 text-center text-md text-black dark:text-gray-500 mx-auto border-t-3 py-3 border-black w-full backdrop-blur-[0.2rem]">
+          Insights will be aggregated from major news outlets, analyzing coverage,<br /> sentiment, and assigning bias in real-time.
         </div>
       </div>
     </div>
