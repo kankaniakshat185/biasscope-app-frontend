@@ -152,33 +152,103 @@ export default function DashboardPage() {
           <h2 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-sekuya)]">Analyzed Articles</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {articles.map((art: any) => (
-              <Card key={art.id} className="hover:shadow-md transition-shadow">
-                <CardHeader className="pb-3">
-                  <div className="flex justify-between items-start gap-4">
-                    <CardTitle className="text-lg leading-tight line-clamp-2 font-[family-name:var(--font-oswald)]">
-                      <a href={art.url} target="_blank" rel="noopener noreferrer" className="hover:underline">{art.title}</a>
-                    </CardTitle>
-                    <Badge variant={art.sentiment === "positive" ? "default" : art.sentiment === "negative" ? "destructive" : "secondary"}>
-                      {art.sentiment}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="text-sm text-gray-500 flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium text-gray-900 dark:text-gray-100">{art.source}</span>
-                    <span>•</span>
-                    <span className="italic">{art.publishedAt ? new Date(art.publishedAt).toLocaleDateString() : 'Unknown Date'}</span>
-                    <span>•</span>
-                    <span className="font-semibold text-black">{art.biasLabel}</span>
-                  </div>
-                  <span>Score: {(art.sentimentScore || 0).toFixed(2)}</span>
-                </CardContent>
-              </Card>
+              <ArticleChatCard key={art.id} art={art} />
             ))}
           </div>
         </div>
 
       </div>
     </div>
+  )
+}
+
+function ArticleChatCard({ art }: { art: any }) {
+  const [chatOpen, setChatOpen] = useState(false)
+  const [question, setQuestion] = useState("")
+  const [answer, setAnswer] = useState("")
+  const [loading, setLoading] = useState(false)
+
+  const handleAsk = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!question) return
+    setLoading(true)
+    setAnswer("")
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/chat-with-article`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ articleId: art.id, message: question })
+      })
+      const data = await res.json()
+      setAnswer(data.answer)
+    } catch (err) {
+      setAnswer("Failed to connect to AI.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <Card className="hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow border-2 border-black flex flex-col">
+      <CardHeader className="pb-3">
+        <div className="flex justify-between items-start gap-4">
+          <CardTitle className="text-lg leading-tight line-clamp-2 font-[family-name:var(--font-oswald)]">
+            <a href={art.url} target="_blank" rel="noopener noreferrer" className="hover:underline">{art.title}</a>
+          </CardTitle>
+          <Badge variant={art.sentiment === "positive" ? "default" : art.sentiment === "negative" ? "destructive" : "secondary"}>
+            {art.sentiment}
+          </Badge>
+        </div>
+      </CardHeader>
+      
+      <CardContent className="text-sm text-gray-500 flex flex-col gap-4">
+        <div className="flex justify-between items-center bg-gray-50 p-2 border-2 border-dashed border-black/20">
+          <div className="flex items-center gap-2">
+            <span className="font-medium text-gray-900">{art.source}</span>
+            <span>•</span>
+            <span className="italic">{art.publishedAt ? new Date(art.publishedAt).toLocaleDateString() : 'Unknown Date'}</span>
+            <span>•</span>
+            <span className="font-bold text-black uppercase tracking-wider">{art.biasLabel}</span>
+          </div>
+          <span className="font-bold">Score: {(art.sentimentScore || 0).toFixed(2)}</span>
+        </div>
+
+        <button 
+          onClick={() => setChatOpen(!chatOpen)}
+          className="text-xs self-start uppercase tracking-widest font-extrabold flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
+        >
+          {chatOpen ? "Close AI Chat" : "Ask Llama-3 About This Article"}
+        </button>
+
+        {chatOpen && (
+          <div className="mt-2 bg-gray-100 p-4 border-l-4 border-blue-600 flex flex-col gap-3">
+            <form onSubmit={handleAsk} className="flex gap-2">
+              <input 
+                type="text" 
+                placeholder="What exactly did they outline in this article?" 
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+                className="flex-1 px-3 py-2 border-2 border-black focus:outline-none"
+              />
+              <button 
+                type="submit" 
+                disabled={loading}
+                className="bg-black text-white px-4 py-2 uppercase font-bold text-xs hover:bg-gray-800 disabled:opacity-50"
+              >
+                {loading ? "Thinking..." : "Ask"}
+              </button>
+            </form>
+            
+            {answer && (
+              <div className="bg-white border-2 border-black p-3 text-black text-sm relative">
+                <span className="absolute -top-3 left-2 bg-white px-1 text-xs font-bold uppercase text-blue-600">AI Response</span>
+                {answer}
+              </div>
+            )}
+          </div>
+        )}
+      </CardContent>
+    </Card>
   )
 }
