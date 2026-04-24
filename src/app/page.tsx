@@ -118,13 +118,13 @@ export default function LandingPage() {
                 <Input 
                   value={domains} 
                   onChange={(e) => setDomains(e.target.value)} 
-                  placeholder="Only strictly search these sites (e.g. wsj.com, reuters.com)" 
+                  placeholder="Only strictly search these sites" 
                   className="rounded-none border-black flex-1 shadow-sm h-10 bg-white"
                 />
                 <Input 
                   value={excludeDomains} 
                   onChange={(e) => setExcludeDomains(e.target.value)} 
-                  placeholder="Explicitly exclude sites (e.g. foxnews.com)" 
+                  placeholder="Explicitly exclude sites" 
                   className="rounded-none border-black flex-1 shadow-sm h-10 bg-white"
                 />
               </div>

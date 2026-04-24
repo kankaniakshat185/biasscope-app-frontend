@@ -162,7 +162,7 @@ export default function DashboardPage() {
                     <span>•</span>
                     <span className="font-semibold text-black">{art.biasLabel}</span>
                   </div>
-                  <span className="font-mono bg-gray-100 px-2 py-1 rounded">Score: {(art.sentimentScore || 0).toFixed(2)}</span>
+                  <span>Score: {(art.sentimentScore || 0).toFixed(2)}</span>
                 </CardContent>
               </Card>
             ))}
