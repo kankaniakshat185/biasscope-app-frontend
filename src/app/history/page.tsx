@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { authClient } from "../../lib/auth-client"
 import { useRouter } from "next/navigation"
 import { Loader2, ArrowRight, Trash2 } from "lucide-react"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select"
 
 export default function HistoryPage() {
   const { data: session, isPending } = authClient.useSession()
