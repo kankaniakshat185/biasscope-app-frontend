@@ -8,11 +8,11 @@ export function AuthButton() {
   const router = useRouter()
 
   if (isPending) {
-    return <div className="text-sm font-bold uppercase tracking-widest text-black/50">Loading...</div>
+    return <div className="text-sm font-bold uppercase tracking-widest text-black/50 print:hidden">Loading...</div>
   }
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-4 print:hidden">
       {session ? (
         <>
           <div className="text-sm font-bold uppercase tracking-widest text-black/80 hidden sm:block">
