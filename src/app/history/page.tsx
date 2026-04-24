@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { authClient } from "../../lib/auth-client"
 import { useRouter } from "next/navigation"
 import { Loader2, ArrowRight, Trash2 } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 
 export default function HistoryPage() {
   const { data: session, isPending } = authClient.useSession()
@@ -88,20 +89,19 @@ export default function HistoryPage() {
         </div>
         
         {searches.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {uniqueCategories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setFilterCategory(cat)}
-                className={`text-xs font-bold uppercase tracking-widest px-3 py-1 border-2 border-black transition-colors ${
-                  filterCategory === cat 
-                    ? "bg-black text-white" 
-                    : "bg-white text-black hover:bg-gray-200"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
+          <div className="w-full md:w-64">
+            <Select value={filterCategory} onValueChange={(val) => setFilterCategory(val || "All")}>
+              <SelectTrigger className="w-full h-12 rounded-none border-2 border-black bg-white focus:ring-0 uppercase tracking-widest font-bold text-xs ring-offset-0 ring-0">
+                <SelectValue placeholder="Filter by Category" />
+              </SelectTrigger>
+              <SelectContent className="rounded-none border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white text-black font-[family-name:var(--font-geist-mono)]">
+                {uniqueCategories.map(cat => (
+                  <SelectItem key={cat} value={cat} className="rounded-none focus:bg-[#FFF200] focus:text-black hover:bg-gray-100 cursor-pointer text-sm font-bold uppercase tracking-wider py-2">
+                    {cat}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         )}
       </div>
