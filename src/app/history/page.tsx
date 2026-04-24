@@ -3,13 +3,34 @@
 import { useEffect, useState } from "react"
 import { authClient } from "../../lib/auth-client"
 import { useRouter } from "next/navigation"
-import { Loader2, ArrowRight } from "lucide-react"
+import { Loader2, ArrowRight, Trash2 } from "lucide-react"
 
 export default function HistoryPage() {
   const { data: session, isPending } = authClient.useSession()
   const router = useRouter()
   const [searches, setSearches] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+
+  const handleDelete = async (e: React.MouseEvent, searchId: string) => {
+    e.stopPropagation();
+    if (!confirm("Are you sure you want to completely delete this search and all its data?")) return;
+    
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/history/${searchId}`, {
+        method: "DELETE"
+      });
+      if (res.ok) {
+        setSearches(prev => prev.filter(s => s.id !== searchId));
+      } else {
+        alert("Failed to delete search.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error deleting search.");
+    }
+  }
+
+  const [filterCategory, setFilterCategory] = useState("All")
 
   useEffect(() => {
     // If auth finishes loading and there's no session, immediately kick them to login
@@ -45,28 +66,55 @@ export default function HistoryPage() {
     )
   }
 
-  // If successfully loaded but not logged in, just drop a blank screen while the useEffect router kicks them
   if (!session) return null
+
+  // Extract unique categories for the filter
+  const uniqueCategories = ["All", ...Array.from(new Set(searches.map(s => s.category || "General"))).filter(c => c && c !== "Category (Optional)")]
+  
+  // Apply filter
+  const filteredSearches = filterCategory === "All" 
+    ? searches 
+    : searches.filter(s => (s.category || "General") === filterCategory)
 
   return (
     <div className="flex-1 w-full max-w-6xl mx-auto p-4 sm:p-8 font-[family-name:var(--font-oswald)] flex flex-col gap-8">
       
-      <div className="border-b-4 border-black pb-4">
-        <h1 className="text-4xl font-extrabold uppercase tracking-tighter">Your Intelligence Vault</h1>
-        <p className="text-xl text-black/60 font-bold uppercase tracking-widest mt-2">
-          Past Prompts & Bias Breakdowns
-        </p>
+      <div className="border-b-4 border-black pb-4 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h1 className="text-4xl font-extrabold uppercase tracking-tighter">Your Intelligence Vault</h1>
+          <p className="text-xl text-black/60 font-bold uppercase tracking-widest mt-2">
+            Past Prompts & Bias Breakdowns
+          </p>
+        </div>
+        
+        {searches.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {uniqueCategories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setFilterCategory(cat)}
+                className={`text-xs font-bold uppercase tracking-widest px-3 py-1 border-2 border-black transition-colors ${
+                  filterCategory === cat 
+                    ? "bg-black text-white" 
+                    : "bg-white text-black hover:bg-gray-200"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
-      {searches.length === 0 ? (
+      {filteredSearches.length === 0 ? (
         <div className="flex-1 flex items-center justify-center p-12 bg-white/50 border-2 border-black border-dashed">
           <p className="text-xl font-bold uppercase tracking-wider text-black/50 text-center">
-            You haven't run any analysis yet.<br/>Go to the main page to scan your first topic!
+            {searches.length === 0 ? "You haven't run any analysis yet.\nGo to the main page to scan your first topic!" : `No searches found for category: ${filterCategory}`}
           </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {searches.map((search) => {
+          {filteredSearches.map((search) => {
             const insight = search.insights?.[0]
             const qualityScore = insight ? (insight.dataQualityScore * 100).toFixed(0) : "0"
             const sentimentMap: Record<string, string> = {
@@ -110,8 +158,17 @@ export default function HistoryPage() {
                   </div>
                 </div>
                 
-                {/* Arrow indicator that appears on hover */}
-                <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                {/* Arrow indicator and Trash that appears on hover */}
+                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center gap-2">
+                  <button 
+                    onClick={(e) => handleDelete(e, search.id)}
+                    className="p-2 bg-red-100/80 text-red-600 border-2 border-transparent hover:border-red-600 hover:bg-red-200 transition-colors z-10"
+                    title="Delete Search"
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </button>
+                </div>
+                <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
                   <ArrowRight className="w-6 h-6 stroke-[3]" />
                 </div>
               </div>
