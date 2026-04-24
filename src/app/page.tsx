@@ -6,6 +6,7 @@ import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 import { Loader2 } from "lucide-react"
+import { authClient } from "../lib/auth-client"
 
 export default function LandingPage() {
   const [query, setQuery] = useState("")
@@ -16,6 +17,7 @@ export default function LandingPage() {
   const [fromDate, setFromDate] = useState("")
   const [toDate, setToDate] = useState("")
   const [showFilters, setShowFilters] = useState(false)
+  const { data: session } = authClient.useSession()
   const router = useRouter()
 
   const clearFilters = () => {
@@ -39,6 +41,7 @@ export default function LandingPage() {
         body: JSON.stringify({ 
           query, 
           category,
+          userId: session?.user?.id || undefined,
           domains: domains ? domains.replace(/\s+/g, '') : undefined,
           exclude_domains: excludeDomains ? excludeDomains.replace(/\s+/g, '') : undefined,
           fromDate: fromDate || undefined,
@@ -46,7 +49,10 @@ export default function LandingPage() {
         })
       })
 
-      if (!res.ok) throw new Error("Search failed")
+      if (!res.ok) {
+        const errText = await res.text()
+        throw new Error(`Search failed: ${errText}`)
+      }
 
       const data = await res.json()
       router.push(`/dashboard/${data.search_id}`)
