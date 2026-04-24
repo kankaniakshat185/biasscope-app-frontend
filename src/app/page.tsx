@@ -18,6 +18,13 @@ export default function LandingPage() {
   const [showFilters, setShowFilters] = useState(false)
   const router = useRouter()
 
+  const clearFilters = () => {
+    setDomains("")
+    setExcludeDomains("")
+    setFromDate("")
+    setToDate("")
+  }
+
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!query) return
@@ -86,13 +93,24 @@ export default function LandingPage() {
         </form>
 
         <div className="w-full max-w-2xl flex flex-col items-end">
-          <button 
-            type="button" 
-            onClick={() => setShowFilters(!showFilters)} 
-            className="text-sm font-bold uppercase tracking-wider text-black/60 hover:text-black transition-colors"
-          >
-            {showFilters ? "- Hide Advanced Filters" : "+ Advanced Filters"}
-          </button>
+          <div className="flex gap-4">
+            {(domains || excludeDomains || fromDate || toDate) && (
+              <button 
+                type="button" 
+                onClick={clearFilters} 
+                className="text-sm font-bold uppercase tracking-wider text-red-500 hover:text-red-700 transition-colors"
+              >
+                Clear Filters
+              </button>
+            )}
+            <button 
+              type="button" 
+              onClick={() => setShowFilters(!showFilters)} 
+              className="text-sm font-bold uppercase tracking-wider text-black/60 hover:text-black transition-colors"
+            >
+              {showFilters ? "- Hide Advanced Filters" : "+ Advanced Filters"}
+            </button>
+          </div>
           
           {showFilters && (
             <div className="w-full font-[family-name:var(--font-oswald)] bg-white/70 backdrop-blur-sm p-4 mt-2 border-2 border-black flex flex-col gap-4 animate-in fade-in slide-in-from-top-4">
@@ -126,6 +144,9 @@ export default function LandingPage() {
                   className="rounded-none border-black flex-1 shadow-sm h-10 bg-white"
                 />
               </div>
+              <p className="text-xs text-black/50 italic tracking-wide text-right w-full">
+                * Dates must fall within the last 30 days.
+              </p>
             </div>
           )}
         </div>

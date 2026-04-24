@@ -158,9 +158,11 @@ export default function DashboardPage() {
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-gray-900 dark:text-gray-100">{art.source}</span>
                     <span>•</span>
-                    <span>{art.biasLabel}</span>
+                    <span className="italic">{art.publishedAt ? new Date(art.publishedAt).toLocaleDateString() : 'Unknown Date'}</span>
+                    <span>•</span>
+                    <span className="font-semibold text-black">{art.biasLabel}</span>
                   </div>
-                  <span>{(art.sentimentScore || 0).toFixed(2)}</span>
+                  <span className="font-mono bg-gray-100 px-2 py-1 rounded">Score: {(art.sentimentScore || 0).toFixed(2)}</span>
                 </CardContent>
               </Card>
             ))}
