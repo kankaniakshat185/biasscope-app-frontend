@@ -19,11 +19,17 @@ export function AuthButton() {
             {session.user.name}
           </div>
           <button 
+            onClick={() => router.push("/history")}
+            className="text-sm border-2 border-black px-4 py-2 font-bold uppercase tracking-widest text-black bg-white hover:bg-black hover:text-white transition-colors"
+          >
+            Vault
+          </button>
+          <button 
             onClick={async () => {
               await authClient.signOut()
               router.refresh()
             }}
-            className="text-sm border-2 border-black px-4 py-2 font-bold uppercase tracking-widest text-black hover:bg-black hover:text-white transition-colors"
+            className="text-sm border-2 border-transparent px-4 py-2 font-bold uppercase tracking-widest text-black/50 hover:text-red-600 transition-colors"
           >
             Logout
           </button>
