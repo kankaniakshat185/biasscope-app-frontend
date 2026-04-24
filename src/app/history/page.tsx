@@ -143,7 +143,7 @@ export default function HistoryPage() {
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-1 mt-auto border-t-2 border-dashed border-black/20 pt-4">
+                <div className="flex flex-col gap-1 mt-auto border-t-2 border-dashed border-black/20 pt-4 pr-10">
                   <div className="flex justify-between text-sm font-bold uppercase tracking-wider">
                     <span className="text-black/60">Data Quality</span>
                     <span>{qualityScore}%</span>
@@ -168,7 +168,7 @@ export default function HistoryPage() {
                     <Trash2 className="w-5 h-5" />
                   </button>
                 </div>
-                <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute bottom-5 right-5 opacity-0 group-hover:opacity-100 transition-opacity">
                   <ArrowRight className="w-6 h-6 stroke-[3]" />
                 </div>
               </div>
