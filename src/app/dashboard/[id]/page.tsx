@@ -52,11 +52,20 @@ export default function DashboardPage() {
       <div className="max-w-7xl mx-auto space-y-8">
         
         {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight font-[family-name:var(--font-sekuya)]">Intelligence Dashboard</h1>
-          <p className="text-black-500 mt-2">
-            Analysis for Topic: <span className="font-semibold text-blue-600">{data.query}</span> in <span className="capitalize">{data.category}</span>
-          </p>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight font-[family-name:var(--font-sekuya)]">Intelligence Dashboard</h1>
+            <p className="text-black-500 mt-2">
+              Analysis for Topic: <span className="font-semibold text-blue-600">{data.query}</span> in <span className="capitalize">{data.category}</span>
+            </p>
+          </div>
+          
+          <button 
+            onClick={() => window.print()}
+            className="print:hidden h-12 bg-black text-white hover:bg-gray-800 uppercase tracking-widest font-bold px-6 flex items-center justify-center border-2 border-black transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]"
+          >
+            Export PDF Report
+          </button>
         </div>
         
         {/* Metric Cards */}
