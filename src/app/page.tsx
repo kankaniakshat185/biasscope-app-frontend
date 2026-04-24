@@ -11,6 +11,11 @@ export default function LandingPage() {
   const [query, setQuery] = useState("")
   const [category, setCategory] = useState("Politics")
   const [loading, setLoading] = useState(false)
+  const [domains, setDomains] = useState("")
+  const [excludeDomains, setExcludeDomains] = useState("")
+  const [fromDate, setFromDate] = useState("")
+  const [toDate, setToDate] = useState("")
+  const [showFilters, setShowFilters] = useState(false)
   const router = useRouter()
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -24,7 +29,14 @@ export default function LandingPage() {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ query, category })
+        body: JSON.stringify({ 
+          query, 
+          category,
+          domains: domains ? domains.replace(/\s+/g, '') : undefined,
+          exclude_domains: excludeDomains ? excludeDomains.replace(/\s+/g, '') : undefined,
+          fromDate: fromDate || undefined,
+          toDate: toDate || undefined
+        })
       })
 
       if (!res.ok) throw new Error("Search failed")
@@ -39,23 +51,23 @@ export default function LandingPage() {
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center text-gray-900 dark:text-gray-100 p-8">
-      <div className="flex-1 flex flex-col w-full items-center justify-center space-y-8">
+      <div className="flex-1 flex flex-col w-full items-center justify-center space-y-4">
 
-        <form onSubmit={handleSearch} className="font-[family-name:var(--font-oswald)] flex flex-row items-center justify-center max-w-2xl bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl flex flex-col sm:flex-row gap-4 border border-gray-100 dark:border-gray-700">
+        <form onSubmit={handleSearch} className="font-[family-name:var(--font-oswald)] w-full max-w-2xl bg-white/70 backdrop-blur-sm p-4 border-2 border-black flex flex-col sm:flex-row gap-4 shadow-none">
           <div className="flex-1">
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Enter a topic"
-              className="w-full text-lg h-12"
+              className="w-full text-lg h-12 rounded-none border-black bg-white shadow-sm"
             />
           </div>
           <div className="w-full sm:w-48">
             <Select value={category} onValueChange={(val) => val && setCategory(val)}>
-              <SelectTrigger className="h-12 w-full">
+              <SelectTrigger className="h-12 w-full rounded-none border-black bg-white shadow-sm">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
-              <SelectContent className="font-[family-name:var(--font-oswald)]">
+              <SelectContent className="font-[family-name:var(--font-oswald)] rounded-none border-black">
                 <SelectItem value="Politics">Politics</SelectItem>
                 <SelectItem value="Technology">Technology</SelectItem>
                 <SelectItem value="Business">Business</SelectItem>
@@ -68,10 +80,55 @@ export default function LandingPage() {
               </SelectContent>
             </Select>
           </div>
-          <Button type="submit" disabled={!query || loading} className="h-12 bg-blue-500 hover:bg-blue-400 px-8 font-semibold w-full sm:w-auto">
+          <Button type="submit" disabled={!query || loading} className="h-12 bg-black text-white hover:bg-gray-800 rounded-none px-8 font-semibold w-full sm:w-auto uppercase tracking-wide">
             {loading ? <Loader2 className="animate-spin w-5 h-5" /> : "Analyze"}
           </Button>
         </form>
+
+        <div className="w-full max-w-2xl flex flex-col items-end">
+          <button 
+            type="button" 
+            onClick={() => setShowFilters(!showFilters)} 
+            className="text-sm font-bold uppercase tracking-wider text-black/60 hover:text-black transition-colors"
+          >
+            {showFilters ? "- Hide Advanced Filters" : "+ Advanced Filters"}
+          </button>
+          
+          {showFilters && (
+            <div className="w-full font-[family-name:var(--font-oswald)] bg-white/70 backdrop-blur-sm p-4 mt-2 border-2 border-black flex flex-col gap-4 animate-in fade-in slide-in-from-top-4">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Input 
+                  value={domains} 
+                  onChange={(e) => setDomains(e.target.value)} 
+                  placeholder="Only strictly search these sites (e.g. wsj.com, reuters.com)" 
+                  className="rounded-none border-black flex-1 shadow-sm h-10 bg-white"
+                />
+                <Input 
+                  value={excludeDomains} 
+                  onChange={(e) => setExcludeDomains(e.target.value)} 
+                  placeholder="Explicitly exclude sites (e.g. foxnews.com)" 
+                  className="rounded-none border-black flex-1 shadow-sm h-10 bg-white"
+                />
+              </div>
+              <div className="flex flex-col sm:flex-row gap-4 items-center">
+                <span className="text-sm font-semibold uppercase whitespace-nowrap px-2">From Date:</span>
+                <Input 
+                  type="date"
+                  value={fromDate} 
+                  onChange={(e) => setFromDate(e.target.value)} 
+                  className="rounded-none border-black flex-1 shadow-sm h-10 bg-white"
+                />
+                <span className="text-sm font-semibold uppercase whitespace-nowrap px-2">To Date:</span>
+                <Input 
+                  type="date"
+                  value={toDate} 
+                  onChange={(e) => setToDate(e.target.value)} 
+                  className="rounded-none border-black flex-1 shadow-sm h-10 bg-white"
+                />
+              </div>
+            </div>
+          )}
+        </div>
 
       </div>
       <div className="mt-8 w-full">
