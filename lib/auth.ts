@@ -11,6 +11,7 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
     },
-    baseURL: process.env.BETTER_AUTH_URL || process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000"),
+    baseURL: process.env.BETTER_AUTH_URL || "https://biasscope-app.vercel.app",
+    trustedOrigins: ["https://biasscope-app.vercel.app", "http://localhost:3000"],
     secret: process.env.BETTER_AUTH_SECRET || "default_super_secret_key"
 });
