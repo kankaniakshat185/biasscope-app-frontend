@@ -70,7 +70,7 @@ export default function LandingPage() {
             />
           </div>
           <div className="w-full sm:w-48">
-            <Select value={category} onValueChange={(val) => setCategory(val)}>
+            <Select value={category} onValueChange={(val) => setCategory(val || "")}>
               <SelectTrigger className="h-12 w-full rounded-none border-black bg-white shadow-sm">
                 <SelectValue placeholder="- Category (Optional) -" />
               </SelectTrigger>
