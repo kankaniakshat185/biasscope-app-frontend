@@ -9,7 +9,7 @@ import { Loader2 } from "lucide-react"
 
 export default function LandingPage() {
   const [query, setQuery] = useState("")
-  const [category, setCategory] = useState("Politics")
+  const [category, setCategory] = useState("")
   const [loading, setLoading] = useState(false)
   const [domains, setDomains] = useState("")
   const [excludeDomains, setExcludeDomains] = useState("")
@@ -70,9 +70,9 @@ export default function LandingPage() {
             />
           </div>
           <div className="w-full sm:w-48">
-            <Select value={category} onValueChange={(val) => val && setCategory(val)}>
+            <Select value={category} onValueChange={(val) => setCategory(val)}>
               <SelectTrigger className="h-12 w-full rounded-none border-black bg-white shadow-sm">
-                <SelectValue placeholder="Category" />
+                <SelectValue placeholder="- Category (Optional) -" />
               </SelectTrigger>
               <SelectContent className="font-[family-name:var(--font-oswald)] rounded-none border-black">
                 <SelectItem value="Politics">Politics</SelectItem>
