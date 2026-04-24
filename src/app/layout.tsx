@@ -50,7 +50,7 @@ export default function RootLayout({
         </main>
         <footer className="w-full px-6 py-2 flex items-center justify-end mt-auto z-40">
           <p className="text-black/40 tracking-wider text-[10px] sm:text-xs flex items-center gap-1.5 uppercase font-[family-name:var(--font-geist-mono)]">
-            Made with <span className="text-red-500/70 text-sm">❤</span> by Akshat Kankani
+            Developed by Akshat Kankani
           </p>
         </footer>
       </body>
