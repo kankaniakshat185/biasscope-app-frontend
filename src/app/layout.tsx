@@ -48,9 +48,9 @@ export default function RootLayout({
         <main className="flex-1 flex flex-col relative w-full">
           {children}
         </main>
-        <footer className="w-full border-t-4 border-black bg-white px-6 py-6 flex items-center justify-center mt-auto z-40">
-          <p className="text-black font-[family-name:var(--font-oswald)] font-bold uppercase tracking-widest text-sm flex items-center gap-2">
-            Made with <span className="text-red-600 text-lg">❤</span> — Akshat Kankani
+        <footer className="w-full px-6 py-2 flex items-center justify-end mt-auto z-40">
+          <p className="text-black/40 tracking-wider text-[10px] sm:text-xs flex items-center gap-1.5 uppercase font-[family-name:var(--font-geist-mono)]">
+            Made with <span className="text-red-500/70 text-sm">❤</span> by Akshat Kankani
           </p>
         </footer>
       </body>
