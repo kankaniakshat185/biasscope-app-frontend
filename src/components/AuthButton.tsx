@@ -34,14 +34,7 @@ export function AuthButton() {
             Logout
           </button>
         </>
-      ) : (
-        <button 
-          onClick={() => router.push("/login")}
-          className="text-sm border-2 border-black px-4 py-2 font-bold uppercase tracking-widest text-black hover:bg-black hover:text-white transition-colors"
-        >
-          Login
-        </button>
-      )}
+      ) : null}
     </div>
   )
 }

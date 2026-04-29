@@ -54,7 +54,7 @@ export function LoginForm() {
             {isLogin ? "Access Scope" : "Join Scope"}
           </h1>
           <p className="text-sm font-bold uppercase tracking-widest text-black/50">
-            {isLogin ? "Enter your credentials to continue" : "Create an account to start analyzing"}
+            {isLogin ? "Login or Signup to continue" : "Create an account to start analyzing"}
           </p>
         </div>
         
@@ -74,7 +74,7 @@ export function LoginForm() {
                 placeholder="FULL NAME"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full h-14 pl-12 pr-4 border-2 border-black bg-white focus:bg-[#FFF200]/5 focus:outline-none font-bold placeholder:text-black/20 uppercase tracking-widest transition-all"
+                className="w-full h-14 pl-12 pr-4 border-2 border-black bg-white focus:bg-[#FFF200]/5 focus:outline-none font-medium placeholder:text-black/20 tracking-wider transition-all font-[family-name:var(--font-geist-sans)]"
                 required={!isLogin}
               />
             </div>
@@ -87,7 +87,7 @@ export function LoginForm() {
               placeholder="EMAIL ADDRESS"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full h-14 pl-12 pr-4 border-2 border-black bg-white focus:bg-[#FFF200]/5 focus:outline-none font-bold placeholder:text-black/20 uppercase tracking-widest transition-all"
+              className="w-full h-14 pl-12 pr-4 border-2 border-black bg-white focus:bg-[#FFF200]/5 focus:outline-none font-medium placeholder:text-black/20 tracking-wider transition-all font-[family-name:var(--font-geist-sans)]"
               required
             />
           </div>
@@ -99,7 +99,7 @@ export function LoginForm() {
               placeholder="PASSWORD"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full h-14 pl-12 pr-4 border-2 border-black bg-white focus:bg-[#FFF200]/5 focus:outline-none font-bold placeholder:text-black/20 uppercase tracking-widest transition-all"
+              className="w-full h-14 pl-12 pr-4 border-2 border-black bg-white focus:bg-[#FFF200]/5 focus:outline-none font-medium placeholder:text-black/20 tracking-wider transition-all font-[family-name:var(--font-geist-sans)]"
               required
             />
           </div>
@@ -132,13 +132,6 @@ export function LoginForm() {
             </span>
           </button>
         </div>
-      </div>
-      
-      {/* Decorative text */}
-      <div className="mt-4 text-center">
-        <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-black/30">
-          BiasScope Intelligence 
-        </p>
       </div>
     </div>
   )
