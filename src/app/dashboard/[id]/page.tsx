@@ -64,7 +64,7 @@ export default function DashboardPage() {
             onClick={() => window.print()}
             className="print:hidden h-12 bg-black text-white hover:bg-gray-800 uppercase tracking-widest font-bold px-6 flex items-center justify-center border-2 border-black transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]"
           >
-            Export PDF Report
+            Download Report
           </button>
         </div>
         

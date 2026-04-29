@@ -7,6 +7,7 @@ import { Input } from "../components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 import { Loader2 } from "lucide-react"
 import { authClient } from "../lib/auth-client"
+import { LoginForm } from "../components/LoginForm"
 
 export default function LandingPage() {
   const [query, setQuery] = useState("")
@@ -17,8 +18,24 @@ export default function LandingPage() {
   const [fromDate, setFromDate] = useState("")
   const [toDate, setToDate] = useState("")
   const [showFilters, setShowFilters] = useState(false)
-  const { data: session } = authClient.useSession()
+  const { data: session, isPending } = authClient.useSession()
   const router = useRouter()
+
+  if (isPending) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <Loader2 className="w-12 h-12 animate-spin text-black/20" />
+      </div>
+    )
+  }
+
+  if (!session) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center p-8">
+        <LoginForm />
+      </div>
+    )
+  }
 
   const clearFilters = () => {
     setDomains("")
