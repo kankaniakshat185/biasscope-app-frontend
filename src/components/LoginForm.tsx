@@ -12,12 +12,14 @@ export function LoginForm() {
   const [name, setName] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  const [success, setSuccess] = useState("")
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError("")
+    setSuccess("")
 
     try {
       if (isLogin) {
@@ -34,7 +36,8 @@ export function LoginForm() {
           name
         })
         if (error) throw new Error(error.message)
-        router.refresh()
+        setSuccess("Verification email sent! Please check your inbox.")
+        setIsLogin(true) // Switch to login view
       }
     } catch (err: any) {
       setError(err.message || "An error occurred")
@@ -62,6 +65,13 @@ export function LoginForm() {
           <div className="bg-red-50 border-2 border-red-600 p-3 flex items-center gap-3 text-red-600 font-bold text-sm uppercase tracking-tight animate-in shake-in">
             <div className="w-2 h-2 bg-red-600 rounded-full animate-pulse" />
             {error}
+          </div>
+        )}
+
+        {success && (
+          <div className="bg-[#FFF200]/10 border-2 border-[#FFF200] p-3 flex items-center gap-3 text-black font-bold text-sm uppercase tracking-tight animate-in fade-in">
+            <div className="w-2 h-2 bg-[#FFF200] rounded-full animate-pulse" />
+            {success}
           </div>
         )}
 
