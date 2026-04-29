@@ -54,7 +54,7 @@ export function LoginForm() {
             {isLogin ? "Access Scope" : "Join Scope"}
           </h1>
           <p className="text-sm font-bold uppercase tracking-widest text-black/50">
-            {isLogin ? "Login or Signup to continue" : "Create an account to start analyzing"}
+            {isLogin ? "Login to start analyzing" : "Signup to start analyzing"}
           </p>
         </div>
         
@@ -124,10 +124,10 @@ export function LoginForm() {
           <div className="w-full h-px bg-black/10" />
           <button 
             onClick={() => setIsLogin(!isLogin)}
-            className="text-xs font-black uppercase tracking-[0.2em] text-black/40 hover:text-black transition-colors flex items-center gap-2 group"
+            className="text-xs font-black uppercase tracking-[0.2em] text-black/40 hover:text-black transition-colors flex items-center gap-2 group whitespace-nowrap"
           >
             {isLogin ? "Need an account?" : "Already have an account?"}
-            <span className="text-black border-b-2 border-black group-hover:bg-[#FFF200] transition-colors px-1">
+            <span className="text-black border-b-2 border-black group-hover:bg-[#FFF200] transition-colors px-1 whitespace-nowrap">
               {isLogin ? "SIGN UP" : "LOG IN"}
             </span>
           </button>
