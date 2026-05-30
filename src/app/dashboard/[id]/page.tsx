@@ -168,9 +168,9 @@ export default function DashboardPage() {
         {/* Narrative & Keywords */}
         {insights && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <Card className="lg:col-span-2 shadow-md">
-              <CardHeader>
-                <CardTitle>AI Narrative Summary</CardTitle>
+            <Card className="lg:col-span-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
+              <CardHeader className="bg-gray-50 border-b-2 border-black">
+                <CardTitle className="uppercase tracking-widest text-sm font-bold">AI Narrative Summary</CardTitle>
               </CardHeader>
               <CardContent className="flex flex-col">
                 <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300 pb-4">
@@ -215,9 +215,9 @@ export default function DashboardPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card className="shadow-md">
-              <CardHeader>
-                <CardTitle>Top Keywords discovered</CardTitle>
+            <Card className="shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
+              <CardHeader className="bg-gray-50 border-b-2 border-black">
+                <CardTitle className="uppercase tracking-widest text-sm font-bold">Top Keywords discovered</CardTitle>
               </CardHeader>
               <CardContent className="flex flex-wrap gap-2">
                 {insights.topKeywords && (insights.topKeywords as string[]).map((kw: string) => (
@@ -235,7 +235,7 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card 
               onClick={() => setFilterBias(filterBias === "LEFT" ? null : "LEFT")}
-              className={`shadow-md border-l-8 border-l-blue-600 cursor-pointer transition-all ${filterBias === 'LEFT' ? 'ring-4 ring-blue-500 bg-blue-100 dark:bg-blue-900/30' : 'bg-blue-50/50 hover:bg-blue-100/50 dark:bg-blue-900/10'}`}
+              className={`shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-2 border-black border-l-8 border-l-blue-600 cursor-pointer transition-all ${filterBias === 'LEFT' ? 'ring-4 ring-blue-500 bg-blue-100 dark:bg-blue-900/30' : 'bg-blue-50/50 hover:bg-blue-100/50 dark:bg-blue-900/10'}`}
             >
               <CardHeader>
                 <CardTitle className="text-blue-800 dark:text-blue-300 font-[family-name:var(--font-oswald)] uppercase tracking-wider flex justify-between items-center">
@@ -256,7 +256,7 @@ export default function DashboardPage() {
             </Card>
             <Card 
               onClick={() => setFilterBias(filterBias === "RIGHT" ? null : "RIGHT")}
-              className={`shadow-md border-l-8 border-l-red-600 cursor-pointer transition-all ${filterBias === 'RIGHT' ? 'ring-4 ring-red-500 bg-red-100 dark:bg-red-900/30' : 'bg-red-50/50 hover:bg-red-100/50 dark:bg-red-900/10'}`}
+              className={`shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-2 border-black border-l-8 border-l-red-600 cursor-pointer transition-all ${filterBias === 'RIGHT' ? 'ring-4 ring-red-500 bg-red-100 dark:bg-red-900/30' : 'bg-red-50/50 hover:bg-red-100/50 dark:bg-red-900/10'}`}
             >
               <CardHeader>
                 <CardTitle className="text-red-800 dark:text-red-300 font-[family-name:var(--font-oswald)] uppercase tracking-wider flex justify-between items-center">
@@ -310,17 +310,23 @@ export default function DashboardPage() {
 
         {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="col-span-1 shadow">
-            <CardHeader><CardTitle>Sentiment Trend</CardTitle></CardHeader>
-            <CardContent><SentimentOverTime data={articles} /></CardContent>
+          <Card className="col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
+            <CardHeader className="bg-gray-50 border-b-2 border-black">
+              <CardTitle className="uppercase tracking-widest text-sm font-bold">Sentiment Trend</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4"><SentimentOverTime data={articles} /></CardContent>
           </Card>
-          <Card className="col-span-1 shadow">
-            <CardHeader><CardTitle>Source Origin</CardTitle></CardHeader>
-            <CardContent><SourceDistribution data={sourceDist} /></CardContent>
+          <Card className="col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
+            <CardHeader className="bg-gray-50 border-b-2 border-black">
+              <CardTitle className="uppercase tracking-widest text-sm font-bold">Source Origin</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4"><SourceDistribution data={sourceDist} /></CardContent>
           </Card>
-          <Card className="col-span-1 shadow">
-            <CardHeader><CardTitle>Political Bias Check</CardTitle></CardHeader>
-            <CardContent>
+          <Card className="col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
+            <CardHeader className="bg-gray-50 border-b-2 border-black">
+              <CardTitle className="uppercase tracking-widest text-sm font-bold">Political Bias Check</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4">
               {insights && <BiasDistribution data={insights.biasDistribution} />}
             </CardContent>
           </Card>
@@ -395,6 +401,32 @@ function ArticleChatCard({ art }: { art: any }) {
         <div className="flex justify-between items-center bg-gray-50 p-2 border-2 border-dashed border-black/20">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="font-medium text-gray-900">{art.source}</span>
+            <span className="text-gray-300">•</span>
+            <span className="italic">{art.publishedAt ? new Date(art.publishedAt).toLocaleDateString() : 'Unknown Date'}</span>
+            <span className="text-gray-300">•</span>
+            <span className="font-bold">Score: {(art.sentimentScore || 0).toFixed(2)}</span>
+          </div>
+        </div>
+
+        {art.entities && Object.keys(art.entities).length > 0 && (
+          <div className="flex flex-wrap gap-1 mt-1">
+            {Object.entries(art.entities).map(([ent, label]) => (
+              <span key={ent} className="text-[10px] bg-slate-100 px-2 py-0.5 rounded border border-slate-300 text-slate-700">
+                {ent} <span className="opacity-50 uppercase ml-1">({String(label)})</span>
+              </span>
+            ))}
+          </div>
+        )}
+
+        <div className="flex justify-between items-center mt-2 border-t border-dashed border-gray-300 pt-3">
+          <button 
+            onClick={() => setChatOpen(!chatOpen)}
+            className="text-xs uppercase tracking-widest font-extrabold flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
+          >
+            {chatOpen ? "Close AI Chat" : "Ask Llama-3 About This Article"}
+          </button>
+
+          <div className="flex gap-2 items-center">
             {(() => {
               const s = art.source.toLowerCase();
               const high = ["reuters.com", "apnews.com", "bbc.co.uk", "bbc.com", "npr.org", "thehindu.com", "indianexpress.com", "ft.com", "wsj.com", "bloomberg.com", "theguardian.com"];
@@ -410,30 +442,9 @@ function ArticleChatCard({ art }: { art: any }) {
               
               return <Badge variant="outline" className={`text-[9px] px-1.5 py-0 uppercase tracking-wider ${color}`}>{label}</Badge>
             })()}
-            <span className="text-gray-300">•</span>
-            <span className="italic">{art.publishedAt ? new Date(art.publishedAt).toLocaleDateString() : 'Unknown Date'}</span>
-            <span className="text-gray-300">•</span>
-            <span className="font-bold text-black uppercase tracking-wider">{art.biasLabel}</span>
+            <span className="font-bold text-black uppercase tracking-wider text-xs">{art.biasLabel}</span>
           </div>
-          <span className="font-bold">Score: {(art.sentimentScore || 0).toFixed(2)}</span>
         </div>
-
-        {art.entities && Object.keys(art.entities).length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-1">
-            {Object.entries(art.entities).map(([ent, label]) => (
-              <span key={ent} className="text-[10px] bg-slate-100 px-2 py-0.5 rounded border border-slate-300 text-slate-700">
-                {ent} <span className="opacity-50 uppercase ml-1">({String(label)})</span>
-              </span>
-            ))}
-          </div>
-        )}
-
-        <button 
-          onClick={() => setChatOpen(!chatOpen)}
-          className="text-xs self-start uppercase tracking-widest font-extrabold flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
-        >
-          {chatOpen ? "Close AI Chat" : "Ask Llama-3 About This Article"}
-        </button>
 
         {chatOpen && (
           <div className="mt-2 bg-gray-100 p-4 border-l-4 border-blue-600 flex flex-col gap-3">
