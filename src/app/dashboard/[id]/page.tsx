@@ -123,18 +123,18 @@ export default function DashboardPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle>Avg Sentiment</CardTitle>
+            <Card className="col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
+              <CardHeader className="pb-2 bg-gray-50 border-b-2 border-black">
+                <CardTitle className="uppercase tracking-widest text-sm font-bold">Avg Sentiment</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-4">
                 <div className="text-3xl font-bold">{Number(insights.avgSentiment).toFixed(2)}</div>
                 <p className="text-xs text-black-400 mt-1">Scale between -1.0 to 1.0</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="flex justify-between items-center">
+            <Card className="col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
+              <CardHeader className="pb-2 bg-gray-50 border-b-2 border-black">
+                <CardTitle className="flex justify-between items-center uppercase tracking-widest text-sm font-bold">
                   Polarization Index
                   <div className="group relative">
                     <Info className="w-4 h-4 text-gray-400 cursor-help" />
@@ -146,16 +146,16 @@ export default function DashboardPage() {
                   </div>
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-4">
                 <div className="text-3xl font-bold text-red-500">{Number(insights.dataQualityScore * 100).toFixed(0)}%</div>
                 <p className="text-xs text-black-400 mt-1">Divergence between Left vs Right</p>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle>Model Confidence</CardTitle>
+            <Card className="col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
+              <CardHeader className="pb-2 bg-gray-50 border-b-2 border-black">
+                <CardTitle className="uppercase tracking-widest text-sm font-bold">Model Confidence</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-4">
                 <div className="text-3xl font-bold text-blue-500">
                   {insights.driftMetrics ? Number(insights.driftMetrics.average_bias_confidence * 100).toFixed(0) : "N/A"}%
                 </div>

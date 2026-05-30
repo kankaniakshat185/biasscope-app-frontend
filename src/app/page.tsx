@@ -177,7 +177,7 @@ export default function LandingPage() {
       </div>
       <div className="mt-8 w-full">
         <div className="text-center text-md text-black dark:text-gray-500 mx-auto border-t-[3px] py-3 border-black w-full max-w-[58rem] backdrop-blur-[0.2rem]">
-          See the story behind the story - AI analysis of news, sentiment, and bias.
+          The story behind the story - AI analysis of news, sentiment, and bias.
         </div>
       </div>
     </div>
