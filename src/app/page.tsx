@@ -110,21 +110,22 @@ export default function LandingPage() {
           </button>
         </div>
         <form onSubmit={handleSearch} className="font-[family-name:var(--font-oswald)] w-full max-w-2xl bg-white/70 backdrop-blur-sm p-4 border-2 border-black flex flex-col sm:flex-row gap-4 shadow-none">
-          <div className="flex-1">
+          <div className="flex-[2]">
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={mode === "topic" ? "Enter a topic" : "Paste full article URL..."}
-              className="w-full text-lg h-12 rounded-none border-black bg-white shadow-sm"
+              className="w-full text-lg h-12 rounded-none border-black bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus-visible:ring-0 focus-visible:ring-offset-0"
             />
           </div>
           {mode === "topic" && (
-            <div className="w-full sm:w-48">
-              <Select value={category} onValueChange={(val) => setCategory(val || "")}>
-                <SelectTrigger className="h-12 w-full rounded-none border-black bg-white shadow-sm">
+            <div className="flex-1">
+              <Select value={category || "none"} onValueChange={(val) => setCategory(val === "none" ? "" : val)}>
+                <SelectTrigger className="h-12 w-full rounded-none border-black bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:ring-0 focus:ring-offset-0">
                   <SelectValue placeholder="- Category (Optional) -" />
                 </SelectTrigger>
-                <SelectContent className="font-[family-name:var(--font-oswald)] rounded-none border-black">
+                <SelectContent className="font-[family-name:var(--font-oswald)] rounded-none border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                  <SelectItem value="none">None</SelectItem>
                   <SelectItem value="Politics">Politics</SelectItem>
                   <SelectItem value="Technology">Technology</SelectItem>
                   <SelectItem value="Business">Business</SelectItem>
@@ -138,19 +139,19 @@ export default function LandingPage() {
               </Select>
             </div>
           )}
-          <Button type="submit" disabled={!query || loading} className="h-12 bg-black text-white hover:bg-gray-800 rounded-none px-8 font-semibold w-full sm:w-auto uppercase tracking-wide">
+          <Button type="submit" disabled={!query || loading} className="h-12 bg-black text-white hover:bg-gray-800 rounded-none px-8 font-semibold w-full sm:w-auto uppercase tracking-wide shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
             {loading ? <Loader2 className="animate-spin w-5 h-5" /> : "Analyze"}
           </Button>
         </form>
 
         {mode === "topic" && (
-          <div className="w-full max-w-2xl flex flex-col items-end">
+          <div className="w-full max-w-2xl flex flex-col items-center">
             <div className="flex gap-4">
               {(domains || excludeDomains || fromDate || toDate) && (
                 <button 
                   type="button" 
                   onClick={clearFilters} 
-                  className="text-sm font-bold uppercase tracking-wider text-red-500 hover:text-red-700 transition-colors"
+                  className="text-xs font-bold uppercase tracking-wider text-red-600 bg-red-50 border-2 border-red-200 px-4 py-2 hover:bg-red-100 transition-colors shadow-sm"
                 >
                   Clear Filters
                 </button>
@@ -158,14 +159,14 @@ export default function LandingPage() {
               <button 
                 type="button" 
                 onClick={() => setShowFilters(!showFilters)} 
-                className="text-sm font-bold uppercase tracking-wider text-black/60 hover:text-black transition-colors"
+                className="text-xs font-bold uppercase tracking-wider text-black bg-white border-2 border-black px-4 py-2 hover:bg-gray-100 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
               >
                 {showFilters ? "- Hide Advanced Filters" : "+ Advanced Filters"}
               </button>
             </div>
             
             {showFilters && (
-              <div className="w-full font-[family-name:var(--font-oswald)] bg-white/70 backdrop-blur-sm p-4 mt-2 border-2 border-black flex flex-col gap-4 animate-in fade-in slide-in-from-top-4">
+              <div className="w-full font-[family-name:var(--font-oswald)] bg-white/90 backdrop-blur-sm p-4 mt-4 border-2 border-black flex flex-col gap-4 animate-in fade-in slide-in-from-top-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Input 
                     value={domains} 
