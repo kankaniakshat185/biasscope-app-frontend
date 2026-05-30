@@ -22,7 +22,7 @@ export function SentimentOverTime({ data }: { data: any[] }) {
 
   const chartData = Object.values(grouped).map((v: any) => ({
     date: v.date,
-    sentiment: v.sentiment / v.count
+    sentiment: Number((v.sentiment / v.count).toFixed(2))
   })).sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
   if (chartData.length === 0) return <div className="text-gray-500">Not enough date data</div>;

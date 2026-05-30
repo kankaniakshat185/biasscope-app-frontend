@@ -14,6 +14,32 @@ export default function DashboardPage() {
   const [data, setData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [filterBias, setFilterBias] = useState<string | null>(null)
+  
+  const [summaryChatOpen, setSummaryChatOpen] = useState(false)
+  const [summaryQuestion, setSummaryQuestion] = useState("")
+  const [summaryAnswer, setSummaryAnswer] = useState("")
+  const [summaryChatLoading, setSummaryChatLoading] = useState(false)
+
+  const handleAskSummary = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!summaryQuestion || !data || !data.insights[0]) return
+    setSummaryChatLoading(true)
+    setSummaryAnswer("")
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/chat-with-summary`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ searchId: data.insights[0].searchId, message: summaryQuestion })
+      })
+      const result = await res.json()
+      setSummaryAnswer(result.answer)
+    } catch (err) {
+      setSummaryAnswer("Failed to connect to AI.")
+    } finally {
+      setSummaryChatLoading(false)
+    }
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -98,8 +124,10 @@ export default function DashboardPage() {
                   Polarization Index
                   <div className="group relative">
                     <Info className="w-4 h-4 text-gray-400 cursor-help" />
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 p-3 bg-black text-white text-xs font-normal shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 pointer-events-none">
-                      Measures the semantic and emotional divergence between Left-leaning and Right-leaning media. A higher index indicates highly opposed echo chambers.
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 p-3 bg-black text-white shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 pointer-events-none">
+                      <p className="font-[family-name:var(--font-geist-sans)] text-xs font-normal normal-case tracking-normal leading-relaxed text-left">
+                        Measures the semantic and emotional divergence between Left-leaning and Right-leaning media. A higher index indicates highly opposed echo chambers.
+                      </p>
                     </div>
                   </div>
                 </CardTitle>
@@ -130,10 +158,47 @@ export default function DashboardPage() {
               <CardHeader>
                 <CardTitle>AI Narrative Summary</CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
+              <CardContent className="flex flex-col">
+                <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300 pb-4">
                   {insights.narrativeSummary}
                 </p>
+
+                <div className="mt-4 border-t border-dashed border-gray-300 pt-4">
+                  <button 
+                    onClick={() => setSummaryChatOpen(!summaryChatOpen)}
+                    className="text-xs uppercase tracking-widest font-extrabold flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
+                  >
+                    {summaryChatOpen ? "Close AI Chat" : "Ask Llama-3 About This Summary"}
+                  </button>
+
+                  {summaryChatOpen && (
+                    <div className="mt-4 bg-gray-100 p-4 border-l-4 border-blue-600 flex flex-col gap-3">
+                      <form onSubmit={handleAskSummary} className="flex gap-2">
+                        <input 
+                          type="text" 
+                          placeholder="What is the overall sentiment of this narrative?" 
+                          value={summaryQuestion}
+                          onChange={(e) => setSummaryQuestion(e.target.value)}
+                          className="flex-1 px-3 py-2 border-2 border-black focus:outline-none text-sm font-sans"
+                        />
+                        <button 
+                          type="submit" 
+                          disabled={summaryChatLoading}
+                          className="bg-black text-white px-4 py-2 uppercase font-bold text-xs hover:bg-gray-800 disabled:opacity-50 transition-colors"
+                        >
+                          {summaryChatLoading ? "Thinking..." : "Ask"}
+                        </button>
+                      </form>
+                      
+                      {summaryAnswer && (
+                        <div className="bg-white border-2 border-black p-3 text-black text-sm relative mt-2 font-sans">
+                          <span className="absolute -top-3 left-2 bg-white px-1 text-xs font-bold uppercase text-blue-600 tracking-wider">AI Response</span>
+                          <p className="leading-relaxed">{summaryAnswer}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
             <Card className="shadow-md">
@@ -163,8 +228,10 @@ export default function DashboardPage() {
                   The Left-Wing Echo Chamber
                   <div className="group relative">
                     <Info className="w-4 h-4 text-blue-400 cursor-help" />
-                    <div className="absolute top-full right-0 mt-2 w-64 p-3 bg-black text-white text-xs font-normal normal-case tracking-normal shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                      Click to filter the article feed below to ONLY show Left-leaning sources. Summary generated by an LLM extracting common themes from left-leaning publications.
+                    <div className="absolute top-full right-0 mt-2 w-64 p-3 bg-black text-white shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                      <p className="font-[family-name:var(--font-geist-sans)] text-xs font-normal normal-case tracking-normal leading-relaxed text-left">
+                        Click to filter the article feed below to ONLY show Left-leaning sources. Summary generated by an LLM extracting common themes from left-leaning publications.
+                      </p>
                     </div>
                   </div>
                 </CardTitle>
@@ -182,8 +249,10 @@ export default function DashboardPage() {
                   The Right-Wing Echo Chamber
                   <div className="group relative">
                     <Info className="w-4 h-4 text-red-400 cursor-help" />
-                    <div className="absolute top-full right-0 mt-2 w-64 p-3 bg-black text-white text-xs font-normal normal-case tracking-normal shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                      Click to filter the article feed below to ONLY show Right-leaning sources. Summary generated by an LLM extracting common themes from right-leaning publications.
+                    <div className="absolute top-full right-0 mt-2 w-64 p-3 bg-black text-white shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                      <p className="font-[family-name:var(--font-geist-sans)] text-xs font-normal normal-case tracking-normal leading-relaxed text-left">
+                        Click to filter the article feed below to ONLY show Right-leaning sources. Summary generated by an LLM extracting common themes from right-leaning publications.
+                      </p>
                     </div>
                   </div>
                 </CardTitle>
