@@ -151,7 +151,9 @@ export default function DashboardPage() {
               <CardHeader className="pb-2 border-b-2 border-black">
                 <CardTitle className="flex justify-between items-center uppercase tracking-widest text-sm font-bold">
                   Polarization Index
-                  <Info className="w-4 h-4 text-gray-400 cursor-help" title="Measures the semantic and emotional divergence between Left-leaning and Right-leaning media. A higher index indicates highly opposed echo chambers." />
+                  <span title="Measures the semantic and emotional divergence between Left-leaning and Right-leaning media. A higher index indicates highly opposed echo chambers.">
+                    <Info className="w-4 h-4 text-gray-400 cursor-help" />
+                  </span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-4">
@@ -163,7 +165,9 @@ export default function DashboardPage() {
               <CardHeader className="pb-2 border-b-2 border-black">
                 <CardTitle className="flex justify-between items-center uppercase tracking-widest text-sm font-bold">
                   Model Confidence
-                  <Info className="w-4 h-4 text-gray-400 cursor-help" title="Averaged confidence score of the deep learning model across all bias classifications. A higher score means the AI is very certain about the political leanings it detected." />
+                  <span title="Averaged confidence score of the deep learning model across all bias classifications. A higher score means the AI is very certain about the political leanings it detected.">
+                    <Info className="w-4 h-4 text-gray-400 cursor-help" />
+                  </span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-4">
