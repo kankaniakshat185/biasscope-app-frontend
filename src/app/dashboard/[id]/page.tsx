@@ -70,7 +70,7 @@ export default function DashboardPage() {
         
         {/* Metric Cards */}
         {insights && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle>Total Valid Articles</CardTitle>
@@ -96,6 +96,17 @@ export default function DashboardPage() {
               <CardContent>
                 <div className="text-3xl font-bold text-green-500">{Number(insights.dataQualityScore * 100).toFixed(0)}%</div>
                 <p className="text-xs text-black-400 mt-1">Based on text completeness & validity</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle>Model Confidence</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-blue-500">
+                  {insights.driftMetrics ? Number(insights.driftMetrics.average_bias_confidence * 100).toFixed(0) : "N/A"}%
+                </div>
+                <p className="text-xs text-black-400 mt-1">AI certainty score (Drift Metric)</p>
               </CardContent>
             </Card>
           </div>
@@ -126,6 +137,58 @@ export default function DashboardPage() {
                 ))}
               </CardContent>
             </Card>
+          </div>
+        )}
+
+        {/* Contrastive Echo Chambers */}
+        {insights && (insights.leftWingSummary || insights.rightWingSummary) && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="shadow-md border-l-8 border-l-blue-600 bg-blue-50/50 dark:bg-blue-900/10">
+              <CardHeader>
+                <CardTitle className="text-blue-800 dark:text-blue-300 font-[family-name:var(--font-oswald)] uppercase tracking-wider">The Left-Wing Echo Chamber</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm leading-relaxed text-blue-900/80 dark:text-blue-100">{insights.leftWingSummary}</p>
+              </CardContent>
+            </Card>
+            <Card className="shadow-md border-l-8 border-l-red-600 bg-red-50/50 dark:bg-red-900/10">
+              <CardHeader>
+                <CardTitle className="text-red-800 dark:text-red-300 font-[family-name:var(--font-oswald)] uppercase tracking-wider">The Right-Wing Echo Chamber</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm leading-relaxed text-red-900/80 dark:text-red-100">{insights.rightWingSummary}</p>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Entity Sentiment Graph */}
+        {insights && insights.entitySentiment && Object.keys(insights.entitySentiment).length > 0 && (
+          <div className="space-y-4">
+            <h2 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-sekuya)]">Entity Sentiment Analysis</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+              {Object.entries(insights.entitySentiment).map(([entity, data]: [string, any]) => (
+                <Card key={entity} className="border-2 border-black hover:-translate-y-1 transition-transform shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                  <CardHeader className="pb-2 pt-4 flex flex-row justify-between items-center gap-2">
+                    <CardTitle className="text-base truncate">{entity}</CardTitle>
+                    <Badge variant="outline" className="text-[10px] bg-yellow-100">{data.label}</Badge>
+                  </CardHeader>
+                  <CardContent className="text-sm flex flex-col gap-1 pb-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-blue-600 font-semibold text-xs">Left Media:</span>
+                      <span className="font-mono text-xs">{data.avg_left_sentiment.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-red-600 font-semibold text-xs">Right Media:</span>
+                      <span className="font-mono text-xs">{data.avg_right_sentiment.toFixed(2)}</span>
+                    </div>
+                    <div className="mt-2 pt-2 border-t border-dashed border-gray-300 text-[10px] text-gray-500 uppercase tracking-widest text-center">
+                      Mentioned in {data.mentions} articles
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         )}
 
@@ -213,6 +276,16 @@ function ArticleChatCard({ art }: { art: any }) {
           </div>
           <span className="font-bold">Score: {(art.sentimentScore || 0).toFixed(2)}</span>
         </div>
+
+        {art.entities && Object.keys(art.entities).length > 0 && (
+          <div className="flex flex-wrap gap-1 mt-1">
+            {Object.entries(art.entities).map(([ent, label]) => (
+              <span key={ent} className="text-[10px] bg-slate-100 px-2 py-0.5 rounded border border-slate-300 text-slate-700">
+                {ent} <span className="opacity-50 uppercase ml-1">({String(label)})</span>
+              </span>
+            ))}
+          </div>
+        )}
 
         <button 
           onClick={() => setChatOpen(!chatOpen)}
