@@ -120,7 +120,7 @@ export default function LandingPage() {
           </div>
           {mode === "topic" && (
             <div className="flex-1">
-              <Select value={category || "none"} onValueChange={(val) => setCategory(val === "none" ? "" : val)}>
+              <Select value={category || "none"} onValueChange={(val) => setCategory(val === "none" ? "" : (val || ""))}>
                 <SelectTrigger className="h-12 w-full rounded-none border-black bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:ring-0 focus:ring-offset-0">
                   <SelectValue placeholder="- Category (Optional) -" />
                 </SelectTrigger>
