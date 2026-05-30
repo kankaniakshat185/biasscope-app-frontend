@@ -151,9 +151,9 @@ export default function DashboardPage() {
               <CardHeader className="pb-2 bg-gray-50 border-b-2 border-black">
                 <CardTitle className="flex justify-between items-center uppercase tracking-widest text-sm font-bold">
                   Polarization Index
-                  <div className="group relative">
+                  <div className="group relative z-20">
                     <Info className="w-4 h-4 text-gray-400 cursor-help" />
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 p-3 bg-black text-white shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 pointer-events-none">
+                    <div className="absolute top-full right-0 mt-2 w-64 p-3 bg-black text-white shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all pointer-events-none">
                       <p className="font-[family-name:var(--font-geist-sans)] text-xs font-normal normal-case tracking-normal leading-relaxed text-left">
                         Measures the semantic and emotional divergence between Left-leaning and Right-leaning media. A higher index indicates highly opposed echo chambers.
                       </p>
@@ -168,7 +168,17 @@ export default function DashboardPage() {
             </Card>
             <Card className="col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
               <CardHeader className="pb-2 bg-gray-50 border-b-2 border-black">
-                <CardTitle className="uppercase tracking-widest text-sm font-bold">Model Confidence</CardTitle>
+                <CardTitle className="flex justify-between items-center uppercase tracking-widest text-sm font-bold">
+                  Model Confidence
+                  <div className="group relative z-20">
+                    <Info className="w-4 h-4 text-gray-400 cursor-help" />
+                    <div className="absolute top-full right-0 mt-2 w-64 p-3 bg-black text-white shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all pointer-events-none">
+                      <p className="font-[family-name:var(--font-geist-sans)] text-xs font-normal normal-case tracking-normal leading-relaxed text-left">
+                        Averaged confidence score of the deep learning model across all bias classifications. A higher score means the AI is very certain about the political leanings it detected.
+                      </p>
+                    </div>
+                  </div>
+                </CardTitle>
               </CardHeader>
               <CardContent className="pt-4">
                 <div className="text-3xl font-bold text-blue-500">
@@ -239,9 +249,9 @@ export default function DashboardPage() {
                   Extracted via Named Entity Recognition (NER). These terms represent the most statistically significant actors and topics anchoring the dataset's underlying narrative bias.
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {insights.topKeywords && (insights.topKeywords as string[]).map((kw: string) => (
-                    <Badge key={kw} variant="secondary" className="px-3 py-1 bg-blue-100 text-blue-800 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-blue-200 transition-colors dark:bg-blue-900/30 dark:text-blue-200">
-                      {kw}
+                  {insights.topKeywords && (insights.topKeywords as any[]).map((kw: any) => (
+                    <Badge key={kw.word || kw} variant="secondary" className="px-3 py-1 bg-blue-100 text-blue-800 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-blue-200 transition-colors dark:bg-blue-900/30 dark:text-blue-200">
+                      {kw.word || kw} {kw.count && <span className="ml-2 px-1.5 py-0.5 bg-black text-white text-[10px] rounded-full">{kw.count}x</span>}
                     </Badge>
                   ))}
                 </div>
