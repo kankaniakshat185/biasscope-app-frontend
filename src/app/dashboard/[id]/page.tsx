@@ -75,6 +75,21 @@ export default function DashboardPage() {
   }, {})
 
   const displayedArticles = filterBias ? articles.filter((a: any) => a.biasLabel === filterBias) : articles
+  
+  const renderWithBoldCitations = (text: string) => {
+    if (!text) return null;
+    const parts = text.split(/(\[[^\]]+\])/g);
+    return parts.map((part, i) => {
+      if (part.startsWith('[') && part.endsWith(']')) {
+        return (
+          <span key={i} className="inline-block font-bold font-mono text-[11px] bg-black text-white px-2 py-0.5 mx-1 border border-black shadow-[2px_2px_0px_0px_rgba(150,150,150,1)] rounded-sm translate-y-[-2px]">
+            {part}
+          </span>
+        );
+      }
+      return part;
+    });
+  };
 
   return (
     <div className="font-[family-name:var(--font-geist-sans)] min-h-screen text-slate-900 dark:text-slate-100 p-8 space-y-8">
@@ -174,7 +189,7 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent className="flex flex-col">
                 <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300 pb-4">
-                  {insights.narrativeSummary}
+                  {renderWithBoldCitations(insights.narrativeSummary)}
                 </p>
 
                 <div className="mt-4 border-t border-dashed border-gray-300 pt-4">
@@ -219,12 +234,17 @@ export default function DashboardPage() {
               <CardHeader className="bg-gray-50 border-b-2 border-black">
                 <CardTitle className="uppercase tracking-widest text-sm font-bold">Top Keywords discovered</CardTitle>
               </CardHeader>
-              <CardContent className="flex flex-wrap gap-2">
-                {insights.topKeywords && (insights.topKeywords as string[]).map((kw: string) => (
-                  <Badge key={kw} variant="secondary" className="px-3 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200">
-                    {kw}
-                  </Badge>
-                ))}
+              <CardContent className="flex flex-col gap-3 pt-4">
+                <p className="text-xs text-gray-500 leading-relaxed font-semibold">
+                  These are the most statistically significant named entities and issues driving the current media cycle.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {insights.topKeywords && (insights.topKeywords as string[]).map((kw: string) => (
+                    <Badge key={kw} variant="secondary" className="px-3 py-1 bg-blue-100 text-blue-800 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-blue-200 transition-colors dark:bg-blue-900/30 dark:text-blue-200">
+                      {kw}
+                    </Badge>
+                  ))}
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -235,7 +255,7 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card 
               onClick={() => setFilterBias(filterBias === "LEFT" ? null : "LEFT")}
-              className={`shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-2 border-black border-l-8 border-l-blue-600 cursor-pointer transition-all ${filterBias === 'LEFT' ? 'ring-4 ring-blue-500 bg-blue-100 dark:bg-blue-900/30' : 'bg-blue-50/50 hover:bg-blue-100/50 dark:bg-blue-900/10'}`}
+              className={`shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-2 border-black cursor-pointer transition-all ${filterBias === 'LEFT' ? 'ring-4 ring-blue-500 bg-blue-100 dark:bg-blue-900/30' : 'bg-blue-50/50 hover:bg-blue-100/50 dark:bg-blue-900/10'}`}
             >
               <CardHeader>
                 <CardTitle className="text-blue-800 dark:text-blue-300 font-[family-name:var(--font-oswald)] uppercase tracking-wider flex justify-between items-center">
@@ -251,12 +271,12 @@ export default function DashboardPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm leading-relaxed text-blue-900/80 dark:text-blue-100">{insights.leftWingSummary}</p>
+                <p className="text-sm leading-relaxed text-blue-900/80 dark:text-blue-100">{renderWithBoldCitations(insights.leftWingSummary)}</p>
               </CardContent>
             </Card>
             <Card 
               onClick={() => setFilterBias(filterBias === "RIGHT" ? null : "RIGHT")}
-              className={`shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-2 border-black border-l-8 border-l-red-600 cursor-pointer transition-all ${filterBias === 'RIGHT' ? 'ring-4 ring-red-500 bg-red-100 dark:bg-red-900/30' : 'bg-red-50/50 hover:bg-red-100/50 dark:bg-red-900/10'}`}
+              className={`shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-2 border-black cursor-pointer transition-all ${filterBias === 'RIGHT' ? 'ring-4 ring-red-500 bg-red-100 dark:bg-red-900/30' : 'bg-red-50/50 hover:bg-red-100/50 dark:bg-red-900/10'}`}
             >
               <CardHeader>
                 <CardTitle className="text-red-800 dark:text-red-300 font-[family-name:var(--font-oswald)] uppercase tracking-wider flex justify-between items-center">
@@ -272,7 +292,7 @@ export default function DashboardPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm leading-relaxed text-red-900/80 dark:text-red-100">{insights.rightWingSummary}</p>
+                <p className="text-sm leading-relaxed text-red-900/80 dark:text-red-100">{renderWithBoldCitations(insights.rightWingSummary)}</p>
               </CardContent>
             </Card>
           </div>
