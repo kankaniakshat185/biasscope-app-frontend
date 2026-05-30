@@ -100,13 +100,27 @@ export default function DashboardPage() {
         {/* Metric Cards */}
         {insights && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle>Total Valid Articles</CardTitle>
+            <Card className="col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
+              <CardHeader className="pb-2 bg-gray-50 border-b-2 border-black">
+                <CardTitle className="uppercase tracking-widest text-sm font-bold">Data Funnel</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold">{insights.validArticles}</div>
-                <p className="text-xs text-black-400 mt-1">{insights.duplicatesRemoved} duplicates removed</p>
+              <CardContent className="text-sm pt-4 flex flex-col gap-2">
+                <div className="flex justify-between border-b border-dashed border-gray-300 pb-1">
+                  <span className="text-gray-600 font-medium">Raw Articles:</span>
+                  <span className="font-mono">{insights.totalArticles}</span>
+                </div>
+                <div className="flex justify-between border-b border-dashed border-gray-300 pb-1">
+                  <span className="text-gray-600 font-medium">- Duplicates:</span>
+                  <span className="font-mono text-red-500">-{insights.duplicatesRemoved}</span>
+                </div>
+                <div className="flex justify-between border-b border-dashed border-gray-300 pb-1">
+                  <span className="text-gray-600 font-medium">- Invalid Text:</span>
+                  <span className="font-mono text-red-500">-{insights.missingContent}</span>
+                </div>
+                <div className="flex justify-between pt-1">
+                  <span className="font-bold text-blue-700 uppercase tracking-wider text-xs">Analyzed:</span>
+                  <span className="font-mono font-bold text-base">{insights.validArticles}</span>
+                </div>
               </CardContent>
             </Card>
             <Card>
@@ -379,11 +393,26 @@ function ArticleChatCard({ art }: { art: any }) {
       
       <CardContent className="text-sm text-gray-500 flex flex-col gap-4">
         <div className="flex justify-between items-center bg-gray-50 p-2 border-2 border-dashed border-black/20">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <span className="font-medium text-gray-900">{art.source}</span>
-            <span>•</span>
+            {(() => {
+              const s = art.source.toLowerCase();
+              const high = ["reuters.com", "apnews.com", "bbc.co.uk", "bbc.com", "npr.org", "thehindu.com", "indianexpress.com", "ft.com", "wsj.com", "bloomberg.com", "theguardian.com"];
+              const mixed = ["foxnews.com", "cnn.com", "msnbc.com", "dailymail.co.uk", "nypost.com", "republicworld.com", "opindia.com", "thewire.in", "ndtv.com", "timesofindia"];
+              const low = ["breitbart.com", "infowars.com", "thegatewaypundit.com", "nationalheraldindia.com"];
+              
+              let label = "Unknown Credibility";
+              let color = "bg-gray-200 text-gray-700 border-gray-300";
+              
+              if (high.some((domain: string) => s.includes(domain))) { label = "High Credibility"; color = "bg-green-100 text-green-800 border-green-300"; }
+              else if (mixed.some((domain: string) => s.includes(domain))) { label = "Mixed Credibility"; color = "bg-yellow-100 text-yellow-800 border-yellow-300"; }
+              else if (low.some((domain: string) => s.includes(domain))) { label = "Low Credibility"; color = "bg-red-100 text-red-800 border-red-300"; }
+              
+              return <Badge variant="outline" className={`text-[9px] px-1.5 py-0 uppercase tracking-wider ${color}`}>{label}</Badge>
+            })()}
+            <span className="text-gray-300">•</span>
             <span className="italic">{art.publishedAt ? new Date(art.publishedAt).toLocaleDateString() : 'Unknown Date'}</span>
-            <span>•</span>
+            <span className="text-gray-300">•</span>
             <span className="font-bold text-black uppercase tracking-wider">{art.biasLabel}</span>
           </div>
           <span className="font-bold">Score: {(art.sentimentScore || 0).toFixed(2)}</span>
