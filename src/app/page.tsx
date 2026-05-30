@@ -105,7 +105,6 @@ export default function LandingPage() {
               placeholder={mode === "topic" ? "Enter a topic" : "Paste full article URL..."}
               className="w-full text-lg h-12 rounded-none border-black bg-white shadow-sm"
             />
-            </Input>
           </div>
           {mode === "topic" && (
             <div className="w-full sm:w-48">
