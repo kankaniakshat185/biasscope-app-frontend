@@ -116,7 +116,7 @@ export default function DashboardPage() {
         {insights && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             <Card className="col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
-              <CardHeader className="pb-2 bg-gray-50 border-b-2 border-black">
+              <CardHeader className="pb-2 border-b-2 border-black">
                 <CardTitle className="uppercase tracking-widest text-sm font-bold">Data Funnel</CardTitle>
               </CardHeader>
               <CardContent className="text-sm pt-4 flex flex-col gap-2">
@@ -139,7 +139,7 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
             <Card className="col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
-              <CardHeader className="pb-2 bg-gray-50 border-b-2 border-black">
+              <CardHeader className="pb-2 border-b-2 border-black">
                 <CardTitle className="uppercase tracking-widest text-sm font-bold">Avg Sentiment</CardTitle>
               </CardHeader>
               <CardContent className="pt-4">
@@ -148,17 +148,10 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
             <Card className="col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
-              <CardHeader className="pb-2 bg-gray-50 border-b-2 border-black">
+              <CardHeader className="pb-2 border-b-2 border-black">
                 <CardTitle className="flex justify-between items-center uppercase tracking-widest text-sm font-bold">
                   Polarization Index
-                  <div className="group relative z-20">
-                    <Info className="w-4 h-4 text-gray-400 cursor-help" />
-                    <div className="absolute top-full right-0 mt-2 w-64 p-3 bg-black text-white shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all pointer-events-none">
-                      <p className="font-[family-name:var(--font-geist-sans)] text-xs font-normal normal-case tracking-normal leading-relaxed text-left">
-                        Measures the semantic and emotional divergence between Left-leaning and Right-leaning media. A higher index indicates highly opposed echo chambers.
-                      </p>
-                    </div>
-                  </div>
+                  <Info className="w-4 h-4 text-gray-400 cursor-help" title="Measures the semantic and emotional divergence between Left-leaning and Right-leaning media. A higher index indicates highly opposed echo chambers." />
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-4">
@@ -167,17 +160,10 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
             <Card className="col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
-              <CardHeader className="pb-2 bg-gray-50 border-b-2 border-black">
+              <CardHeader className="pb-2 border-b-2 border-black">
                 <CardTitle className="flex justify-between items-center uppercase tracking-widest text-sm font-bold">
                   Model Confidence
-                  <div className="group relative z-20">
-                    <Info className="w-4 h-4 text-gray-400 cursor-help" />
-                    <div className="absolute top-full right-0 mt-2 w-64 p-3 bg-black text-white shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all pointer-events-none">
-                      <p className="font-[family-name:var(--font-geist-sans)] text-xs font-normal normal-case tracking-normal leading-relaxed text-left">
-                        Averaged confidence score of the deep learning model across all bias classifications. A higher score means the AI is very certain about the political leanings it detected.
-                      </p>
-                    </div>
-                  </div>
+                  <Info className="w-4 h-4 text-gray-400 cursor-help" title="Averaged confidence score of the deep learning model across all bias classifications. A higher score means the AI is very certain about the political leanings it detected." />
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-4">
@@ -194,7 +180,7 @@ export default function DashboardPage() {
         {insights && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <Card className="lg:col-span-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
-              <CardHeader className="bg-gray-50 border-b-2 border-black">
+              <CardHeader className="border-b-2 border-black">
                 <CardTitle className="uppercase tracking-widest text-sm font-bold">AI Narrative Summary</CardTitle>
               </CardHeader>
               <CardContent className="flex flex-col">
@@ -241,7 +227,7 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
             <Card className="shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
-              <CardHeader className="bg-gray-50 border-b-2 border-black">
+              <CardHeader className="border-b-2 border-black">
                 <CardTitle className="uppercase tracking-widest text-sm font-bold">Top Keywords discovered</CardTitle>
               </CardHeader>
               <CardContent className="flex flex-col gap-3 pt-4">
@@ -250,8 +236,8 @@ export default function DashboardPage() {
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {insights.topKeywords && (insights.topKeywords as any[]).map((kw: any) => (
-                    <Badge key={kw.word || kw} variant="secondary" className="px-3 py-1 bg-blue-100 text-blue-800 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-blue-200 transition-colors dark:bg-blue-900/30 dark:text-blue-200">
-                      {kw.word || kw} {kw.count && <span className="ml-2 px-1.5 py-0.5 bg-black text-white text-[10px] rounded-full">{kw.count}x</span>}
+                    <Badge key={kw.word || kw} variant="secondary" className="px-3 py-1 bg-white text-gray-700 border border-gray-300 font-normal shadow-none hover:bg-gray-50 transition-colors">
+                      {kw.word || kw} {kw.count && <span className="ml-1 text-gray-400">({kw.count})</span>}
                     </Badge>
                   ))}
                 </div>
@@ -341,19 +327,19 @@ export default function DashboardPage() {
         {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Card className="col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
-            <CardHeader className="bg-gray-50 border-b-2 border-black">
+            <CardHeader className="border-b-2 border-black">
               <CardTitle className="uppercase tracking-widest text-sm font-bold">Sentiment Trend</CardTitle>
             </CardHeader>
             <CardContent className="pt-4"><SentimentOverTime data={articles} /></CardContent>
           </Card>
           <Card className="col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
-            <CardHeader className="bg-gray-50 border-b-2 border-black">
+            <CardHeader className="border-b-2 border-black">
               <CardTitle className="uppercase tracking-widest text-sm font-bold">Source Origin</CardTitle>
             </CardHeader>
             <CardContent className="pt-4"><SourceDistribution data={sourceDist} /></CardContent>
           </Card>
           <Card className="col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
-            <CardHeader className="bg-gray-50 border-b-2 border-black">
+            <CardHeader className="border-b-2 border-black">
               <CardTitle className="uppercase tracking-widest text-sm font-bold">Political Bias Check</CardTitle>
             </CardHeader>
             <CardContent className="pt-4">
@@ -459,9 +445,9 @@ function ArticleChatCard({ art }: { art: any }) {
           <div className="flex gap-2 items-center">
             {(() => {
               const s = art.source.toLowerCase();
-              const high = ["reuters.com", "apnews.com", "bbc.co.uk", "bbc.com", "npr.org", "thehindu.com", "indianexpress.com", "ft.com", "wsj.com", "bloomberg.com", "theguardian.com"];
-              const mixed = ["foxnews.com", "cnn.com", "msnbc.com", "dailymail.co.uk", "nypost.com", "republicworld.com", "opindia.com", "thewire.in", "ndtv.com", "timesofindia"];
-              const low = ["breitbart.com", "infowars.com", "thegatewaypundit.com", "nationalheraldindia.com"];
+              const high = ["reuters.com", "apnews.com", "bbc.co.uk", "bbc.com", "npr.org", "thehindu.com", "indianexpress.com", "ft.com", "wsj.com", "bloomberg.com", "theguardian.com", "nytimes.com", "washingtonpost.com", "economist.com", "latimes.com", "aljazeera.com", "cbsnews.com", "pbs.org", "propublica.org", "time.com", "scientificamerican.com", "nature.com"];
+              const mixed = ["foxnews.com", "cnn.com", "msnbc.com", "dailymail.co.uk", "nypost.com", "republicworld.com", "opindia.com", "thewire.in", "ndtv.com", "timesofindia", "usatoday.com", "businessinsider.com", "forbes.com", "newsweek.com", "telegraph.co.uk", "vice.com", "buzzfeednews.com", "cnet.com", "gizmodo.com", "slashdot.org", "techradar.com", "simonwillison.net"];
+              const low = ["breitbart.com", "infowars.com", "thegatewaypundit.com", "nationalheraldindia.com", "dailycaller.com", "theblaze.com", "wnd.com", "newsmax.com", "oann.com", "rt.com", "sputniknews.com"];
               
               let label = "Unknown Credibility";
               let color = "bg-gray-200 text-gray-700 border-gray-300";
