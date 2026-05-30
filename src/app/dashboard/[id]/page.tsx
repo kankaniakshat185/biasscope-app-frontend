@@ -82,7 +82,7 @@ export default function DashboardPage() {
     return parts.map((part, i) => {
       if (part.startsWith('[') && part.endsWith(']')) {
         return (
-          <span key={i} className="inline-block font-bold font-mono text-[11px] bg-black text-white px-2 py-0.5 mx-1 border border-black shadow-[2px_2px_0px_0px_rgba(150,150,150,1)] rounded-sm translate-y-[-2px]">
+          <span key={i} className="font-bold">
             {part}
           </span>
         );
@@ -236,7 +236,7 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent className="flex flex-col gap-3 pt-4">
                 <p className="text-xs text-gray-500 leading-relaxed font-semibold">
-                  These are the most statistically significant named entities and issues driving the current media cycle.
+                  Extracted via Named Entity Recognition (NER). These terms represent the most statistically significant actors and topics anchoring the dataset's underlying narrative bias.
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {insights.topKeywords && (insights.topKeywords as string[]).map((kw: string) => (
