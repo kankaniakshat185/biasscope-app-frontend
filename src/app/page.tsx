@@ -92,11 +92,23 @@ export default function LandingPage() {
     <div className="flex-1 flex flex-col items-center justify-center text-gray-900 dark:text-gray-100 p-8">
       <div className="flex-1 flex flex-col w-full items-center justify-center space-y-4">
 
-        <div className="flex gap-4 mb-2">
-          <button onClick={() => setMode("topic")} className={`text-sm font-bold uppercase tracking-wider px-4 py-2 border-2 border-black transition-all ${mode === 'topic' ? 'bg-black text-white' : 'bg-white text-black'}`}>Topic Search</button>
-          <button onClick={() => setMode("url")} className={`text-sm font-bold uppercase tracking-wider px-4 py-2 border-2 border-black transition-all ${mode === 'url' ? 'bg-black text-white' : 'bg-white text-black'}`}>Single URL Analysis</button>
+        <div className="flex bg-white border-2 border-black w-fit mb-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-[family-name:var(--font-oswald)]">
+          <button 
+            type="button"
+            onClick={() => setMode("topic")} 
+            className={`text-sm font-bold uppercase tracking-widest px-6 py-2 transition-colors ${mode === 'topic' ? 'bg-black text-white' : 'bg-white text-black hover:bg-gray-100'}`}
+          >
+            Topic Search
+          </button>
+          <div className="w-[2px] bg-black"></div>
+          <button 
+            type="button"
+            onClick={() => setMode("url")} 
+            className={`text-sm font-bold uppercase tracking-widest px-6 py-2 transition-colors ${mode === 'url' ? 'bg-black text-white' : 'bg-white text-black hover:bg-gray-100'}`}
+          >
+            Single URL Analysis
+          </button>
         </div>
-
         <form onSubmit={handleSearch} className="font-[family-name:var(--font-oswald)] w-full max-w-2xl bg-white/70 backdrop-blur-sm p-4 border-2 border-black flex flex-col sm:flex-row gap-4 shadow-none">
           <div className="flex-1">
             <Input
