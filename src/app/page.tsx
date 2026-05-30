@@ -1,17 +1,19 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
-import { Loader2 } from "lucide-react"
+import { Loader2, UploadCloud } from "lucide-react"
 import { authClient } from "../lib/auth-client"
 import { LoginForm } from "../components/LoginForm"
 
 export default function LandingPage() {
   const [query, setQuery] = useState("")
   const [mode, setMode] = useState<"topic" | "url">("topic")
+  const [file, setFile] = useState<File | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [category, setCategory] = useState("")
   const [loading, setLoading] = useState(false)
   const [domains, setDomains] = useState("")
@@ -47,33 +49,50 @@ export default function LandingPage() {
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!query) return
+    if (!query && !file) return
     setLoading(true)
 
     try {
       let endpoint = "/search";
-      let payload: any = { 
-        query, 
-        category,
-        userId: session?.user?.id || undefined,
-        domains: domains ? domains.replace(/\s+/g, '') : undefined,
-        exclude_domains: excludeDomains ? excludeDomains.replace(/\s+/g, '') : undefined,
-        fromDate: fromDate || undefined,
-        toDate: toDate || undefined
-      };
+      let fetchConfig: RequestInit = {}
 
-      if (mode === "url") {
-        endpoint = "/analyze-url";
-        payload = { url: query, userId: session?.user?.id || undefined };
+      if (mode === "url" && file) {
+        endpoint = "/analyze-upload";
+        const formData = new FormData();
+        formData.append("file", file);
+        if (session?.user?.id) {
+          formData.append("userId", session.user.id);
+        }
+        fetchConfig = {
+          method: "POST",
+          body: formData
+        }
+      } else {
+        let payload: any = { 
+          query, 
+          category,
+          userId: session?.user?.id || undefined,
+          domains: domains ? domains.replace(/\s+/g, '') : undefined,
+          exclude_domains: excludeDomains ? excludeDomains.replace(/\s+/g, '') : undefined,
+          fromDate: fromDate || undefined,
+          toDate: toDate || undefined
+        };
+
+        if (mode === "url") {
+          endpoint = "/analyze-url";
+          payload = { url: query, userId: session?.user?.id || undefined };
+        }
+
+        fetchConfig = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        }
       }
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}${endpoint}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      })
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}${endpoint}`, fetchConfig)
 
       if (!res.ok) {
         const errText = await res.text()
@@ -110,13 +129,42 @@ export default function LandingPage() {
           </button>
         </div>
         <form onSubmit={handleSearch} className="font-[family-name:var(--font-oswald)] w-full max-w-2xl bg-white/70 backdrop-blur-sm p-4 border-2 border-black flex flex-col sm:flex-row gap-4 shadow-none">
-          <div className="flex-[2]">
+          <div className="flex-[2] flex flex-col gap-2">
             <Input
-              value={query}
+              value={file ? file.name : query}
+              readOnly={!!file}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={mode === "topic" ? "Enter a topic" : "Paste full article URL..."}
               className="w-full text-lg h-12 rounded-none border-black bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus-visible:ring-0 focus-visible:ring-offset-0"
             />
+            {mode === "url" && (
+              <div className="flex items-center gap-4 mt-2 mb-2">
+                <span className="text-sm font-bold uppercase text-gray-500">OR</span>
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  className="hidden" 
+                  ref={fileInputRef} 
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) {
+                      setFile(e.target.files[0]);
+                      setQuery(""); 
+                    }
+                  }} 
+                />
+                <button 
+                  type="button" 
+                  onClick={() => fileInputRef.current?.click()} 
+                  className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-black bg-gray-100 border-2 border-black px-4 py-2 hover:bg-gray-200 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                >
+                  <UploadCloud className="w-4 h-4" />
+                  {file ? "Change Image" : "Upload Local Image"}
+                </button>
+                {file && (
+                  <button type="button" onClick={() => setFile(null)} className="text-xs font-bold uppercase text-red-500 hover:text-red-700">Remove</button>
+                )}
+              </div>
+            )}
           </div>
           {mode === "topic" && (
             <div className="flex-1">
@@ -139,7 +187,7 @@ export default function LandingPage() {
               </Select>
             </div>
           )}
-          <Button type="submit" disabled={!query || loading} className="h-12 bg-black text-white hover:bg-gray-800 rounded-none px-8 font-semibold w-full sm:w-auto uppercase tracking-wide shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+          <Button type="submit" disabled={(!query && !file) || loading} className="h-12 bg-black text-white hover:bg-gray-800 rounded-none px-8 font-semibold w-full sm:w-auto uppercase tracking-wide shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
             {loading ? <Loader2 className="animate-spin w-5 h-5" /> : "Analyze"}
           </Button>
         </form>
