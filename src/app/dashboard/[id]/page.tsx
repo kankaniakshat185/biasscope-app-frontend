@@ -88,7 +88,7 @@ export default function DashboardPage() {
         
         {/* Metric Cards */}
         {insights && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             <Card className="col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
               <CardHeader className="pb-2 border-b-2 border-black">
                 <CardTitle className="uppercase tracking-widest text-sm font-bold">Data Funnel</CardTitle>
@@ -146,9 +146,33 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent className="pt-4">
                 <div className="text-3xl font-bold text-blue-500">
-                  {insights.driftMetrics ? Number(insights.driftMetrics.average_bias_confidence * 100).toFixed(0) : "N/A"}%
+                  {insights.driftMetrics && insights.driftMetrics.average_bias_confidence ? Number(insights.driftMetrics.average_bias_confidence * 100).toFixed(0) : "N/A"}%
                 </div>
                 <p className="text-xs text-black-400 mt-1">AI certainty score (Drift Metric)</p>
+              </CardContent>
+            </Card>
+            <Card className="col-span-1 sm:col-span-2 md:col-span-4 lg:col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
+              <CardHeader className="pb-2 border-b-2 border-black">
+                <CardTitle className="flex justify-between items-center uppercase tracking-widest text-sm font-bold">
+                  Dataset Diversity
+                  <div title="Measures the breadth of sources and the ideological distribution of the coverage to ensure a representative sample.">
+                    <Info className="w-4 h-4 text-gray-400 cursor-help" />
+                  </div>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4 flex flex-col gap-2">
+                <div className="flex justify-between border-b border-dashed border-gray-300 pb-1 text-sm">
+                  <span className="text-gray-600 font-medium">Unique Publishers:</span>
+                  <span className="font-mono font-bold">{insights.datasetMetrics?.source_diversity || "N/A"}</span>
+                </div>
+                <div className="flex flex-col pt-1 text-xs text-gray-500">
+                  <span className="font-bold text-gray-700 uppercase tracking-wider mb-1">Coverage Imbalance:</span>
+                  <div className="flex justify-between font-mono">
+                    <span className="text-blue-600">L: {insights.datasetMetrics?.coverage_imbalance?.LEFT || 0}%</span>
+                    <span className="text-gray-600">C: {insights.datasetMetrics?.coverage_imbalance?.CENTER || 0}%</span>
+                    <span className="text-red-600">R: {insights.datasetMetrics?.coverage_imbalance?.RIGHT || 0}%</span>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -389,7 +413,14 @@ function ArticleChatCard({ art }: { art: any }) {
               
               return <Badge variant="outline" className={`text-[9px] px-1.5 py-0 uppercase tracking-wider ${color}`}>{label}</Badge>
             })()}
-            <span className="font-bold text-black uppercase tracking-wider text-xs">{art.biasLabel}</span>
+            <span className="font-bold text-black uppercase tracking-wider text-xs flex gap-1 items-center">
+              Bias: {art.biasLabel}
+              {art.deviationScore > 0 && (
+                <span className="bg-red-600 text-white px-1 py-0.5 rounded-sm text-[8px] animate-pulse" title={`Narrative Anomaly: Source is typically ${art.sourceBias}, but this article was classified as ${art.biasLabel}.`}>
+                  ⚠️ ANOMALY
+                </span>
+              )}
+            </span>
           </div>
         </div>
 
