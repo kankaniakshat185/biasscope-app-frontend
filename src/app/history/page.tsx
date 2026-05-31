@@ -31,6 +31,19 @@ export default function HistoryPage() {
     }
   }
 
+  const handleDeleteAll = async () => {
+    if (!confirm("Are you sure you want to completely delete ALL searches? This cannot be undone.")) return;
+    setLoading(true);
+    try {
+      await Promise.all(searches.map(s => fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/history/${s.id}`, { method: "DELETE" })));
+      setSearches([]);
+    } catch (err) {
+      alert("Error deleting searches.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const [filterCategory, setFilterCategory] = useState("All")
 
   useEffect(() => {
@@ -89,19 +102,27 @@ export default function HistoryPage() {
         </div>
         
         {searches.length > 0 && (
-          <div className="w-full md:w-64">
-            <Select value={filterCategory} onValueChange={(val) => setFilterCategory(val || "All")}>
-              <SelectTrigger className="w-full h-12 rounded-none border-2 border-black bg-white focus:ring-0 uppercase tracking-widest font-bold text-xs ring-offset-0 ring-0">
-                <SelectValue placeholder="Filter by Category" />
-              </SelectTrigger>
-              <SelectContent className="rounded-none border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white text-black font-[family-name:var(--font-geist-mono)]">
-                {uniqueCategories.map(cat => (
-                  <SelectItem key={cat} value={cat} className="rounded-none focus:bg-[#FFF200] focus:text-black hover:bg-gray-100 cursor-pointer text-sm font-bold uppercase tracking-wider py-2">
-                    {cat}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="flex flex-col md:flex-row gap-4 items-center w-full md:w-auto">
+            <div className="w-full md:w-64">
+              <Select value={filterCategory} onValueChange={(val) => setFilterCategory(val || "All")}>
+                <SelectTrigger className="w-full h-12 rounded-none border-2 border-black bg-white focus:ring-0 uppercase tracking-widest font-bold text-xs ring-offset-0 ring-0">
+                  <SelectValue placeholder="Filter by Category" />
+                </SelectTrigger>
+                <SelectContent className="rounded-none border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white text-black font-[family-name:var(--font-geist-mono)]">
+                  {uniqueCategories.map(cat => (
+                    <SelectItem key={cat} value={cat} className="rounded-none focus:bg-[#FFF200] focus:text-black hover:bg-gray-100 cursor-pointer text-sm font-bold uppercase tracking-wider py-2">
+                      {cat}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <button 
+              onClick={handleDeleteAll}
+              className="w-full md:w-auto h-12 bg-red-100 hover:bg-red-200 text-red-600 border-2 border-black px-6 uppercase font-bold tracking-widest text-xs transition-colors whitespace-nowrap shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+            >
+              Delete All
+            </button>
           </div>
         )}
       </div>
@@ -137,7 +158,7 @@ export default function HistoryPage() {
                     <span className="text-xs font-bold bg-black text-white px-2 py-1 w-fit uppercase tracking-widest mb-2">
                       {search.category || "General"}
                     </span>
-                    <h2 className="text-2xl font-black uppercase tracking-tighter line-clamp-2">
+                    <h2 className="text-2xl font-black uppercase tracking-tighter line-clamp-3 break-all overflow-hidden">
                       "{search.query}"
                     </h2>
                   </div>
@@ -145,7 +166,7 @@ export default function HistoryPage() {
 
                 <div className="flex flex-col gap-1 mt-auto border-t-2 border-dashed border-black/20 pt-4 pr-10">
                   <div className="flex justify-between text-sm font-bold uppercase tracking-wider">
-                    <span className="text-black/60">Data Quality</span>
+                    <span className="text-black/60">Polarization Score</span>
                     <span>{qualityScore}%</span>
                   </div>
                   <div className="flex justify-between text-sm font-bold uppercase tracking-wider">

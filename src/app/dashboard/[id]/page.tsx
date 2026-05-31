@@ -14,32 +14,6 @@ export default function DashboardPage() {
   const [data, setData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [filterBias, setFilterBias] = useState<string | null>(null)
-  
-  const [summaryChatOpen, setSummaryChatOpen] = useState(false)
-  const [summaryQuestion, setSummaryQuestion] = useState("")
-  const [summaryAnswer, setSummaryAnswer] = useState("")
-  const [summaryChatLoading, setSummaryChatLoading] = useState(false)
-
-  const handleAskSummary = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!summaryQuestion || !data || !data.insights[0]) return
-    setSummaryChatLoading(true)
-    setSummaryAnswer("")
-
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/chat-with-summary`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ searchId: data.insights[0].searchId, message: summaryQuestion })
-      })
-      const result = await res.json()
-      setSummaryAnswer(result.answer)
-    } catch (err) {
-      setSummaryAnswer("Failed to connect to AI.")
-    } finally {
-      setSummaryChatLoading(false)
-    }
-  }
 
   useEffect(() => {
     async function fetchData() {
@@ -191,43 +165,6 @@ export default function DashboardPage() {
                 <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300 pb-4">
                   {renderWithBoldCitations(insights.narrativeSummary)}
                 </p>
-
-                <div className="mt-4 border-t border-dashed border-gray-300 pt-4">
-                  <button 
-                    onClick={() => setSummaryChatOpen(!summaryChatOpen)}
-                    className="text-xs uppercase tracking-widest font-extrabold flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
-                  >
-                    {summaryChatOpen ? "Close AI Chat" : "Ask Llama-3 About This Summary"}
-                  </button>
-
-                  {summaryChatOpen && (
-                    <div className="mt-4 bg-gray-100 p-4 border-l-4 border-blue-600 flex flex-col gap-3">
-                      <form onSubmit={handleAskSummary} className="flex gap-2">
-                        <input 
-                          type="text" 
-                          placeholder="What is the overall sentiment of this narrative?" 
-                          value={summaryQuestion}
-                          onChange={(e) => setSummaryQuestion(e.target.value)}
-                          className="flex-1 px-3 py-2 border-2 border-black focus:outline-none text-sm font-sans"
-                        />
-                        <button 
-                          type="submit" 
-                          disabled={summaryChatLoading}
-                          className="bg-black text-white px-4 py-2 uppercase font-bold text-xs hover:bg-gray-800 disabled:opacity-50 transition-colors"
-                        >
-                          {summaryChatLoading ? "Thinking..." : "Ask"}
-                        </button>
-                      </form>
-                      
-                      {summaryAnswer && (
-                        <div className="bg-white border-2 border-black p-3 text-black text-sm relative mt-2 font-sans">
-                          <span className="absolute -top-3 left-2 bg-white px-1 text-xs font-bold uppercase text-blue-600 tracking-wider">AI Response</span>
-                          <p className="leading-relaxed">{summaryAnswer}</p>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
               </CardContent>
             </Card>
             <Card className="shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
@@ -464,7 +401,7 @@ function ArticleChatCard({ art }: { art: any }) {
                 placeholder="What exactly did they outline in this article?" 
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
-                className="flex-1 px-3 py-2 border-2 border-black focus:outline-none"
+                className="flex-1 px-3 py-2 border-2 border-black focus:outline-none font-sans normal-case font-normal"
               />
               <button 
                 type="submit" 

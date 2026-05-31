@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
@@ -16,6 +16,7 @@ export default function LandingPage() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [category, setCategory] = useState("")
   const [loading, setLoading] = useState(false)
+  const [progress, setProgress] = useState(0)
   const [domains, setDomains] = useState("")
   const [excludeDomains, setExcludeDomains] = useState("")
   const [fromDate, setFromDate] = useState("")
@@ -23,6 +24,18 @@ export default function LandingPage() {
   const [showFilters, setShowFilters] = useState(false)
   const { data: session, isPending } = authClient.useSession()
   const router = useRouter()
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (loading) {
+      interval = setInterval(() => {
+        setProgress(p => (p < 90 ? p + 2 : p));
+      }, 500);
+    } else {
+      setProgress(0);
+    }
+    return () => clearInterval(interval);
+  }, [loading]);
 
   if (isPending) {
     return (
@@ -110,8 +123,23 @@ export default function LandingPage() {
   return (
     <div className="flex-1 flex flex-col items-center justify-center text-gray-900 dark:text-gray-100 p-8">
       <div className="flex-1 flex flex-col w-full items-center justify-center space-y-4">
+        
+        {loading && (
+          <div className="w-full max-w-2xl flex flex-col gap-2 font-[family-name:var(--font-oswald)] mb-4">
+            <div className="flex justify-between text-xs font-bold uppercase tracking-widest">
+              <span>Running Intelligence Pipeline...</span>
+              <span className="animate-pulse">{progress}%</span>
+            </div>
+            <div className="w-full h-4 bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden">
+              <div 
+                className="absolute top-0 left-0 h-full bg-[#FFF200] border-r-2 border-black transition-all duration-500 ease-out"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div>
+        )}
 
-        <div className="flex bg-white border-2 border-black w-fit mb-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-[family-name:var(--font-oswald)]">
+        <div className={`flex bg-white border-2 border-black w-fit mb-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-[family-name:var(--font-oswald)] ${loading ? 'opacity-50 pointer-events-none' : ''}`}>
           <button 
             type="button"
             onClick={() => setMode("topic")} 
