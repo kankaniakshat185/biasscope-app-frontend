@@ -138,17 +138,17 @@ export default function DashboardPage() {
             <Card className="col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
               <CardHeader className="pb-2 border-b-2 border-black">
                 <CardTitle className="flex justify-between items-center uppercase tracking-widest text-sm font-bold">
-                  Model Confidence
-                  <span title="Averaged confidence score of the deep learning model across all bias classifications. A higher score means the AI is very certain about the political leanings it detected.">
+                  Source Reliability
+                  <span title="The average credibility of the publishers in this dataset. High credibility sources (e.g. Reuters, BBC) increase this score, while highly partisan or unverified sources lower it.">
                     <Info className="w-4 h-4 text-gray-400 cursor-help" />
                   </span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-4">
                 <div className="text-3xl font-bold text-blue-500">
-                  {insights.driftMetrics && insights.driftMetrics.average_bias_confidence ? Number(insights.driftMetrics.average_bias_confidence * 100).toFixed(0) : "N/A"}%
+                  {insights.driftMetrics && insights.driftMetrics.source_reliability_confidence ? Number(insights.driftMetrics.source_reliability_confidence * 100).toFixed(0) : "N/A"}%
                 </div>
-                <p className="text-xs text-black-400 mt-1">AI certainty score (Drift Metric)</p>
+                <p className="text-xs text-black-400 mt-1">Publisher credibility score</p>
               </CardContent>
             </Card>
             <Card className="col-span-1 sm:col-span-2 md:col-span-4 lg:col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
