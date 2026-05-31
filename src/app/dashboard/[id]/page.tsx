@@ -91,7 +91,9 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             <Card className="col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
               <CardHeader className="pb-2 border-b-2 border-black">
-                <CardTitle className="uppercase tracking-widest text-sm font-bold">Data Funnel</CardTitle>
+                <CardTitle className="flex justify-between items-center h-8 uppercase tracking-widest text-xs font-bold">
+                  Data Funnel
+                </CardTitle>
               </CardHeader>
               <CardContent className="text-sm pt-4 flex flex-col gap-2">
                 <div className="flex justify-between border-b border-dashed border-gray-300 pb-1">
@@ -114,7 +116,9 @@ export default function DashboardPage() {
             </Card>
             <Card className="col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
               <CardHeader className="pb-2 border-b-2 border-black">
-                <CardTitle className="uppercase tracking-widest text-sm font-bold">Avg Sentiment</CardTitle>
+                <CardTitle className="flex justify-between items-center h-8 uppercase tracking-widest text-xs font-bold">
+                  Avg Sentiment
+                </CardTitle>
               </CardHeader>
               <CardContent className="pt-4">
                 <div className="text-3xl font-bold">{Number(insights.avgSentiment).toFixed(2)}</div>
@@ -123,7 +127,7 @@ export default function DashboardPage() {
             </Card>
             <Card className="col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
               <CardHeader className="pb-2 border-b-2 border-black">
-                <CardTitle className="flex justify-between items-center uppercase tracking-widest text-sm font-bold">
+                <CardTitle className="flex justify-between items-center h-8 uppercase tracking-widest text-xs font-bold">
                   Polarization Index
                   <div title="Calculated using Jensen-Shannon Divergence between ideological distributions.">
                     <Info className="w-4 h-4 text-gray-400 cursor-help" />
@@ -141,7 +145,7 @@ export default function DashboardPage() {
             </Card>
             <Card className="col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
               <CardHeader className="pb-2 border-b-2 border-black">
-                <CardTitle className="flex justify-between items-center uppercase tracking-widest text-sm font-bold">
+                <CardTitle className="flex justify-between items-center h-8 uppercase tracking-widest text-xs font-bold">
                   Source Reliability
                   <span title="Reliability is calculated using weighted publisher credibility scores across the analyzed dataset.">
                     <Info className="w-4 h-4 text-gray-400 cursor-help" />
@@ -163,10 +167,10 @@ export default function DashboardPage() {
             </Card>
             <Card className="col-span-1 sm:col-span-2 md:col-span-4 lg:col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
               <CardHeader className="pb-2 border-b-2 border-black">
-                <CardTitle className="flex justify-between items-center uppercase tracking-widest text-sm font-bold truncate">
+                <CardTitle className="flex justify-between items-center h-8 uppercase tracking-widest text-[11px] lg:text-[10px] xl:text-xs font-bold">
                   Dataset Diversity
                   <div title="Measures the breadth of sources and the ideological distribution of the coverage to ensure a representative sample.">
-                    <Info className="w-4 h-4 text-gray-400 cursor-help flex-shrink-0 ml-2" />
+                    <Info className="w-4 h-4 text-gray-400 cursor-help flex-shrink-0 ml-1" />
                   </div>
                 </CardTitle>
               </CardHeader>
