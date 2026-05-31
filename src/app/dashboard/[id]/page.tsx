@@ -401,7 +401,7 @@ function ArticleChatCard({ art }: { art: any }) {
                 placeholder="What exactly did they outline in this article?" 
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
-                className="flex-1 px-3 py-2 border-2 border-black focus:outline-none font-sans normal-case font-normal"
+                className="flex-1 px-3 py-2 border-2 border-black focus:outline-none font-[family-name:var(--font-geist-sans)] normal-case font-normal tracking-normal text-sm"
               />
               <button 
                 type="submit" 
