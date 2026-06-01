@@ -160,7 +160,7 @@ export default function IntelligenceLayer({ searchId }: { searchId: string }) {
               <ClaimCard key={idx} claim={claim} />
             ))}
           </div>
-        )}
+        </div>
 
       </div>
     </div>
