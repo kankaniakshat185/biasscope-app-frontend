@@ -131,20 +131,28 @@ export default function IntelligenceLayer({ searchId }: { searchId: string }) {
             {intel.clusters.map((cl: any, idx: number) => (
               <Card key={idx} className="border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                 <CardHeader className="bg-gray-50 border-b border-black py-3">
+                  <div className="text-xs font-bold uppercase text-gray-500 mb-1">Canonical Claim</div>
                   <CardTitle className="text-lg font-bold">{cl.title}</CardTitle>
-                  <div className="flex gap-4 mt-2 font-mono text-xs text-gray-600">
-                    <span>Cluster Size: {cl.claims.length}</span>
-                    <span>Sources: {cl.sourceCount}</span>
-                    <span>Evidence Count: {cl.evidenceCount}</span>
-                  </div>
                 </CardHeader>
-                <CardContent className="pt-4">
-                  <h4 className="text-xs font-bold uppercase text-gray-500 mb-2">Cluster Members (Canonical Claims)</h4>
-                  <ul className="list-disc pl-5 space-y-2 text-sm">
-                    {cl.claims.map((c: string, cidx: number) => (
-                      <li key={cidx} className="font-semibold text-gray-800">{c}</li>
-                    ))}
-                  </ul>
+                <CardContent className="pt-4 space-y-4">
+                  <div>
+                    <h4 className="text-xs font-bold uppercase text-gray-500 mb-2">Supporting Claims</h4>
+                    <ul className="list-disc pl-5 space-y-1 text-sm text-gray-800">
+                      {cl.claims.filter((c: string) => c !== cl.title).map((c: string, cidx: number) => (
+                        <li key={cidx}>{c}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 text-sm font-mono bg-gray-100 p-3 border border-gray-300">
+                    <div>
+                      <div className="font-bold text-gray-500 uppercase text-xs mb-1">Sources</div>
+                      <div className="text-blue-700">{cl.sources.join(", ")}</div>
+                    </div>
+                    <div>
+                      <div className="font-bold text-gray-500 uppercase text-xs mb-1">Evidence Count</div>
+                      <div>{cl.evidenceCount}</div>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             ))}
