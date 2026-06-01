@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card"
 import { Badge } from "../../../components/ui/badge"
-import { Loader2, Database, Network, Key, AlertTriangle } from "lucide-react"
+import { Loader2, Database, Network, Key, AlertTriangle, TrendingUp } from "lucide-react"
 
 export default function IntelligenceLayer({ searchId }: { searchId: string }) {
   const [intel, setIntel] = useState<any>(null)
@@ -24,7 +24,6 @@ export default function IntelligenceLayer({ searchId }: { searchId: string }) {
       }
     }
 
-    // Since this runs in background, poll a few times
     fetchIntel()
     const interval = setInterval(() => {
       fetchIntel()
@@ -44,7 +43,6 @@ export default function IntelligenceLayer({ searchId }: { searchId: string }) {
 
   if (!intel || !intel.metrics) return null
 
-  // If intelligence is empty (maybe no articles), don't show or show empty state
   if (intel.metrics.canonicalClaims === 0 && !loading) {
     return null;
   }
@@ -57,7 +55,7 @@ export default function IntelligenceLayer({ searchId }: { searchId: string }) {
             Claim Intelligence <span className="text-sm bg-yellow-300 px-2 py-1 ml-2 border border-black font-mono">BETA</span>
           </h2>
           <p className="text-gray-600 mt-2 max-w-2xl text-sm">
-            BiasScope has extracted and canonicalized verifiable facts from the dataset, mapping them into an event graph.
+            BiasScope extracts verifiable facts from articles, clusters them into canonical claims, and detects cross-source events.
           </p>
         </div>
       </div>
@@ -100,24 +98,44 @@ export default function IntelligenceLayer({ searchId }: { searchId: string }) {
         <div className={activeTab === "events" ? "block" : "hidden print:block"}>
           <div className="space-y-4">
             <h3 className="font-bold text-xl uppercase border-b border-gray-300 pb-2 hidden print:block">Top Events</h3>
-            {intel.events.length === 0 && <p className="text-gray-500 italic">No events detected yet.</p>}
+            {intel.events.length === 0 && <p className="text-gray-500 italic">No events detected yet. Events require 2+ sources, 2+ claims, and 3+ evidence pieces.</p>}
             {intel.events.map((ev: any, idx: number) => (
               <Card key={idx} className="border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                 <CardHeader className="bg-gray-50 border-b border-black py-3">
-                  <CardTitle className="text-lg font-bold">Event: {ev.title}</CardTitle>
-                  <div className="flex gap-4 mt-2 font-mono text-xs text-gray-600">
-                    <span>Clusters: {ev.clusters.length}</span>
+                  <div className="flex items-start justify-between gap-4">
+                    <CardTitle className="text-lg font-bold">{ev.title}</CardTitle>
+                    <Badge variant="outline" className="border-black font-mono shrink-0 text-xs">
+                      <TrendingUp className="w-3 h-3 mr-1 inline" />
+                      {(ev.importanceScore || 0).toFixed(1)}
+                    </Badge>
+                  </div>
+                  {ev.description && (
+                    <p className="text-sm text-gray-600 mt-1">{ev.description}</p>
+                  )}
+                  <div className="flex flex-wrap gap-4 mt-2 font-mono text-xs text-gray-600">
                     <span>Sources: {ev.sourceCount}</span>
-                    <span>Total Evidence: {ev.evidenceCount}</span>
+                    <span>Claims: {ev.claimCount || '—'}</span>
+                    <span>Evidence: {ev.evidenceCount}</span>
                   </div>
                 </CardHeader>
                 <CardContent className="pt-4">
-                  <h4 className="text-xs font-bold uppercase text-gray-500 mb-2">Related Claim Clusters</h4>
-                  <ul className="list-disc pl-5 space-y-1 text-sm">
-                    {ev.clusters.map((cl: string, cidx: number) => (
-                      <li key={cidx}>{cl}</li>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {ev.sources?.map((s: string, sidx: number) => (
+                      <Badge key={sidx} variant="secondary" className="text-xs font-mono bg-blue-50 text-blue-700 border border-blue-200">
+                        {s}
+                      </Badge>
                     ))}
-                  </ul>
+                  </div>
+                  {ev.clusters?.length > 0 && (
+                    <>
+                      <h4 className="text-xs font-bold uppercase text-gray-500 mb-2">Related Claim Clusters</h4>
+                      <ul className="list-disc pl-5 space-y-1 text-sm">
+                        {ev.clusters.map((cl: string, cidx: number) => (
+                          <li key={cidx}>{cl}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
                 </CardContent>
               </Card>
             ))}
@@ -131,22 +149,31 @@ export default function IntelligenceLayer({ searchId }: { searchId: string }) {
             {intel.clusters.map((cl: any, idx: number) => (
               <Card key={idx} className="border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                 <CardHeader className="bg-gray-50 border-b border-black py-3">
-                  <div className="text-xs font-bold uppercase text-gray-500 mb-1">Canonical Claim</div>
+                  <div className="text-xs font-bold uppercase text-gray-500 mb-1">Cluster Title</div>
                   <CardTitle className="text-lg font-bold">{cl.title}</CardTitle>
                 </CardHeader>
                 <CardContent className="pt-4 space-y-4">
+                  {cl.canonicalClaim && cl.canonicalClaim !== cl.title && (
+                    <div>
+                      <h4 className="text-xs font-bold uppercase text-gray-500 mb-1">Canonical Claim</h4>
+                      <p className="text-sm font-semibold text-gray-900 bg-yellow-50 p-2 border border-yellow-200">{cl.canonicalClaim}</p>
+                    </div>
+                  )}
                   <div>
                     <h4 className="text-xs font-bold uppercase text-gray-500 mb-2">Supporting Claims</h4>
                     <ul className="list-disc pl-5 space-y-1 text-sm text-gray-800">
-                      {cl.claims.filter((c: string) => c !== cl.title).map((c: string, cidx: number) => (
+                      {cl.claims.filter((c: string) => c !== cl.canonicalClaim).map((c: string, cidx: number) => (
                         <li key={cidx}>{c}</li>
                       ))}
+                      {cl.claims.filter((c: string) => c !== cl.canonicalClaim).length === 0 && (
+                        <li className="text-gray-400 italic">All claims canonicalized into one.</li>
+                      )}
                     </ul>
                   </div>
                   <div className="grid grid-cols-2 gap-4 text-sm font-mono bg-gray-100 p-3 border border-gray-300">
                     <div>
                       <div className="font-bold text-gray-500 uppercase text-xs mb-1">Sources</div>
-                      <div className="text-blue-700">{cl.sources.join(", ")}</div>
+                      <div className="text-blue-700">{cl.sources?.join(", ") || '—'}</div>
                     </div>
                     <div>
                       <div className="font-bold text-gray-500 uppercase text-xs mb-1">Evidence Count</div>
@@ -202,7 +229,7 @@ function ClaimCard({ claim }: { claim: any }) {
           <div className="space-y-3">
             {claim.evidence.map((ev: any, idx: number) => (
               <div key={idx} className="bg-white p-3 border border-gray-200 text-sm break-inside-avoid">
-                <p className="italic text-gray-800">"{ev.sentence}"</p>
+                <p className="italic text-gray-800">&quot;{ev.sentence}&quot;</p>
                 <div className="mt-2 text-xs text-gray-500 flex justify-between">
                   <span className="font-bold text-black">{ev.source}</span>
                   <span>{ev.publishedAt ? new Date(ev.publishedAt).toLocaleDateString() : 'Unknown Date'}</span>
@@ -219,7 +246,7 @@ function ClaimCard({ claim }: { claim: any }) {
           <div className="space-y-3">
             {claim.evidence.map((ev: any, idx: number) => (
               <div key={idx} className="bg-white p-3 border border-gray-200 text-sm">
-                <p className="italic text-gray-800">"{ev.sentence}"</p>
+                <p className="italic text-gray-800">&quot;{ev.sentence}&quot;</p>
                 <div className="mt-2 text-xs text-gray-500 flex justify-between">
                   <span className="font-bold text-black">{ev.source}</span>
                   <span>{ev.publishedAt ? new Date(ev.publishedAt).toLocaleDateString() : 'Unknown Date'}</span>
