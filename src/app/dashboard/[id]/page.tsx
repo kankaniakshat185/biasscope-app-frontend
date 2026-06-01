@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui
 import { Badge } from "../../../components/ui/badge"
 import { SentimentOverTime, BiasDistribution, SourceDistribution } from "../../../components/Charts"
 import { Loader2, Info } from "lucide-react"
+import IntelligenceLayer from "./IntelligenceLayer"
 
 export default function DashboardPage() {
   const params = useParams()
@@ -340,6 +341,9 @@ export default function DashboardPage() {
             ))}
           </div>
         </div>
+
+        {/* Intelligence Layer */}
+        <IntelligenceLayer searchId={id as string} />
 
         {/* Methodology & Trust Report */}
         <div className="mt-16 border-t-4 border-black pt-8">
