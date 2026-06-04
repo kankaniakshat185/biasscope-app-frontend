@@ -137,10 +137,19 @@ function EventCard({ event }: { event: any }) {
     <Card className="border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
       <CardHeader className="bg-gray-50 border-b border-black py-3 cursor-pointer" onClick={() => setExpanded(!expanded)}>
         <div className="flex items-start justify-between gap-4">
-          <CardTitle className="text-lg font-bold">{event.title}</CardTitle>
+          <div className="flex flex-col gap-1">
+            <CardTitle className="text-lg font-bold">{event.title}</CardTitle>
+            {(event.cluster_count > 0 || event.clusters?.length > 0) && (
+              <div className="flex gap-2 mt-1">
+                <Badge variant="outline" className="border-green-500 text-green-700 bg-green-50 text-[10px] uppercase font-bold tracking-widest shrink-0">
+                  Consistent Claim
+                </Badge>
+              </div>
+            )}
+          </div>
           <Badge variant="outline" className="border-black font-mono shrink-0 text-xs bg-yellow-100/50 cursor-help" title="Cross-source Event Impact Score">
             <TrendingUp className="w-3 h-3 mr-1 inline text-blue-600" />
-            Impact: {(event.importanceScore || 0).toFixed(1)}
+            Impact: {(event.importanceScore || event.importance_score || 0).toFixed(1)}
           </Badge>
         </div>
         {event.description && (
@@ -149,9 +158,9 @@ function EventCard({ event }: { event: any }) {
 
         {/* Canonical Claim — displayed ONCE (Issue 2 fix) */}
         {event.canonicalClaim && (
-          <div className="mt-2 bg-yellow-50 border border-yellow-200 p-2">
-            <span className="text-xs font-bold uppercase text-yellow-700">Canonical Claim: </span>
-            <span className="text-sm text-gray-900">{event.canonicalClaim}</span>
+          <div className="mt-4 p-3 bg-white border border-gray-200 shadow-sm border-l-4 border-l-purple-500">
+            <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Core Claim</p>
+            <p className="text-sm font-semibold text-gray-800">{typeof event.canonicalClaim === 'string' ? event.canonicalClaim : event.canonicalClaim.text}</p>
           </div>
         )}
 
@@ -220,8 +229,19 @@ function ClusterCard({ cluster }: { cluster: any }) {
   return (
     <Card className="border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
       <CardHeader className="bg-gray-50 border-b border-black py-3">
-        <div className="text-xs font-bold uppercase text-gray-500 mb-1">Cluster</div>
-        <CardTitle className="text-lg font-bold">{cluster.title}</CardTitle>
+        <div className="flex justify-between items-start gap-4">
+          <div className="flex flex-col gap-1">
+            <div className="text-xs font-bold uppercase text-gray-500 mb-1">Cluster</div>
+            <CardTitle className="text-lg font-bold">{cluster.title}</CardTitle>
+            {(cluster.consensusScore || 0) >= 0.5 && (
+              <div className="flex gap-2 mt-1">
+                <Badge variant="outline" className="border-green-500 text-green-700 bg-green-50 text-[10px] uppercase font-bold tracking-widest shrink-0" title="This claim is consistently reported across multiple distinct sources.">
+                  Consistent Claim
+                </Badge>
+              </div>
+            )}
+          </div>
+        </div>
       </CardHeader>
       <CardContent className="pt-4 space-y-4">
 
