@@ -22,7 +22,7 @@ export function AuthButton() {
             onClick={() => router.push("/subscriptions")}
             className="text-sm border-2 border-black px-4 py-2 font-bold uppercase tracking-widest text-black bg-white hover:bg-black hover:text-white transition-colors"
           >
-            History
+            Subscriptions
           </button>
           <button 
             onClick={() => router.push("/history")}
