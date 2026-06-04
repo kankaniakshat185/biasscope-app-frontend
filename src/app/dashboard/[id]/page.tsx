@@ -16,6 +16,7 @@ export default function DashboardPage() {
   
   const [data, setData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [filterBias, setFilterBias] = useState<string | null>(null)
   const [subscribing, setSubscribing] = useState(false)
   const [subscribed, setSubscribed] = useState(false)
@@ -65,17 +66,21 @@ export default function DashboardPage() {
         if (typeof id === 'string' && id.startsWith('demo-')) {
           const topic = decodeURIComponent(id.replace('demo-', ''))
           res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/demo/${topic}`)
-          if (!res.ok) throw new Error("Demo snapshot not found")
+          if (!res.ok) throw new Error("We couldn't load the demo snapshot for this topic.")
           const result = await res.json()
           setData(result.search)
         } else {
           res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/results/${id}`)
-          if (!res.ok) throw new Error("Results not found")
+          if (!res.ok) throw new Error("We couldn't find any news articles for this specific topic. Try searching for a broader term or a more recent event.")
           const result = await res.json()
+          if (!result || !result.articles || result.articles.length === 0) {
+            throw new Error("We couldn't find any valid news articles for this specific topic. The sources may have been filtered out due to irrelevance.")
+          }
           setData(result)
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error(err)
+        setErrorMsg(err.message || "An unexpected error occurred while fetching the analysis.")
       } finally {
         setLoading(false)
       }
@@ -84,12 +89,21 @@ export default function DashboardPage() {
   }, [id])
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center text-gray-900 dark:text-gray-100">
-      <Loader2 className="w-10 h-10 animate-spin text-blue-500" />
+    <div className="min-h-screen flex flex-col items-center justify-center text-gray-900 bg-gray-50">
+      <Loader2 className="w-12 h-12 animate-spin text-black mb-4" />
+      <div className="font-bold uppercase tracking-widest text-xs font-mono animate-pulse">Running Analysis Pipeline...</div>
     </div>
   )
 
-  if (!data) return <div className="p-8 text-center">Results not found.</div>
+  if (errorMsg || !data) return (
+    <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center text-slate-900 bg-gray-50">
+      <div className="max-w-md w-full bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-8">
+        <h2 className="text-2xl font-bold font-[family-name:var(--font-oswald)] uppercase mb-4 text-red-600">Analysis Failed</h2>
+        <p className="text-gray-700 font-medium">{errorMsg || "Results not found."}</p>
+        <button onClick={() => window.location.href = '/'} className="mt-8 w-full px-6 py-3 bg-black text-white font-bold uppercase tracking-widest text-xs hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] transition-all">Return Home</button>
+      </div>
+    </div>
+  )
 
   const insights = data.insights && data.insights[0] ? data.insights[0] : null
   const articles = data.articles || []
@@ -377,8 +391,8 @@ export default function DashboardPage() {
 
         {/* Article Cards Grid */}
         <div id="source-articles" className="space-y-4 scroll-mt-32">
-          <div className="flex justify-between items-end border-b-2 border-black pb-2">
-            <h2 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-sekuya)]">Analyzed Articles</h2>
+          <div className="flex justify-between items-end mb-2">
+            <h2 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-sekuya)] uppercase">Analyzed Articles</h2>
             {filterBias && (
               <button 
                 onClick={() => setFilterBias(null)}

@@ -55,10 +55,11 @@ export default function IntelligenceLayer({ searchId }: { searchId: string }) {
     <div className="mt-12 pt-4">
       <div className="flex justify-between items-end mb-8">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight font-[family-name:var(--font-sekuya)] uppercase">
-            Claim Intelligence <span className="text-sm bg-yellow-300 px-2 py-1 ml-2 border border-black font-mono">BETA</span>
+          <h2 className="text-3xl font-bold tracking-tight font-[family-name:var(--font-sekuya)] uppercase flex items-center flex-wrap gap-3">
+            Claim Intelligence 
+            <span className="text-sm bg-yellow-300 px-2 py-1 border border-black font-mono tracking-normal leading-none">BETA</span>
           </h2>
-          <p className="text-gray-600 mt-2 max-w-2xl text-sm">
+          <p className="text-gray-600 mt-2 max-w-none text-sm">
             BiasScope extracts verifiable facts, clusters them into canonical claims, and detects cross-source events.
           </p>
         </div>
