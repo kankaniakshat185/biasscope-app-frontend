@@ -138,9 +138,9 @@ function EventCard({ event }: { event: any }) {
       <CardHeader className="bg-gray-50 border-b border-black py-3 cursor-pointer" onClick={() => setExpanded(!expanded)}>
         <div className="flex items-start justify-between gap-4">
           <CardTitle className="text-lg font-bold">{event.title}</CardTitle>
-          <Badge variant="outline" className="border-black font-mono shrink-0 text-xs">
-            <TrendingUp className="w-3 h-3 mr-1 inline" />
-            {(event.importanceScore || 0).toFixed(1)}
+          <Badge variant="outline" className="border-black font-mono shrink-0 text-xs bg-yellow-100/50 cursor-help" title="Cross-source Event Impact Score">
+            <TrendingUp className="w-3 h-3 mr-1 inline text-blue-600" />
+            Impact: {(event.importanceScore || 0).toFixed(1)}
           </Badge>
         </div>
         {event.description && (
