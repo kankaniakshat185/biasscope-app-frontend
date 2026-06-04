@@ -139,7 +139,7 @@ export default function LandingPage() {
           </div>
         )}
 
-        <div className={`flex bg-white border-2 border-black w-full max-w-2xl mb-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-[family-name:var(--font-oswald)] ${loading ? 'opacity-50 pointer-events-none' : ''}`}>
+        <div className={`flex bg-white border-2 border-black w-full max-w-2xl mb-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-[family-name:var(--font-oswald)] ${loading ? 'opacity-50 pointer-events-none' : ''}`}>
           <button 
             type="button"
             onClick={() => setMode("topic")} 
@@ -172,7 +172,7 @@ export default function LandingPage() {
               readOnly={!!file}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={mode === "topic" ? "Enter a topic" : "Paste full article URL..."}
-              className="w-full text-lg h-12 rounded-none border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="w-full text-lg h-12 rounded-none border-2 border-black bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus-visible:ring-0 focus-visible:ring-offset-0"
             />
             {mode === "url" && (
               <div className="flex items-center gap-4 mt-2 mb-2">
@@ -192,7 +192,7 @@ export default function LandingPage() {
                 <button 
                   type="button" 
                   onClick={() => fileInputRef.current?.click()} 
-                  className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-black bg-gray-100 border-2 border-black px-4 py-2 hover:bg-gray-200 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                  className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-black bg-white border-2 border-black px-4 py-2 hover:bg-gray-100 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                 >
                   <UploadCloud className="w-4 h-4" />
                   {file ? "Change Image" : "Upload Local Image"}
@@ -206,10 +206,10 @@ export default function LandingPage() {
           {mode === "topic" && (
             <div className="flex-1">
               <Select value={category || "none"} onValueChange={(val) => setCategory(val === "none" ? "" : (val || ""))}>
-                <SelectTrigger className="h-12 w-full rounded-none border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus:ring-0 focus:ring-offset-0">
+                <SelectTrigger className="h-12 w-full rounded-none !border-2 !border-black bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus:ring-0 focus:ring-offset-0">
                   <SelectValue placeholder="- Category (Optional) -" />
                 </SelectTrigger>
-                <SelectContent className="font-[family-name:var(--font-oswald)] rounded-none border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <SelectContent className="font-[family-name:var(--font-oswald)] rounded-none border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                   <SelectItem value="none">None</SelectItem>
                   <SelectItem value="Politics">Politics</SelectItem>
                   <SelectItem value="Technology">Technology</SelectItem>
@@ -224,7 +224,7 @@ export default function LandingPage() {
               </Select>
             </div>
           )}
-          <Button type="submit" disabled={(!query && !file) || loading} className="h-12 bg-black text-white hover:bg-gray-800 rounded-none px-8 font-semibold w-full sm:w-auto uppercase tracking-wide border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <Button type="submit" disabled={(!query && !file) || loading} className="h-12 bg-black text-white hover:bg-gray-800 rounded-none px-8 font-semibold w-full sm:w-auto uppercase tracking-wide border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
             {loading ? <Loader2 className="animate-spin w-5 h-5" /> : "Analyze"}
           </Button>
         </form>
