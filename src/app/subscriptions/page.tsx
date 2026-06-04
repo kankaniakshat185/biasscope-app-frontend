@@ -105,14 +105,14 @@ function TopicTimeline({ subscription }: { subscription: any }) {
   const driftNum = parseFloat(driftStr)
 
   return (
-    <Card className="rounded-none border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-      <CardHeader className="bg-gray-100 border-b-2 border-black">
+    <Card className="rounded-none !border-2 !border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] bg-white">
+      <CardHeader className="bg-white border-b-2 border-black">
         <div className="flex justify-between items-center">
           <CardTitle className="text-3xl font-[family-name:var(--font-sekuya)] uppercase tracking-wider">
             {subscription.topic}
           </CardTitle>
           <div className="flex gap-2">
-             <Badge className="bg-black text-white rounded-none uppercase text-xs">Active</Badge>
+             <Badge className="bg-black text-white rounded-none uppercase text-xs hover:bg-black">Active</Badge>
           </div>
         </div>
       </CardHeader>
@@ -121,16 +121,16 @@ function TopicTimeline({ subscription }: { subscription: any }) {
         {/* Topline Metrics */}
         <div className="grid grid-cols-3 border-b-2 border-black font-mono text-sm">
           <div className="p-4 border-r-2 border-black flex flex-col justify-center items-center">
-            <span className="text-gray-500 mb-1">TOTAL EVENTS</span>
-            <span className="text-3xl font-bold">{latest.eventCount}</span>
+            <span className="text-gray-500 mb-1 font-bold">TOTAL EVENTS</span>
+            <span className="text-3xl font-black">{latest.eventCount}</span>
           </div>
           <div className="p-4 border-r-2 border-black flex flex-col justify-center items-center">
-            <span className="text-gray-500 mb-1">TOTAL CLAIMS</span>
-            <span className="text-3xl font-bold">{latest.claimCount}</span>
+            <span className="text-gray-500 mb-1 font-bold">TOTAL CLAIMS</span>
+            <span className="text-3xl font-black">{latest.claimCount}</span>
           </div>
-          <div className="p-4 flex flex-col justify-center items-center bg-blue-50">
-            <span className="text-gray-500 mb-1 flex items-center gap-2"><TrendingUp className="w-4 h-4" /> POLARIZATION</span>
-            <span className="text-3xl font-bold text-blue-600">{(latest.polarizationIndex * 100).toFixed(1)}%</span>
+          <div className="p-4 flex flex-col justify-center items-center bg-white">
+            <span className="text-gray-500 mb-1 flex items-center gap-2 font-bold"><TrendingUp className="w-4 h-4" /> POLARIZATION</span>
+            <span className="text-3xl font-black text-blue-600">{(latest.polarizationIndex * 100).toFixed(1)}%</span>
           </div>
         </div>
 
@@ -140,39 +140,42 @@ function TopicTimeline({ subscription }: { subscription: any }) {
             <AlertTriangle className="w-6 h-6 shrink-0" />
             <div>
               <p className="font-bold uppercase font-[family-name:var(--font-oswald)]">Significant Narrative Drift Detected</p>
-              <p className="text-sm">Polarization shifted by {driftStr}% since the last weekly snapshot.</p>
+              <p className="text-sm font-bold">Polarization shifted by {driftStr}% since the last weekly snapshot.</p>
             </div>
           </div>
         )}
 
         {/* Weekly Timeline */}
-        <div className="p-6">
+        <div className="p-6 bg-white">
           <h3 className="font-bold uppercase tracking-widest mb-6 font-[family-name:var(--font-oswald)] text-lg">Weekly Timeline</h3>
-          <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
+          <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-black">
             {snapshots.map((snap: any, i: number) => (
               <div key={snap.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
                 
                 {/* Timeline dot */}
-                <div className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-black bg-white text-slate-500 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] z-10">
-                  <span className="text-xs font-bold">{snapshots.length - i}</span>
+                <div className="flex items-center justify-center w-10 h-10 rounded-none border-2 border-black bg-[#FFF200] text-black shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] z-10 font-bold font-mono">
+                  <span>{snapshots.length - i}</span>
                 </div>
                 
                 {/* Card */}
-                <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <div 
+                  onClick={() => window.location.href = `/dashboard/demo-${encodeURIComponent(subscription.topic)}`}
+                  className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 hover:-translate-x-0.5 transition-all cursor-pointer"
+                >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="font-bold font-mono text-sm">{new Date(snap.createdAt).toLocaleDateString()}</span>
+                    <span className="font-bold font-mono text-sm uppercase tracking-wider">{new Date(snap.createdAt).toLocaleDateString()}</span>
                   </div>
-                  <p className="text-sm mb-3 text-gray-700">
-                    Processed <span className="font-bold">{snap.articleCount}</span> new articles resulting in <span className="font-bold">{snap.eventCount}</span> verifiable events.
+                  <p className="text-sm mb-3 text-black font-medium leading-relaxed">
+                    Processed <span className="font-black bg-[#FFF200] px-1">{snap.articleCount}</span> new articles resulting in <span className="font-black bg-[#FFF200] px-1">{snap.eventCount}</span> verifiable events.
                   </p>
                   
                   {snap.biasDistribution && (
-                    <div className="mt-4 pt-4 border-t border-dashed border-gray-300">
-                      <p className="text-xs text-gray-500 font-bold uppercase mb-2">Publisher Bias</p>
-                      <div className="flex h-3 w-full border border-black overflow-hidden">
-                         <div style={{width: `${(snap.biasDistribution.LEFT / snap.articleCount) * 100}%`}} className="bg-blue-500 h-full"></div>
-                         <div style={{width: `${(snap.biasDistribution.CENTER / snap.articleCount) * 100}%`}} className="bg-gray-300 h-full"></div>
-                         <div style={{width: `${(snap.biasDistribution.RIGHT / snap.articleCount) * 100}%`}} className="bg-red-500 h-full"></div>
+                    <div className="mt-4 pt-4 border-t-2 border-dashed border-black/20">
+                      <p className="text-xs text-black/60 font-bold uppercase tracking-wider mb-2">Publisher Bias</p>
+                      <div className="flex h-4 w-full border-2 border-black overflow-hidden bg-gray-100">
+                         <div style={{width: `${(snap.biasDistribution.LEFT / snap.articleCount) * 100}%`}} className="bg-blue-500 h-full border-r-2 border-black last:border-r-0"></div>
+                         <div style={{width: `${(snap.biasDistribution.CENTER / snap.articleCount) * 100}%`}} className="bg-gray-300 h-full border-r-2 border-black last:border-r-0"></div>
+                         <div style={{width: `${(snap.biasDistribution.RIGHT / snap.articleCount) * 100}%`}} className="bg-red-500 h-full border-r-2 border-black last:border-r-0"></div>
                       </div>
                     </div>
                   )}

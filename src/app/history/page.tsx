@@ -151,7 +151,7 @@ export default function HistoryPage() {
               <div 
                 key={search.id}
                 onClick={() => router.push(`/dashboard/${search.id}`)}
-                className="bg-white border-4 border-black p-6 flex flex-col gap-4 cursor-pointer hover:bg-[#FFF200] transition-colors group relative shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:-translate-x-1"
+                className="bg-white border-2 border-black p-6 flex flex-col gap-4 cursor-pointer hover:bg-[#FFF200] transition-colors group relative shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 hover:-translate-x-0.5"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex flex-col">
