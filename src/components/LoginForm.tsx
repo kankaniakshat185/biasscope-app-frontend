@@ -28,7 +28,7 @@ export function LoginForm() {
           password
         })
         if (error) throw new Error(error.message)
-        router.refresh()
+        window.location.reload()
       } else {
         const { error } = await authClient.signUp.email({
           email,

@@ -218,6 +218,14 @@ export default function LandingPage() {
           <Button type="submit" disabled={(!query && !file) || loading} className="h-12 bg-black text-white hover:bg-gray-800 rounded-none px-8 font-semibold w-full sm:w-auto uppercase tracking-wide shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
             {loading ? <Loader2 className="animate-spin w-5 h-5" /> : "Analyze"}
           </Button>
+          <Button 
+            type="button" 
+            onClick={() => router.push('/dashboard/demo-elon%20musk')}
+            disabled={loading}
+            className="h-12 bg-[#FFF200] text-black hover:bg-[#ffe600] rounded-none px-4 font-bold uppercase tracking-wide shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black"
+          >
+            Demo
+          </Button>
         </form>
 
         {mode === "topic" && (

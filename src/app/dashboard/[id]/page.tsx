@@ -19,10 +19,19 @@ export default function DashboardPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/results/${id}`)
-        if (!res.ok) throw new Error("Results not found")
-        const result = await res.json()
-        setData(result)
+        let res;
+        if (typeof id === 'string' && id.startsWith('demo-')) {
+          const topic = decodeURIComponent(id.replace('demo-', ''))
+          res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/demo/${topic}`)
+          if (!res.ok) throw new Error("Demo snapshot not found")
+          const result = await res.json()
+          setData(result.search)
+        } else {
+          res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/results/${id}`)
+          if (!res.ok) throw new Error("Results not found")
+          const result = await res.json()
+          setData(result)
+        }
       } catch (err) {
         console.error(err)
       } finally {
