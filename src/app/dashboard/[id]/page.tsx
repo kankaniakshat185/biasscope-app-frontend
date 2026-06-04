@@ -121,8 +121,8 @@ export default function DashboardPage() {
     <div className="font-[family-name:var(--font-geist-sans)] min-h-screen text-slate-900 dark:text-slate-100 flex flex-col">
       
       {/* Sticky Horizontal Nav Bar - Full Width */}
-      <div className="sticky top-[72px] z-40 bg-black border-b-2 border-white py-3 px-6 shadow-md print:hidden hidden md:block w-full">
-        <ul className="flex justify-between items-center text-xs font-bold uppercase tracking-widest text-white max-w-7xl mx-auto w-full">
+      <div className="sticky top-[72px] z-40 bg-white border-b-4 border-black py-3 px-6 print:hidden hidden md:block w-full">
+        <ul className="flex justify-between items-center text-xs font-bold uppercase tracking-widest text-black max-w-7xl mx-auto w-full">
           <li><a href="#overview" className="hover:underline underline-offset-4 decoration-2">Overview</a></li>
           <li><a href="#bias-visuals" className="hover:underline underline-offset-4 decoration-2">Bias Visuals</a></li>
           <li><a href="#source-distribution" className="hover:underline underline-offset-4 decoration-2">Source Dist</a></li>
