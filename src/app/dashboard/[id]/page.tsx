@@ -168,9 +168,8 @@ export default function DashboardPage() {
             </div>
           </div>
           
-          {/* Metric Cards */}
+          {/* Metric Cards - Unified Metrics Bar */}
           {insights && (
-            {/* Unified Metrics Bar */}
             <div className="border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white flex flex-col lg:flex-row divide-y-2 lg:divide-y-0 lg:divide-x-2 divide-black">
               {/* Data Funnel */}
               <div className="flex-1 p-5 flex flex-col">
