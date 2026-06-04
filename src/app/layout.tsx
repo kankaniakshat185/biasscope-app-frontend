@@ -37,8 +37,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${sekuyaFont.variable} ${geistMono.variable} ${oswaldFont.variable} ${geistSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col vox-bg">
-        <header className="w-full bg-black border-b-2 border-white px-6 py-4 flex items-center justify-between z-50 sticky top-0">
-          <a href="/" className="text-3xl font-extrabold text-white tracking-tighter uppercase relative flex-1">
+        <header className="w-full bg-[#FFF200] border-b-4 border-black px-6 py-4 flex items-center justify-between z-50 sticky top-0">
+          <a href="/" className="text-3xl font-extrabold text-black tracking-tighter uppercase relative flex-1">
             BiasScope
           </a>
           <div className="flex justify-end items-center gap-6 relative z-50">
