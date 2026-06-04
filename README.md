@@ -11,6 +11,8 @@ The front-facing user interface for the BiasScope Intelligence platform, designe
 - **Strict Neobrutalist UI** — High-contrast, unrounded structural design emphasizing data hierarchy and analytical objectivity.
 - **Interactive Claim Explorer** — Deep-dive interfaces allowing users to trace macro-events down to their foundational claims and original evidence sentences.
 - **Cross-Ideological Consensus Indicators** — Visual badges surfacing claims that possess high multi-publisher corroboration.
+- **Single URL Inspector** — Dedicated interface for deep-dive validation of isolated news articles, stripping away macro-topic noise.
+- **Multimodal Visual Analysis** — Integrates with Vision LLMs to extract and visualize biases embedded directly within uploaded infographics and media screenshots.
 - **Echo Chamber Visualizations** — Side-by-side comparative views of LLM-generated narrative framing for identical topics.
 - **Entity Sentiment Matrices** — Grid-based mapping of Named Entity Recognition (NER) data against aggregated polarization scores.
 - **Secure Vault & History** — Fully authenticated session management via Better Auth, allowing users to retain and manage historical analytical snapshots.
@@ -25,6 +27,27 @@ We are actively researching and implementing the following production-grade capa
 
 ## Architecture
 
+<details>
+<summary><b>View Detailed Frontend Architecture Diagram</b></summary>
+
+```mermaid
+graph TD
+    A[User Request] --> B[Vercel Edge Network]
+    B --> C{Better Auth Middleware}
+    C -->|Unauthenticated| D[Neobrutalist Login Wall]
+    C -->|Authenticated| E[Next.js App Router]
+    
+    E --> F[React Server Components]
+    F --> G[Data Fetching Layer]
+    G --> H[BiasScope Core Engine API]
+    
+    F --> I[Client Components]
+    I --> J[Lucide Icons]
+    I --> K[D3 / Recharts Data Viz]
+    I --> L[Shadcn UI State]
+```
+</details>
+
 The frontend is built as a serverless, edge-ready application:
 
 | Layer | Components |
@@ -32,7 +55,7 @@ The frontend is built as a serverless, edge-ready application:
 | Edge Delivery | Next.js App Router deployed globally on Vercel |
 | State & Caching | Native Next.js caching, aggressive UI debouncing, React Server Components |
 | Authentication | Better Auth stateless session management via Edge Middleware |
-| Styling | Tailwind CSS, Shadcn UI custom brutalist theme |
+| Styling & Viz | Tailwind CSS, Shadcn UI custom brutalist theme, Vision UI placeholders |
 
 ## Performance & Optimization
 
