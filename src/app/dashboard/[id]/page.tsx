@@ -132,7 +132,7 @@ export default function DashboardPage() {
         </ul>
       </div>
 
-      <div className="max-w-7xl mx-auto space-y-8 w-full p-8 flex-1">
+      <div className="max-w-7xl mx-auto space-y-20 w-full p-8 flex-1">
         
         {/* Header */}
         <div id="overview" className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 scroll-mt-32">
