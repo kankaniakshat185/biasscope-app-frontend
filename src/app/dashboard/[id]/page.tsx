@@ -118,23 +118,24 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="font-[family-name:var(--font-geist-sans)] min-h-screen text-slate-900 dark:text-slate-100 p-8">
-      <div className="max-w-7xl mx-auto space-y-8">
-        
-        {/* Sticky Horizontal Nav Bar */}
-        <div className="sticky top-0 z-50 bg-[#FFF200] border-2 border-black py-3 px-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] print:hidden hidden md:block mt-0 mb-8">
-          <ul className="flex justify-between items-center text-xs font-bold uppercase tracking-widest text-black">
-            <li><a href="#overview" className="hover:underline underline-offset-4 decoration-2">Overview</a></li>
-            <li><a href="#bias-visuals" className="hover:underline underline-offset-4 decoration-2">Bias Visuals</a></li>
-            <li><a href="#source-distribution" className="hover:underline underline-offset-4 decoration-2">Source Dist</a></li>
-            <li><a href="#intelligence-layer" className="hover:underline underline-offset-4 decoration-2">Intelligence</a></li>
-            <li><a href="#source-articles" className="hover:underline underline-offset-4 decoration-2">Source Articles</a></li>
-            <li><a href="#methodology" className="hover:underline underline-offset-4 decoration-2">Methodology</a></li>
-          </ul>
-        </div>
+    <div className="font-[family-name:var(--font-geist-sans)] min-h-screen text-slate-900 dark:text-slate-100 flex flex-col">
+      
+      {/* Sticky Horizontal Nav Bar - Full Width */}
+      <div className="sticky top-[72px] z-40 bg-black border-b-2 border-white py-3 px-6 shadow-md print:hidden hidden md:block w-full">
+        <ul className="flex justify-between items-center text-xs font-bold uppercase tracking-widest text-white max-w-7xl mx-auto w-full">
+          <li><a href="#overview" className="hover:underline underline-offset-4 decoration-2">Overview</a></li>
+          <li><a href="#bias-visuals" className="hover:underline underline-offset-4 decoration-2">Bias Visuals</a></li>
+          <li><a href="#source-distribution" className="hover:underline underline-offset-4 decoration-2">Source Dist</a></li>
+          <li><a href="#intelligence-layer" className="hover:underline underline-offset-4 decoration-2">Intelligence</a></li>
+          <li><a href="#source-articles" className="hover:underline underline-offset-4 decoration-2">Source Articles</a></li>
+          <li><a href="#methodology" className="hover:underline underline-offset-4 decoration-2">Methodology</a></li>
+        </ul>
+      </div>
+
+      <div className="max-w-7xl mx-auto space-y-8 w-full p-8 flex-1">
         
         {/* Header */}
-        <div id="overview" className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 scroll-mt-24">
+        <div id="overview" className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 scroll-mt-32">
             <div>
               <h1 className="text-3xl font-bold tracking-tight font-[family-name:var(--font-sekuya)]">Intelligence Dashboard</h1>
               <p className="text-black-500 mt-2 flex flex-row items-center gap-2">
@@ -147,20 +148,20 @@ export default function DashboardPage() {
                 <button 
                   onClick={handleSubscribe}
                   disabled={subscribing}
-                  className={`print:hidden h-12 flex-1 sm:w-48 uppercase tracking-widest font-bold px-4 flex items-center justify-center gap-2 border-2 border-black transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none ${
+                  className={`print:hidden h-12 flex-1 sm:w-48 uppercase tracking-widest font-bold px-2 text-[10px] flex items-center justify-center gap-2 border-2 border-black transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none ${
                     subscribed 
                       ? "bg-[#FFF200] text-black hover:bg-red-500 hover:text-white group" 
                       : "bg-white text-black hover:bg-gray-100"
                   }`}
                 >
-                  <BellRing className="w-5 h-5 shrink-0" />
+                  <BellRing className="w-4 h-4 shrink-0" />
                   <span className="group-hover:hidden truncate">{subscribed ? "Subscribed" : subscribing ? "Loading..." : "Track Weekly"}</span>
                   <span className="hidden group-hover:block truncate">{subscribed ? "Unsubscribe" : ""}</span>
                 </button>
               )}
               <button 
                 onClick={() => window.print()}
-                className="print:hidden h-12 flex-1 sm:w-48 bg-black text-white hover:bg-gray-800 uppercase tracking-widest font-bold px-4 flex items-center justify-center border-2 border-black transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]"
+                className="print:hidden h-12 flex-1 sm:w-48 bg-black text-white hover:bg-gray-800 uppercase tracking-widest font-bold px-2 text-[10px] flex items-center justify-center border-2 border-black transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]"
               >
                 Download Report
               </button>
