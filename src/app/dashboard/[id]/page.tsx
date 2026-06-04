@@ -248,7 +248,7 @@ export default function DashboardPage() {
         {/* Narrative & Keywords */}
         {insights && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <Card className="lg:col-span-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
+            <Card className="rounded-none lg:col-span-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
               <CardHeader className="border-b-2 border-black">
                 <CardTitle className="uppercase tracking-widest text-sm font-bold">AI Narrative Summary</CardTitle>
               </CardHeader>
@@ -258,7 +258,7 @@ export default function DashboardPage() {
                 </p>
               </CardContent>
             </Card>
-            <Card className="shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
+            <Card className="rounded-none shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
               <CardHeader className="border-b-2 border-black">
                 <CardTitle className="uppercase tracking-widest text-sm font-bold">Top Keywords discovered</CardTitle>
               </CardHeader>
@@ -268,7 +268,7 @@ export default function DashboardPage() {
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {insights.topKeywords && (insights.topKeywords as any[]).map((kw: any) => (
-                    <Badge key={kw.word || kw} variant="secondary" className="px-3 py-1 bg-white text-gray-700 border border-gray-300 font-normal shadow-none hover:bg-gray-50 transition-colors">
+                    <Badge key={kw.word || kw} variant="secondary" className="rounded-none px-3 py-1 bg-white text-gray-700 border border-gray-300 font-normal shadow-none hover:bg-gray-50 transition-colors">
                       {kw.word || kw} {kw.count && <span className="ml-1 text-gray-400">({kw.count})</span>}
                     </Badge>
                   ))}
