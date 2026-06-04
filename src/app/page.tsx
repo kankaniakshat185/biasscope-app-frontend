@@ -155,6 +155,15 @@ export default function LandingPage() {
           >
             Single URL Analysis
           </button>
+          <div className="w-[2px] bg-black"></div>
+          <button 
+            type="button" 
+            onClick={() => router.push('/dashboard/demo-elon%20musk')}
+            disabled={loading}
+            className="text-sm font-bold uppercase tracking-widest px-6 py-2 transition-colors bg-[#FFF200] text-black hover:bg-[#ffe600]"
+          >
+            Demo
+          </button>
         </div>
         <form onSubmit={handleSearch} className="font-[family-name:var(--font-oswald)] w-full max-w-2xl bg-white/70 backdrop-blur-sm p-4 border-2 border-black flex flex-col sm:flex-row gap-4 shadow-none">
           <div className="flex-[2] flex flex-col gap-2">
@@ -217,14 +226,6 @@ export default function LandingPage() {
           )}
           <Button type="submit" disabled={(!query && !file) || loading} className="h-12 bg-black text-white hover:bg-gray-800 rounded-none px-8 font-semibold w-full sm:w-auto uppercase tracking-wide shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
             {loading ? <Loader2 className="animate-spin w-5 h-5" /> : "Analyze"}
-          </Button>
-          <Button 
-            type="button" 
-            onClick={() => router.push('/dashboard/demo-elon%20musk')}
-            disabled={loading}
-            className="h-12 bg-[#FFF200] text-black hover:bg-[#ffe600] rounded-none px-4 font-bold uppercase tracking-wide shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black"
-          >
-            Demo
           </Button>
         </form>
 

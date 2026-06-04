@@ -237,11 +237,12 @@ function ClusterCard({ cluster }: { cluster: any }) {
         {/* Raw supporting claims (original text, not canonical) */}
         {cluster.claims?.length > 0 && (
           <div>
-            <h4 className="text-xs font-bold uppercase text-gray-500 mb-2">Supporting Claims ({cluster.claimCount})</h4>
+            <h4 className="text-xs font-bold uppercase text-gray-500 mb-2">Supporting Claims ({cluster.claimCount || cluster.claims.length})</h4>
             <ul className="list-disc pl-5 space-y-1 text-sm text-gray-800">
-              {cluster.claims.map((c: string, cidx: number) => (
-                <li key={cidx}>{c}</li>
-              ))}
+              {cluster.claims.map((c: any, cidx: number) => {
+                const text = typeof c === 'string' ? c : (c.canonicalClaim || c.id || "Unknown Claim");
+                return <li key={cidx}>{text}</li>;
+              })}
             </ul>
           </div>
         )}

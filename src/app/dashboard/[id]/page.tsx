@@ -24,18 +24,39 @@ export default function DashboardPage() {
     if (!session?.user?.id || !data?.query) return
     setSubscribing(true)
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/subscriptions`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: session.user.id, topic: data.query })
-      })
-      if (res.ok) setSubscribed(true)
+      if (subscribed) {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/subscriptions?userId=${session.user.id}&topic=${encodeURIComponent(data.query)}`, {
+          method: "DELETE"
+        })
+        if (res.ok) setSubscribed(false)
+      } else {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/subscriptions`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: session.user.id, topic: data.query })
+        })
+        if (res.ok) setSubscribed(true)
+      }
     } catch (err) {
       console.error(err)
     } finally {
       setSubscribing(false)
     }
   }
+
+  // Check if initially subscribed
+  useEffect(() => {
+    if (session?.user?.id && data?.query) {
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/subscriptions/${session.user.id}`)
+        .then(res => res.json())
+        .then(subs => {
+          if (Array.isArray(subs) && subs.some((s: any) => s.topic === data.query.toLowerCase())) {
+            setSubscribed(true)
+          }
+        })
+        .catch(err => console.error(err))
+    }
+  }, [session, data?.query])
 
   useEffect(() => {
     async function fetchData() {
@@ -113,11 +134,16 @@ export default function DashboardPage() {
             {session && (
               <button 
                 onClick={handleSubscribe}
-                disabled={subscribing || subscribed}
-                className="print:hidden h-12 bg-white text-black hover:bg-gray-100 uppercase tracking-widest font-bold px-6 flex items-center justify-center gap-2 border-2 border-black transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none"
+                disabled={subscribing}
+                className={`print:hidden h-12 uppercase tracking-widest font-bold px-6 flex items-center justify-center gap-2 border-2 border-black transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none ${
+                  subscribed 
+                    ? "bg-[#FFF200] text-black hover:bg-red-500 hover:text-white group" 
+                    : "bg-white text-black hover:bg-gray-100"
+                }`}
               >
                 <BellRing className="w-5 h-5" />
-                {subscribed ? "Subscribed" : subscribing ? "Loading..." : "Track Weekly"}
+                <span className="group-hover:hidden">{subscribed ? "Subscribed" : subscribing ? "Loading..." : "Track Weekly"}</span>
+                <span className="hidden group-hover:block">{subscribed ? "Unsubscribe" : ""}</span>
               </button>
             )}
             <button 

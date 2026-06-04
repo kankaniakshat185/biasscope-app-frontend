@@ -42,9 +42,6 @@ export default function RootLayout({
             BiasScope
           </a>
           <div className="flex justify-end items-center gap-6 relative z-50">
-            <a href="/history" className="text-black font-bold uppercase tracking-widest font-[family-name:var(--font-oswald)] hover:underline">
-              History
-            </a>
             <AuthButton />
           </div>
         </header>
