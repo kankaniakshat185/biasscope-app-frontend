@@ -119,26 +119,22 @@ export default function DashboardPage() {
 
   return (
     <div className="font-[family-name:var(--font-geist-sans)] min-h-screen text-slate-900 dark:text-slate-100 p-8">
-      <div className="max-w-[90rem] mx-auto flex flex-col xl:flex-row gap-8 items-start">
+      <div className="max-w-7xl mx-auto space-y-8">
         
-        {/* Sticky Sidebar */}
-        <div className="hidden xl:flex flex-col sticky top-8 w-64 shrink-0 bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] p-6 print:hidden">
-          <h3 className="font-bold uppercase tracking-widest mb-4 border-b-2 border-black pb-2 text-sm font-[family-name:var(--font-oswald)]">Navigation</h3>
-          <ul className="space-y-3 text-xs font-bold uppercase tracking-wider text-black/60">
-            <li><a href="#overview" className="hover:text-black transition-colors block">Overview</a></li>
-            <li><a href="#bias-visuals" className="hover:text-black transition-colors block">Bias Visuals</a></li>
-            <li><a href="#source-distribution" className="hover:text-black transition-colors block">Source Distribution</a></li>
-            <li><a href="#intelligence-layer" className="hover:text-black transition-colors block">Intelligence Layer</a></li>
-            <li><a href="#source-articles" className="hover:text-black transition-colors block">Source Articles</a></li>
-            <li><a href="#methodology" className="hover:text-black transition-colors block">Methodology Report</a></li>
+        {/* Sticky Horizontal Nav Bar */}
+        <div className="sticky top-0 z-50 bg-[#FFF200] border-2 border-black py-3 px-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] print:hidden hidden md:block mt-0 mb-8">
+          <ul className="flex justify-between items-center text-xs font-bold uppercase tracking-widest text-black">
+            <li><a href="#overview" className="hover:underline underline-offset-4 decoration-2">Overview</a></li>
+            <li><a href="#bias-visuals" className="hover:underline underline-offset-4 decoration-2">Bias Visuals</a></li>
+            <li><a href="#source-distribution" className="hover:underline underline-offset-4 decoration-2">Source Dist</a></li>
+            <li><a href="#intelligence-layer" className="hover:underline underline-offset-4 decoration-2">Intelligence</a></li>
+            <li><a href="#source-articles" className="hover:underline underline-offset-4 decoration-2">Source Articles</a></li>
+            <li><a href="#methodology" className="hover:underline underline-offset-4 decoration-2">Methodology</a></li>
           </ul>
         </div>
-
-        {/* Main Content */}
-        <div className="flex-1 w-full space-y-8 min-w-0">
-          
-          {/* Header */}
-          <div id="overview" className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 scroll-mt-12">
+        
+        {/* Header */}
+        <div id="overview" className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 scroll-mt-24">
             <div>
               <h1 className="text-3xl font-bold tracking-tight font-[family-name:var(--font-sekuya)]">Intelligence Dashboard</h1>
               <p className="text-black-500 mt-2 flex flex-row items-center gap-2">
@@ -435,7 +431,6 @@ export default function DashboardPage() {
         </div>
 
       </div>
-    </div>
     </div>
   )
 }
