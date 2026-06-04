@@ -52,7 +52,7 @@ export default function IntelligenceLayer({ searchId }: { searchId: string }) {
   if (intel.metrics.canonicalClaims === 0 && !loading) return null
 
   return (
-    <div className="mt-16 pt-8 border-t-4 border-black">
+    <div className="mt-12 pt-4">
       <div className="flex justify-between items-end mb-8">
         <div>
           <h2 className="text-3xl font-bold tracking-tight font-[family-name:var(--font-sekuya)] uppercase">
