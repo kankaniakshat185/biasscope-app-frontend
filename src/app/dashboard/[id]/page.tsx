@@ -5,16 +5,37 @@ import { useParams } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card"
 import { Badge } from "../../../components/ui/badge"
 import { SentimentOverTime, BiasDistribution, SourceDistribution } from "../../../components/Charts"
-import { Loader2, Info } from "lucide-react"
+import { Loader2, Info, BellRing } from "lucide-react"
 import IntelligenceLayer from "./IntelligenceLayer"
+import { authClient } from "../../../lib/auth-client"
 
 export default function DashboardPage() {
   const params = useParams()
   const { id } = params
+  const { data: session } = authClient.useSession()
   
   const [data, setData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [filterBias, setFilterBias] = useState<string | null>(null)
+  const [subscribing, setSubscribing] = useState(false)
+  const [subscribed, setSubscribed] = useState(false)
+
+  const handleSubscribe = async () => {
+    if (!session?.user?.id || !data?.query) return
+    setSubscribing(true)
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/subscriptions`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: session.user.id, topic: data.query })
+      })
+      if (res.ok) setSubscribed(true)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setSubscribing(false)
+    }
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -88,12 +109,24 @@ export default function DashboardPage() {
             </p>
           </div>
           
-          <button 
-            onClick={() => window.print()}
-            className="print:hidden h-12 bg-black text-white hover:bg-gray-800 uppercase tracking-widest font-bold px-6 flex items-center justify-center border-2 border-black transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]"
-          >
-            Download Report
-          </button>
+          <div className="flex gap-2">
+            {session && (
+              <button 
+                onClick={handleSubscribe}
+                disabled={subscribing || subscribed}
+                className="print:hidden h-12 bg-white text-black hover:bg-gray-100 uppercase tracking-widest font-bold px-6 flex items-center justify-center gap-2 border-2 border-black transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none"
+              >
+                <BellRing className="w-5 h-5" />
+                {subscribed ? "Subscribed" : subscribing ? "Loading..." : "Track Weekly"}
+              </button>
+            )}
+            <button 
+              onClick={() => window.print()}
+              className="print:hidden h-12 bg-black text-white hover:bg-gray-800 uppercase tracking-widest font-bold px-6 flex items-center justify-center border-2 border-black transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]"
+            >
+              Download Report
+            </button>
+          </div>
         </div>
         
         {/* Metric Cards */}

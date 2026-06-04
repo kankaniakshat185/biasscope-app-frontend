@@ -2,202 +2,188 @@
 
 import { useEffect, useState } from "react"
 import { authClient } from "../../lib/auth-client"
-import { useRouter } from "next/navigation"
-import { Loader2, ArrowRight, Trash2 } from "lucide-react"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select"
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card"
+import { Badge } from "../../components/ui/badge"
+import { Loader2, TrendingUp, AlertTriangle, Clock } from "lucide-react"
 
 export default function HistoryPage() {
   const { data: session, isPending } = authClient.useSession()
-  const router = useRouter()
-  const [searches, setSearches] = useState<any[]>([])
+  const [subscriptions, setSubscriptions] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
-  const handleDelete = async (e: React.MouseEvent, searchId: string) => {
-    e.stopPropagation();
-    if (!confirm("Are you sure you want to completely delete this search and all its data?")) return;
-    
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/history/${searchId}`, {
-        method: "DELETE"
-      });
-      if (res.ok) {
-        setSearches(prev => prev.filter(s => s.id !== searchId));
-      } else {
-        alert("Failed to delete search.");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Error deleting search.");
-    }
-  }
-
-  const handleDeleteAll = async () => {
-    if (!confirm("Are you sure you want to completely delete ALL searches? This cannot be undone.")) return;
-    setLoading(true);
-    try {
-      await Promise.all(searches.map(s => fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/history/${s.id}`, { method: "DELETE" })));
-      setSearches([]);
-    } catch (err) {
-      alert("Error deleting searches.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  const [filterCategory, setFilterCategory] = useState("All")
-
   useEffect(() => {
-    // If auth finishes loading and there's no session, immediately kick them to login
-    if (!isPending && !session) {
-      router.push("/login")
-    }
-  }, [isPending, session, router])
-
-  useEffect(() => {
-    if (!session?.user?.id) return
-
-    const fetchHistory = async () => {
+    async function fetchSubs() {
+      if (!session?.user?.id) return
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/history?userId=${session.user.id}`)
-        if (!res.ok) throw new Error("Failed to fetch history")
-        const data = await res.json()
-        setSearches(data)
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/subscriptions/${session.user.id}`)
+        if (res.ok) {
+          const data = await res.json()
+          setSubscriptions(data)
+        }
       } catch (err) {
-        console.error(err)
+        console.error("Failed to fetch subscriptions", err)
       } finally {
         setLoading(false)
       }
     }
+    
+    if (!isPending) {
+      fetchSubs()
+    }
+  }, [session, isPending])
 
-    fetchHistory()
-  }, [session])
-
-  if (isPending || (loading && session)) {
+  if (isPending || loading) {
     return (
-      <div className="flex-1 flex items-center justify-center">
-        <Loader2 className="animate-spin w-10 h-10 text-black" />
+      <div className="flex-1 flex items-center justify-center min-h-screen">
+        <Loader2 className="w-12 h-12 animate-spin text-black/20" />
       </div>
     )
   }
 
-  if (!session) return null
-
-  // Extract unique categories for the filter
-  const uniqueCategories = ["All", ...Array.from(new Set(searches.map(s => s.category || "General"))).filter(c => c && c !== "Category (Optional)")]
-  
-  // Apply filter
-  const filteredSearches = filterCategory === "All" 
-    ? searches 
-    : searches.filter(s => (s.category || "General") === filterCategory)
+  if (!session) {
+    return (
+      <div className="flex-1 p-8 flex flex-col items-center justify-center min-h-screen">
+        <h2 className="text-2xl font-bold font-[family-name:var(--font-oswald)] uppercase">Please log in to view your subscriptions.</h2>
+      </div>
+    )
+  }
 
   return (
-    <div className="flex-1 w-full max-w-6xl mx-auto p-4 sm:p-8 font-[family-name:var(--font-oswald)] flex flex-col gap-8">
-      
-      <div className="border-b-4 border-black pb-4 flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <h1 className="text-4xl font-extrabold uppercase tracking-tighter">Your Intelligence Vault</h1>
-          <p className="text-xl text-black/60 font-bold uppercase tracking-widest mt-2">
-            Past Prompts & Bias Breakdowns
-          </p>
-        </div>
-        
-        {searches.length > 0 && (
-          <div className="flex flex-col md:flex-row gap-4 items-center w-full md:w-auto">
-            <div className="w-full md:w-64">
-              <Select value={filterCategory} onValueChange={(val) => setFilterCategory(val || "All")}>
-                <SelectTrigger className="w-full h-12 rounded-none border-2 border-black bg-white focus:ring-0 uppercase tracking-widest font-bold text-xs ring-offset-0 ring-0">
-                  <SelectValue placeholder="Filter by Category" />
-                </SelectTrigger>
-                <SelectContent className="rounded-none border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white text-black font-[family-name:var(--font-geist-mono)]">
-                  {uniqueCategories.map(cat => (
-                    <SelectItem key={cat} value={cat} className="rounded-none focus:bg-[#FFF200] focus:text-black hover:bg-gray-100 cursor-pointer text-sm font-bold uppercase tracking-wider py-2">
-                      {cat}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <button 
-              onClick={handleDeleteAll}
-              className="w-full md:w-auto h-12 bg-red-100 hover:bg-red-200 text-red-600 border-2 border-black px-6 uppercase font-bold tracking-widest text-xs transition-colors whitespace-nowrap shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-            >
-              Delete All
-            </button>
-          </div>
-        )}
+    <div className="flex-1 p-8 max-w-6xl mx-auto w-full min-h-screen">
+      <div className="mb-12">
+        <h1 className="text-4xl font-bold font-[family-name:var(--font-oswald)] uppercase tracking-tight mb-2">Longitudinal Intelligence</h1>
+        <p className="text-gray-600">Track narrative drift and event evolution across your subscribed topics over time.</p>
       </div>
 
-      {filteredSearches.length === 0 ? (
-        <div className="flex-1 flex items-center justify-center p-12 bg-white/50 border-2 border-black border-dashed">
-          <p className="text-xl font-bold uppercase tracking-wider text-black/50 text-center">
-            {searches.length === 0 ? "You haven't run any analysis yet.\nGo to the main page to scan your first topic!" : `No searches found for category: ${filterCategory}`}
-          </p>
-        </div>
+      {subscriptions.length === 0 ? (
+        <Card className="rounded-none border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-[#FFF200]">
+          <CardContent className="p-8 text-center">
+            <h3 className="text-xl font-bold font-[family-name:var(--font-oswald)] uppercase mb-2">No Active Subscriptions</h3>
+            <p className="text-sm">When you run a search, you will be able to subscribe to it for weekly intelligence tracking.</p>
+          </CardContent>
+        </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredSearches.map((search) => {
-            const insight = search.insights?.[0]
-            const qualityScore = insight ? (insight.dataQualityScore * 100).toFixed(0) : "0"
-            const sentimentMap: Record<string, string> = {
-              "positive": "text-green-600",
-              "neutral": "text-gray-500",
-              "negative": "text-red-600"
-            }
-            
-            // Recompute overall sentiment text statically since it's not natively saved, or use avgSentiment
-            const displaySentiment = insight?.avgSentiment > 0.15 ? "positive" : insight?.avgSentiment < -0.15 ? "negative" : "neutral"
-
-            return (
-              <div 
-                key={search.id}
-                onClick={() => router.push(`/dashboard/${search.id}`)}
-                className="bg-white border-4 border-black p-6 flex flex-col gap-4 cursor-pointer hover:bg-[#FFF200] transition-colors group relative shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:-translate-x-1"
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex flex-col">
-                    <span className="text-xs font-bold bg-black text-white px-2 py-1 w-fit uppercase tracking-widest mb-2">
-                      {search.category || "General"}
-                    </span>
-                    <h2 className="text-2xl font-black uppercase tracking-tighter line-clamp-3 break-all overflow-hidden">
-                      "{search.query}"
-                    </h2>
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-1 mt-auto border-t-2 border-dashed border-black/20 pt-4 pr-10">
-                  <div className="flex justify-between text-sm font-bold uppercase tracking-wider">
-                    <span className="text-black/60">Polarization Score</span>
-                    <span>{qualityScore}%</span>
-                  </div>
-                  <div className="flex justify-between text-sm font-bold uppercase tracking-wider">
-                    <span className="text-black/60">Sentiment</span>
-                    <span className={sentimentMap[displaySentiment] || "text-black"}>{displaySentiment}</span>
-                  </div>
-                  <div className="flex justify-between text-sm font-bold uppercase tracking-wider">
-                    <span className="text-black/60">Date</span>
-                    <span>{new Date(search.createdAt).toLocaleDateString()}</span>
-                  </div>
-                </div>
-                
-                {/* Arrow indicator and Trash that appears on hover */}
-                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center gap-2">
-                  <button 
-                    onClick={(e) => handleDelete(e, search.id)}
-                    className="p-2 bg-red-100/80 text-red-600 border-2 border-transparent hover:border-red-600 hover:bg-red-200 transition-colors z-10"
-                    title="Delete Search"
-                  >
-                    <Trash2 className="w-5 h-5" />
-                  </button>
-                </div>
-                <div className="absolute bottom-5 right-5 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <ArrowRight className="w-6 h-6 stroke-[3]" />
-                </div>
-              </div>
-            )
-          })}
+        <div className="space-y-12">
+          {subscriptions.map(sub => (
+            <TopicTimeline key={sub.id} subscription={sub} />
+          ))}
         </div>
       )}
-
     </div>
+  )
+}
+
+function TopicTimeline({ subscription }: { subscription: any }) {
+  const snapshots = subscription.snapshots || []
+  
+  if (snapshots.length === 0) {
+    return (
+      <Card className="rounded-none border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <CardHeader className="bg-black text-white border-b-2 border-black">
+          <CardTitle className="font-[family-name:var(--font-sekuya)] uppercase tracking-wider flex justify-between">
+            <span>{subscription.topic}</span>
+            <Badge variant="secondary" className="bg-white text-black rounded-none uppercase text-xs">Waiting for first snapshot</Badge>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-6">
+          <p className="text-sm text-gray-500 flex items-center gap-2">
+            <Clock className="w-4 h-4" /> Celery will generate the first baseline snapshot within 7 days.
+          </p>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  // Most recent is first because of the backend order desc
+  const latest = snapshots[0]
+  const previous = snapshots.length > 1 ? snapshots[1] : null
+  
+  const driftStr = previous 
+    ? ((latest.polarizationIndex - previous.polarizationIndex) * 100).toFixed(1)
+    : "0.0"
+  
+  const driftNum = parseFloat(driftStr)
+
+  return (
+    <Card className="rounded-none border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+      <CardHeader className="bg-gray-100 border-b-2 border-black">
+        <div className="flex justify-between items-center">
+          <CardTitle className="text-3xl font-[family-name:var(--font-sekuya)] uppercase tracking-wider">
+            {subscription.topic}
+          </CardTitle>
+          <div className="flex gap-2">
+             <Badge className="bg-black text-white rounded-none uppercase text-xs">Active</Badge>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="p-0">
+        
+        {/* Topline Metrics */}
+        <div className="grid grid-cols-3 border-b-2 border-black font-mono text-sm">
+          <div className="p-4 border-r-2 border-black flex flex-col justify-center items-center">
+            <span className="text-gray-500 mb-1">TOTAL EVENTS</span>
+            <span className="text-3xl font-bold">{latest.eventCount}</span>
+          </div>
+          <div className="p-4 border-r-2 border-black flex flex-col justify-center items-center">
+            <span className="text-gray-500 mb-1">TOTAL CLAIMS</span>
+            <span className="text-3xl font-bold">{latest.claimCount}</span>
+          </div>
+          <div className="p-4 flex flex-col justify-center items-center bg-blue-50">
+            <span className="text-gray-500 mb-1 flex items-center gap-2"><TrendingUp className="w-4 h-4" /> POLARIZATION</span>
+            <span className="text-3xl font-bold text-blue-600">{(latest.polarizationIndex * 100).toFixed(1)}%</span>
+          </div>
+        </div>
+
+        {/* Narrative Drift Alert */}
+        {previous && Math.abs(driftNum) > 10 && (
+          <div className="bg-[#FFF200] border-b-2 border-black p-4 flex gap-3 items-center">
+            <AlertTriangle className="w-6 h-6 shrink-0" />
+            <div>
+              <p className="font-bold uppercase font-[family-name:var(--font-oswald)]">Significant Narrative Drift Detected</p>
+              <p className="text-sm">Polarization shifted by {driftStr}% since the last weekly snapshot.</p>
+            </div>
+          </div>
+        )}
+
+        {/* Weekly Timeline */}
+        <div className="p-6">
+          <h3 className="font-bold uppercase tracking-widest mb-6 font-[family-name:var(--font-oswald)] text-lg">Weekly Timeline</h3>
+          <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
+            {snapshots.map((snap: any, i: number) => (
+              <div key={snap.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                
+                {/* Timeline dot */}
+                <div className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-black bg-white text-slate-500 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] z-10">
+                  <span className="text-xs font-bold">{snapshots.length - i}</span>
+                </div>
+                
+                {/* Card */}
+                <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-bold font-mono text-sm">{new Date(snap.createdAt).toLocaleDateString()}</span>
+                  </div>
+                  <p className="text-sm mb-3 text-gray-700">
+                    Processed <span className="font-bold">{snap.articleCount}</span> new articles resulting in <span className="font-bold">{snap.eventCount}</span> verifiable events.
+                  </p>
+                  
+                  {snap.biasDistribution && (
+                    <div className="mt-4 pt-4 border-t border-dashed border-gray-300">
+                      <p className="text-xs text-gray-500 font-bold uppercase mb-2">Publisher Bias</p>
+                      <div className="flex h-3 w-full border border-black overflow-hidden">
+                         <div style={{width: `${(snap.biasDistribution.LEFT / snap.articleCount) * 100}%`}} className="bg-blue-500 h-full"></div>
+                         <div style={{width: `${(snap.biasDistribution.CENTER / snap.articleCount) * 100}%`}} className="bg-gray-300 h-full"></div>
+                         <div style={{width: `${(snap.biasDistribution.RIGHT / snap.articleCount) * 100}%`}} className="bg-red-500 h-full"></div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </CardContent>
+    </Card>
   )
 }
