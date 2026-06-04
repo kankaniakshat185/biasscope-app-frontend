@@ -380,7 +380,7 @@ export default function DashboardPage() {
         )}
 
         {/* Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div id="bias-visuals" className="grid grid-cols-1 lg:grid-cols-3 gap-6 scroll-mt-32">
           <Card className="col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
             <CardHeader className="border-b-2 border-black">
               <CardTitle className="uppercase tracking-widest text-sm font-bold">Sentiment Trend</CardTitle>
@@ -403,8 +403,13 @@ export default function DashboardPage() {
           </Card>
         </div>
 
+        {/* Intelligence Layer */}
+        <div id="intelligence-layer" className="scroll-mt-32">
+          <IntelligenceLayer searchId={id as string} />
+        </div>
+
         {/* Article Cards Grid */}
-        <div className="space-y-4">
+        <div id="source-articles" className="space-y-4 scroll-mt-32">
           <div className="flex justify-between items-end border-b-2 border-black pb-2">
             <h2 className="text-2xl font-bold tracking-tight font-[family-name:var(--font-sekuya)]">Analyzed Articles</h2>
             {filterBias && (
@@ -423,11 +428,8 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Intelligence Layer */}
-        <IntelligenceLayer searchId={id as string} />
-
         {/* Methodology & Trust Report */}
-        <div className="mt-16 border-t-4 border-black pt-8">
+        <div id="methodology" className="mt-16 border-t-4 border-black pt-8 scroll-mt-32">
           <MethodologyReport />
         </div>
 
