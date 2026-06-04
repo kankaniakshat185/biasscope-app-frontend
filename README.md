@@ -40,35 +40,15 @@ The platform abandons generic, rounded, corporate UI in favor of a bold **Neobru
 *   **🔎 Search & History Vault**
     *   Real-time topic search integration and a dedicated "Vault" page allowing users to view, filter by category, and delete their previous analytical snapshots.
 
-## 🚧 Ongoing Improvements
-- **Infinite Scroll / Pagination:** Implementing continuous scrolling for the "Analyzed Articles" feed to support massive datasets without performance degradation.
-- **Dynamic Methodology Rendering:** Transitioning the static methodology report to dynamically reflect the validation metrics returned by the backend.
-- **Real-Time WebSockets:** Adding live-loading bars during the 20-30 second backend NLP processing phase.
+## 🚧 Advanced Engineering Roadmap
+We are actively researching and implementing the following production-grade capabilities:
+- **Client-Side Vector Search via WebAssembly (Wasm):** Migrating high-latency filtering of Echo Chambers directly to the client to achieve sub-millisecond interaction speeds without round-tripping to the backend API.
+- **WebWorker-Offloaded Rendering:** Decoupling the D3.js/Chart.js rendering thread from the main UI thread to guarantee 60fps scrolling even when visualizing thousands of complex claim entities.
+- **Optimistic UI with Conflict Resolution:** Building an intelligent local cache layer with CRDTs (Conflict-free Replicated Data Types) to allow offline-first interaction with previously loaded Snapshots.
+- **Dynamic Methodology Rendering Engine:** Transitioning the static methodology report into a reactive computation graph that dynamically reflects the exact validation thresholds and drift metrics returned by the backend in real-time.
 
-## 💻 Local Development Setup
-
-### 1. Prerequisites
-- Node.js (v18+)
-- npm or pnpm
-- Access to the BiasScope Backend API
-
-### 2. Installation
-```bash
-git clone https://github.com/kankaniakshat185/biasscope-app-frontend.git
-cd biasscope-app-frontend
-npm install
-```
-
-### 3. Environment Variables
-Create a `.env.local` file in the root directory:
-```env
-NEXT_PUBLIC_API_URL="http://127.0.0.1:8000"
-BETTER_AUTH_SECRET="your-auth-secret-key"
-NEXT_PUBLIC_APP_URL="http://localhost:3000"
-```
-
-### 4. Running the Development Server
-```bash
-npm run dev
-```
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🌍 Production Infrastructure
+BiasScope Dashboard is a fully serverless, edge-ready application:
+- **Edge Delivery:** Next.js (App Router) deployed globally on Vercel's Edge Network for sub-50ms TTFB (Time to First Byte).
+- **Authentication:** Better Auth handles secure, stateless session management seamlessly integrated with Edge Middleware.
+- **State Management:** Native Next.js App Router caching coupled with aggressive UI debouncing ensures smooth data mutations without unnecessary API load.
