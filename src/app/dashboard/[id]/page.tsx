@@ -118,46 +118,62 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="font-[family-name:var(--font-geist-sans)] min-h-screen text-slate-900 dark:text-slate-100 p-8 space-y-8">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="font-[family-name:var(--font-geist-sans)] min-h-screen text-slate-900 dark:text-slate-100 p-8">
+      <div className="max-w-[90rem] mx-auto flex flex-col xl:flex-row gap-8 items-start">
         
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight font-[family-name:var(--font-sekuya)]">Intelligence Dashboard</h1>
-            <p className="text-black-500 mt-2 flex flex-row items-center gap-2">
-              Analysis for Topic: <span className="font-semibold text-blue-600 truncate max-w-[200px] md:max-w-[400px]" title={data.query}>{data.query}</span> <span>in <span className="capitalize">{data.category}</span></span>
-            </p>
+        {/* Sticky Sidebar */}
+        <div className="hidden xl:flex flex-col sticky top-8 w-64 shrink-0 bg-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] p-6 print:hidden">
+          <h3 className="font-bold uppercase tracking-widest mb-4 border-b-2 border-black pb-2 text-sm font-[family-name:var(--font-oswald)]">Navigation</h3>
+          <ul className="space-y-3 text-xs font-bold uppercase tracking-wider text-black/60">
+            <li><a href="#overview" className="hover:text-black transition-colors block">Overview</a></li>
+            <li><a href="#bias-visuals" className="hover:text-black transition-colors block">Bias Visuals</a></li>
+            <li><a href="#source-distribution" className="hover:text-black transition-colors block">Source Distribution</a></li>
+            <li><a href="#intelligence-layer" className="hover:text-black transition-colors block">Intelligence Layer</a></li>
+            <li><a href="#source-articles" className="hover:text-black transition-colors block">Source Articles</a></li>
+            <li><a href="#methodology" className="hover:text-black transition-colors block">Methodology Report</a></li>
+          </ul>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 w-full space-y-8 min-w-0">
+          
+          {/* Header */}
+          <div id="overview" className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 scroll-mt-12">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight font-[family-name:var(--font-sekuya)]">Intelligence Dashboard</h1>
+              <p className="text-black-500 mt-2 flex flex-row items-center gap-2">
+                Analysis for Topic: <span className="font-semibold text-blue-600 truncate max-w-[200px] md:max-w-[400px]" title={data.query}>{data.query}</span> <span>in <span className="capitalize">{data.category}</span></span>
+              </p>
+            </div>
+            
+            <div className="flex gap-2 w-full sm:w-auto">
+              {session && (
+                <button 
+                  onClick={handleSubscribe}
+                  disabled={subscribing}
+                  className={`print:hidden h-12 flex-1 sm:w-48 uppercase tracking-widest font-bold px-4 flex items-center justify-center gap-2 border-2 border-black transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none ${
+                    subscribed 
+                      ? "bg-[#FFF200] text-black hover:bg-red-500 hover:text-white group" 
+                      : "bg-white text-black hover:bg-gray-100"
+                  }`}
+                >
+                  <BellRing className="w-5 h-5 shrink-0" />
+                  <span className="group-hover:hidden truncate">{subscribed ? "Subscribed" : subscribing ? "Loading..." : "Track Weekly"}</span>
+                  <span className="hidden group-hover:block truncate">{subscribed ? "Unsubscribe" : ""}</span>
+                </button>
+              )}
+              <button 
+                onClick={() => window.print()}
+                className="print:hidden h-12 flex-1 sm:w-48 bg-black text-white hover:bg-gray-800 uppercase tracking-widest font-bold px-4 flex items-center justify-center border-2 border-black transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]"
+              >
+                Download Report
+              </button>
+            </div>
           </div>
           
-          <div className="flex gap-2">
-            {session && (
-              <button 
-                onClick={handleSubscribe}
-                disabled={subscribing}
-                className={`print:hidden h-12 uppercase tracking-widest font-bold px-6 flex items-center justify-center gap-2 border-2 border-black transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none ${
-                  subscribed 
-                    ? "bg-[#FFF200] text-black hover:bg-red-500 hover:text-white group" 
-                    : "bg-white text-black hover:bg-gray-100"
-                }`}
-              >
-                <BellRing className="w-5 h-5" />
-                <span className="group-hover:hidden">{subscribed ? "Subscribed" : subscribing ? "Loading..." : "Track Weekly"}</span>
-                <span className="hidden group-hover:block">{subscribed ? "Unsubscribe" : ""}</span>
-              </button>
-            )}
-            <button 
-              onClick={() => window.print()}
-              className="print:hidden h-12 bg-black text-white hover:bg-gray-800 uppercase tracking-widest font-bold px-6 flex items-center justify-center border-2 border-black transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]"
-            >
-              Download Report
-            </button>
-          </div>
-        </div>
-        
-        {/* Metric Cards */}
-        {insights && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+          {/* Metric Cards */}
+          {insights && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             <Card className="col-span-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
               <CardHeader className="pb-2 border-b-2 border-black">
                 <CardTitle className="flex justify-between items-center h-8 uppercase tracking-widest text-xs font-bold">
