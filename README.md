@@ -11,9 +11,10 @@ The front-facing user interface for the BiasScope Intelligence platform, designe
 - **Strict Neobrutalist UI** — High-contrast, unrounded structural design emphasizing data hierarchy and analytical objectivity.
 - **Interactive Claim Explorer** — Deep-dive interfaces allowing users to trace macro-events down to their foundational claims and original evidence sentences.
 - **Cross-Ideological Consensus Indicators** — Visual badges surfacing claims that possess high multi-publisher corroboration.
+- **NLI Polarization Engine** — Visualizing the degree of direct mathematical contradiction between media sources using DeBERTa-v3 zero-shot Natural Language Inference.
 - **Single URL Inspector** — Dedicated interface for deep-dive validation of isolated news articles, stripping away macro-topic noise.
 - **Multimodal Visual Analysis** — Integrates with Vision LLMs to extract and visualize biases embedded directly within uploaded infographics and media screenshots.
-- **Echo Chamber Visualizations** — Side-by-side comparative views of LLM-generated narrative framing for identical topics.
+- **Echo Chamber Visualizations** — Side-by-side comparative views of LLM-generated narrative framing for identical topics, driven by a dual-ingestion GDELT 2.0 and NewsAPI pipeline.
 - **Entity Sentiment Matrices** — Grid-based mapping of Named Entity Recognition (NER) data against aggregated polarization scores.
 - **Secure Vault & History** — Fully authenticated session management via Better Auth, allowing users to retain and manage historical analytical snapshots.
 
