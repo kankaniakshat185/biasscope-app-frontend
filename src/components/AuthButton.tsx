@@ -20,13 +20,13 @@ export function AuthButton() {
           </div>
           <button 
             onClick={() => router.push("/subscriptions")}
-            className="text-sm border-2 border-black px-4 py-2 font-bold uppercase tracking-widest text-black bg-white hover:bg-black hover:text-white transition-colors"
+            className="text-sm px-4 py-2 font-bold uppercase tracking-widest text-black hover:underline underline-offset-4 decoration-2 transition-colors"
           >
             Subscriptions
           </button>
           <button 
             onClick={() => router.push("/history")}
-            className="text-sm border-2 border-black px-4 py-2 font-bold uppercase tracking-widest text-black bg-white hover:bg-black hover:text-white transition-colors"
+            className="text-sm px-4 py-2 font-bold uppercase tracking-widest text-black hover:underline underline-offset-4 decoration-2 transition-colors"
           >
             Vault
           </button>

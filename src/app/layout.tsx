@@ -42,20 +42,13 @@ export default function RootLayout({
             BiasScope
           </a>
           <div className="flex justify-end items-center gap-6 relative z-50">
-            <a href="/subscriptions" className="font-bold tracking-widest text-sm uppercase hover:underline underline-offset-4 decoration-2">Subscriptions</a>
-            <a href="/vault" className="font-bold tracking-widest text-sm uppercase hover:underline underline-offset-4 decoration-2">Vault</a>
             <AuthButton />
           </div>
         </header>
         <main className="flex-1 flex flex-col relative w-full">
           {children}
         </main>
-        <footer className="w-full px-6 py-2 flex items-center justify-end mt-auto z-40">
-          <p className="text-black/40 tracking-wider text-[10px] sm:text-xs flex items-center gap-1.5 uppercase font-[family-name:var(--font-geist-mono)]">
-            Developed by Akshat Kankani
-          </p>
-        </footer>
-      </body>
+              </body>
     </html>
   );
 }

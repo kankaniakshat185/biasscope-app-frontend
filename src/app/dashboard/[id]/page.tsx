@@ -139,7 +139,7 @@ export default function DashboardPage() {
         <ul className="flex justify-between items-center text-xs font-bold uppercase tracking-widest text-black max-w-7xl mx-auto w-full">
           <li><a href="#overview" className="hover:underline underline-offset-4 decoration-2">Overview</a></li>
           <li><a href="#bias-visuals" className="hover:underline underline-offset-4 decoration-2">Bias Visuals</a></li>
-          <li><a href="#source-distribution" className="hover:underline underline-offset-4 decoration-2">Source Dist</a></li>
+          <li><a href="#source-distribution" className="hover:underline underline-offset-4 decoration-2">SOURCES</a></li>
           <li><a href="#intelligence-layer" className="hover:underline underline-offset-4 decoration-2">Intelligence</a></li>
           <li><a href="#source-articles" className="hover:underline underline-offset-4 decoration-2">Source Articles</a></li>
           <li><a href="#methodology" className="hover:underline underline-offset-4 decoration-2">Methodology</a></li>

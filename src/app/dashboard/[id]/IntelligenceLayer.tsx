@@ -134,8 +134,8 @@ function EventCard({ event }: { event: any }) {
   const [expanded, setExpanded] = useState(false)
 
   return (
-    <Card className="border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-      <CardHeader className="bg-gray-50 border-b border-black py-3 cursor-pointer" onClick={() => setExpanded(!expanded)}>
+    <Card className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+      <CardHeader className="bg-white border-b border-black py-3 cursor-pointer" onClick={() => setExpanded(!expanded)}>
         <div className="flex items-start justify-between gap-4">
           <div className="flex flex-col gap-1">
             <CardTitle className="text-lg font-bold">{event.title}</CardTitle>
@@ -187,7 +187,7 @@ function EventCard({ event }: { event: any }) {
 
       {/* Evidence (expandable) — each evidence matches its claim (Issue 1 fix) */}
       {expanded && event.evidence?.length > 0 && (
-        <CardContent className="pt-0 pb-4 bg-gray-50 border-t border-dashed border-gray-300 print:hidden">
+        <CardContent className="pt-0 pb-4 bg-white border-t border-dashed border-gray-300 print:hidden">
           <h4 className="text-xs font-bold uppercase text-gray-500 mt-3 mb-2">Supporting Evidence</h4>
           <div className="space-y-2">
             {event.evidence.map((ev: any, idx: number) => (
@@ -205,7 +205,7 @@ function EventCard({ event }: { event: any }) {
 
       {/* Print version */}
       <div className="hidden print:block">
-        <CardContent className="pt-0 pb-4 bg-gray-50 border-t border-dashed border-gray-300">
+        <CardContent className="pt-0 pb-4 bg-white border-t border-dashed border-gray-300">
           <h4 className="text-xs font-bold uppercase text-gray-500 mt-3 mb-2">Supporting Evidence</h4>
           <div className="space-y-2">
             {event.evidence?.slice(0, 5).map((ev: any, idx: number) => (
@@ -227,8 +227,8 @@ function EventCard({ event }: { event: any }) {
 
 function ClusterCard({ cluster }: { cluster: any }) {
   return (
-    <Card className="border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-      <CardHeader className="bg-gray-50 border-b border-black py-3">
+    <Card className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+      <CardHeader className="bg-white border-b border-black py-3">
         <div className="flex justify-between items-start gap-4">
           <div className="flex flex-col gap-1">
             <div className="text-xs font-bold uppercase text-gray-500 mb-1">Cluster</div>
@@ -311,7 +311,7 @@ function RawClaimCard({ claim }: { claim: any }) {
   const [expanded, setExpanded] = useState(false)
 
   return (
-    <Card className="border-2 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
+    <Card className="bg-white border-2 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
       <CardHeader className="py-3 cursor-pointer bg-white" onClick={() => setExpanded(!expanded)}>
         <div className="flex justify-between items-start gap-4">
           <CardTitle className="text-base font-bold text-gray-900 leading-tight">
@@ -336,7 +336,7 @@ function RawClaimCard({ claim }: { claim: any }) {
       </CardHeader>
 
       {expanded && (
-        <CardContent className="pt-0 pb-4 bg-gray-50 border-t border-dashed border-gray-300 print:hidden">
+        <CardContent className="pt-0 pb-4 bg-white border-t border-dashed border-gray-300 print:hidden">
           <div className="space-y-2 mt-3">
             {claim.evidence.map((ev: any, idx: number) => (
               <div key={idx} className="bg-white p-3 border border-gray-200 text-sm">
