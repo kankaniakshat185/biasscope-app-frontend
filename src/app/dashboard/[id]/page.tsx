@@ -212,9 +212,23 @@ export default function DashboardPage() {
                   <div title="Calculated using Jensen-Shannon Divergence between ideological distributions."><Info className="w-4 h-4 text-gray-400 cursor-help" /></div>
                 </div>
                 <div className="flex flex-col justify-center flex-1">
-                  <div className="text-3xl font-black text-red-500">{Number(insights.dataQualityScore * 100).toFixed(0)}%</div>
+                  <div className="text-3xl font-black text-red-500">{Number((insights.polarizationScore ?? 0) * 100).toFixed(0)}%</div>
                   <p className="text-[10px] text-gray-700 mt-1 uppercase tracking-widest font-bold">
-                    {insights.dataQualityScore < 0.25 ? "Low" : insights.dataQualityScore < 0.60 ? "Moderate" : "High"} Divergence
+                    {(insights.polarizationScore ?? 0) < 0.25 ? "Low" : (insights.polarizationScore ?? 0) < 0.60 ? "Moderate" : "High"} Divergence
+                  </p>
+                </div>
+              </div>
+
+              {/* Data Quality Score */}
+              <div className="flex-1 p-5 flex flex-col">
+                <div className="uppercase tracking-widest text-xs font-bold border-b-2 border-black pb-2 mb-3 flex justify-between items-center">
+                  Data Quality
+                  <div title="Metric combining source diversity, content completeness, and article richness."><Info className="w-4 h-4 text-gray-400 cursor-help" /></div>
+                </div>
+                <div className="flex flex-col justify-center flex-1">
+                  <div className="text-3xl font-black text-purple-600">{Number(insights.dataQualityScore * 100).toFixed(0)}</div>
+                  <p className="text-[10px] text-gray-700 mt-1 uppercase tracking-widest font-bold">
+                    {insights.dataQualityScore > 0.8 ? "Excellent" : insights.dataQualityScore > 0.6 ? "Good" : "Fair"} Quality
                   </p>
                 </div>
               </div>
@@ -232,6 +246,7 @@ export default function DashboardPage() {
                   <div className="mt-2 text-[10px] text-gray-500 flex justify-between gap-1 border-t border-dashed border-gray-300 pt-1.5 font-mono">
                     <span className="text-green-600 font-bold" title="High Credibility">H:{insights.driftMetrics?.credibility_breakdown?.High || 0}</span>
                     <span className="text-yellow-600 font-bold" title="Medium Credibility">M:{insights.driftMetrics?.credibility_breakdown?.Medium || 0}</span>
+                    <span className="text-orange-500 font-bold" title="Mixed Credibility">Mx:{insights.driftMetrics?.credibility_breakdown?.Mixed || 0}</span>
                     <span className="text-red-600 font-bold" title="Low Credibility">L:{insights.driftMetrics?.credibility_breakdown?.Low || 0}</span>
                   </div>
                 </div>
