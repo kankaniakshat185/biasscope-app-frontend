@@ -20,7 +20,7 @@ export function AuthButton() {
             <User className="w-4 h-4 stroke-[2.5px]" />
             {session.user.name}
           </div>
-          <div className="w-[2px] h-4 bg-black/20 hidden sm:block"></div>
+          <div className="w-[2px] h-4 bg-black hidden sm:block"></div>
           <button 
             onClick={() => router.push("/subscriptions")}
             className="text-sm py-2 font-bold uppercase tracking-widest text-black hover:underline underline-offset-4 decoration-2 transition-colors"
