@@ -122,24 +122,24 @@ export default function LandingPage() {
         {/* Trending Chips positioned above search box, left-aligned */}
         {!loading && (
           <div className="w-full max-w-2xl flex justify-start">
-            <div className="w-full md:w-[50%] flex items-center justify-between font-[family-name:var(--font-oswald)] mb-2">
+            <div className="w-full md:w-[50%] flex items-center justify-start gap-4 font-[family-name:var(--font-oswald)] mb-2">
+              <span className="text-xs font-bold uppercase tracking-widest text-black/50">DEMOS</span>
               <div className="flex gap-2">
                 <button 
                   type="button"
-                  onClick={() => { setQuery("Artificial Intelligence"); handleSearch(undefined, "Artificial Intelligence"); }}
+                  onClick={() => router.push('/dashboard/demo-ai%20regulation')}
                   className="text-xs font-bold uppercase tracking-widest text-black bg-white border-2 border-black px-3 py-1 hover:bg-gray-100 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                 >
                   AI Regulation
                 </button>
                 <button 
                   type="button"
-                  onClick={() => { setQuery("US Elections"); handleSearch(undefined, "US Elections"); }}
+                  onClick={() => router.push('/dashboard/demo-us%20elections')}
                   className="text-xs font-bold uppercase tracking-widest text-black bg-white border-2 border-black px-3 py-1 hover:bg-gray-100 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                 >
                   US Elections
                 </button>
               </div>
-              <span className="text-xs font-bold uppercase tracking-widest text-black/50">TRENDING</span>
             </div>
           </div>
         )}
