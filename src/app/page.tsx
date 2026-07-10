@@ -121,29 +121,33 @@ export default function LandingPage() {
 
         {/* Trending Chips positioned above search box, left-aligned */}
         {!loading && (
-          <div className="w-full max-w-2xl flex flex-wrap items-center justify-start gap-2 font-[family-name:var(--font-oswald)] mb-2">
-            <button 
-              type="button"
-              onClick={() => router.push('/dashboard/demo-elon%20musk')}
-              className="text-xs font-bold uppercase tracking-widest text-black bg-[#FFF200] border-2 border-black px-3 py-1 hover:bg-[#ffe600] transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-            >
-              Elon Musk
-            </button>
-            <button 
-              type="button"
-              onClick={() => { setQuery("Artificial Intelligence"); handleSearch(undefined, "Artificial Intelligence"); }}
-              className="text-xs font-bold uppercase tracking-widest text-black bg-white border-2 border-black px-3 py-1 hover:bg-gray-100 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-            >
-              AI Regulation
-            </button>
-            <button 
-              type="button"
-              onClick={() => { setQuery("US Elections"); handleSearch(undefined, "US Elections"); }}
-              className="text-xs font-bold uppercase tracking-widest text-black bg-white border-2 border-black px-3 py-1 hover:bg-gray-100 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-            >
-              US Elections
-            </button>
-            <span className="text-xs font-bold uppercase tracking-widest text-black/50 ml-2">TRENDING:</span>
+          <div className="w-full max-w-2xl flex justify-start">
+            <div className="w-full md:w-[65%] flex items-center justify-between font-[family-name:var(--font-oswald)] mb-2">
+              <div className="flex gap-2">
+                <button 
+                  type="button"
+                  onClick={() => router.push('/dashboard/demo-elon%20musk')}
+                  className="text-xs font-bold uppercase tracking-widest text-black bg-[#FFF200] border-2 border-black px-3 py-1 hover:bg-[#ffe600] transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                >
+                  Elon Musk
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => { setQuery("Artificial Intelligence"); handleSearch(undefined, "Artificial Intelligence"); }}
+                  className="text-xs font-bold uppercase tracking-widest text-black bg-white border-2 border-black px-3 py-1 hover:bg-gray-100 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                >
+                  AI Regulation
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => { setQuery("US Elections"); handleSearch(undefined, "US Elections"); }}
+                  className="text-xs font-bold uppercase tracking-widest text-black bg-white border-2 border-black px-3 py-1 hover:bg-gray-100 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                >
+                  US Elections
+                </button>
+              </div>
+              <span className="text-xs font-bold uppercase tracking-widest text-black/50">TRENDING</span>
+            </div>
           </div>
         )}
 
@@ -165,12 +169,12 @@ export default function LandingPage() {
         {/* Advanced Filters Button positioned below search box, right-aligned */}
         {!loading && (
           <div className="w-full max-w-2xl flex flex-col items-end mt-2">
-            <div className="flex gap-4">
+            <div className="w-full md:w-[65%] flex gap-4">
               {(domains || excludeDomains || fromDate || toDate || category) && (
                 <button 
                   type="button" 
                   onClick={clearFilters} 
-                  className="text-xs font-bold uppercase tracking-wider text-red-600 bg-red-50 border-2 border-red-200 px-4 py-2 hover:bg-red-100 transition-colors shadow-sm"
+                  className="flex-1 text-xs font-bold uppercase tracking-wider text-red-600 bg-red-50 border-2 border-red-200 py-2 hover:bg-red-100 transition-colors shadow-sm text-center"
                 >
                   Clear Filters
                 </button>
@@ -178,7 +182,7 @@ export default function LandingPage() {
               <button 
                 type="button" 
                 onClick={() => setShowFilters(!showFilters)} 
-                className="text-xs font-bold uppercase tracking-wider text-black bg-white border-2 border-black px-4 py-2 hover:bg-gray-100 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                className="flex-[2] text-xs font-bold uppercase tracking-wider text-black bg-white border-2 border-black py-2 hover:bg-gray-100 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-center"
               >
                 {showFilters ? "- Hide Advanced Filters" : "+ Advanced Filters"}
               </button>
