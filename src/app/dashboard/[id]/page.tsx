@@ -97,7 +97,7 @@ export default function DashboardPage() {
 
   if (errorMsg || !data) return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center text-slate-900 bg-gray-50">
-      <div className="max-w-md w-full bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-8">
+      <div className="max-w-md w-full bg-white border border-[#D9D9D9] shadow-sm p-8">
         <h2 className="text-2xl font-bold font-[family-name:var(--font-oswald)] uppercase mb-4 text-red-600">Analysis Failed</h2>
         <p className="text-gray-700 font-medium">{errorMsg || "Results not found."}</p>
         <button onClick={() => window.location.href = '/'} className="mt-8 w-full px-6 py-3 bg-black text-white font-bold uppercase tracking-widest text-xs hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] transition-all">Return Home</button>
@@ -132,11 +132,11 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="bg-white font-[family-name:var(--font-geist-sans)] min-h-screen text-slate-900 dark:text-slate-100 flex flex-col">
+    <div className="bg-[#F6F6F6] font-[family-name:var(--font-geist-sans)] min-h-screen text-[#1A1A1A] flex flex-col">
       
       {/* Sticky Horizontal Nav Bar - Full Width */}
-      <div className="sticky top-[72px] z-40 bg-white border-b-4 border-black py-3 px-6 print:hidden hidden md:block w-full">
-        <ul className="flex justify-between items-center text-xs font-bold uppercase tracking-widest text-black max-w-7xl mx-auto w-full">
+      <div className="sticky top-[64px] z-40 bg-[#F6F6F6] border-b border-[#D9D9D9] py-2 px-6 print:hidden hidden md:block w-full">
+        <ul className="flex justify-between items-center text-xs font-semibold tracking-wider text-[#1A1A1A] max-w-7xl mx-auto w-full">
           <li><a href="#overview" className="hover:underline underline-offset-4 decoration-2">Overview</a></li>
           <li><a href="#bias-visuals" className="hover:underline underline-offset-4 decoration-2">Bias Visuals</a></li>
           <li><a href="#source-distribution" className="hover:underline underline-offset-4 decoration-2">Source Dist</a></li>
@@ -146,13 +146,13 @@ export default function DashboardPage() {
         </ul>
       </div>
 
-      <div className="max-w-7xl mx-auto space-y-12 w-full p-8 flex-1">
+      <div className="max-w-7xl mx-auto space-y-16 w-full px-12 py-10 flex-1">
         
         {/* Header */}
         <div id="overview" className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 scroll-mt-32">
             <div>
-              <h1 className="text-3xl font-bold tracking-tight font-[family-name:var(--font-sekuya)]">Intelligence Dashboard</h1>
-              <p className="text-black-500 mt-2 flex flex-row items-center gap-2">
+              <h1 className="text-4xl font-[800] tracking-tight font-[family-name:var(--font-sekuya)] text-[#1A1A1A]">Intelligence Dashboard</h1>
+              <p className="text-[#666] text-lg mt-2 flex flex-row items-center gap-2">
                 Analysis for Topic: <span className="font-semibold text-blue-600 truncate max-w-[200px] md:max-w-[400px]" title={data.query}>{data.query}</span> <span>in <span className="capitalize">{data.category || 'General'}</span></span>
               </p>
             </div>
@@ -162,10 +162,10 @@ export default function DashboardPage() {
                 <button 
                   onClick={handleSubscribe}
                   disabled={subscribing}
-                  className={`print:hidden h-12 flex-1 sm:w-48 uppercase tracking-widest font-bold px-2 text-[10px] flex items-center justify-center gap-2 border-2 border-black transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none ${
+                  className={`print:hidden h-12 flex-1 sm:w-48 font-semibold rounded-[10px] px-2 text-xs flex items-center justify-center gap-2 border border-[#D9D9D9] transition-transform hover:-translate-y-1 hover:shadow-sm disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none ${
                     subscribed 
                       ? "bg-[#FFF200] text-black hover:bg-red-500 hover:text-white group" 
-                      : "bg-white text-black hover:bg-gray-100"
+                      : "bg-white text-[#1A1A1A] hover:bg-gray-50"
                   }`}
                 >
                   <BellRing className="w-4 h-4 shrink-0" />
@@ -175,7 +175,7 @@ export default function DashboardPage() {
               )}
               <button 
                 onClick={() => window.print()}
-                className="print:hidden h-12 flex-1 sm:w-48 bg-black text-white hover:bg-gray-800 uppercase tracking-widest font-bold px-2 text-[10px] flex items-center justify-center border-2 border-black transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]"
+                className="print:hidden h-12 flex-1 sm:w-48 bg-[#1A1A1A] text-white rounded-[10px] hover:bg-black font-semibold px-2 text-xs flex items-center justify-center transition-transform hover:-translate-y-1 hover:shadow-sm"
               >
                 Download Report
               </button>
@@ -184,66 +184,66 @@ export default function DashboardPage() {
           
           {/* Metric Cards - Unified Metrics Bar */}
           {insights && (
-            <div className="border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white flex flex-col lg:flex-row divide-y-2 lg:divide-y-0 lg:divide-x-2 divide-black">
+            <div className="border border-[#D9D9D9] shadow-sm rounded-[10px] bg-white grid grid-cols-1 lg:grid-cols-5 gap-6 p-2">
               {/* Data Funnel */}
-              <div className="flex-1 p-5 flex flex-col">
-                <div className="uppercase tracking-widest text-xs font-bold border-b-2 border-black pb-2 mb-3">Data Funnel</div>
-                <div className="text-xs flex flex-col gap-1.5 flex-1 justify-center">
-                  <div className="flex justify-between"><span className="text-gray-600 font-medium">Raw Articles:</span><span className="font-mono">{insights.totalArticles}</span></div>
-                  <div className="flex justify-between"><span className="text-gray-600 font-medium">- Duplicates:</span><span className="font-mono text-red-500">-{insights.duplicatesRemoved}</span></div>
-                  <div className="flex justify-between"><span className="text-gray-600 font-medium">- Invalid Text:</span><span className="font-mono text-red-500">-{insights.missingContent}</span></div>
-                  <div className="flex justify-between pt-1 border-t border-dashed border-gray-300 mt-1"><span className="font-bold text-blue-700 uppercase tracking-wider">Analyzed:</span><span className="font-mono font-bold text-sm">{insights.validArticles}</span></div>
+              <div className="flex-1 p-4 flex flex-col">
+                <div className="text-sm font-semibold text-[#1A1A1A] tracking-wide mb-3">Data Funnel</div>
+                <div className="text-xs flex flex-col gap-1.5 flex-1 justify-center text-left">
+                  <div className="flex justify-between"><span className="text-[#666] font-medium">Raw Articles:</span><span className="font-mono">{insights.totalArticles}</span></div>
+                  <div className="flex justify-between"><span className="text-[#666] font-medium">Duplicates:</span><span className="font-mono text-red-500">-{insights.duplicatesRemoved}</span></div>
+                  <div className="flex justify-between"><span className="text-[#666] font-medium">Invalid Text:</span><span className="font-mono text-red-500">-{insights.missingContent}</span></div>
+                  <div className="flex justify-between pt-2 mt-1"><span className="font-semibold text-blue-700 tracking-wide">Analyzed:</span><span className="font-mono font-bold text-sm">{insights.validArticles}</span></div>
                 </div>
               </div>
 
               {/* Avg Sentiment */}
-              <div className="flex-1 p-5 flex flex-col">
-                <div className="uppercase tracking-widest text-xs font-bold border-b-2 border-black pb-2 mb-3">Avg Sentiment</div>
-                <div className="flex flex-col justify-center flex-1">
-                  <div className="text-3xl font-black">{Number(insights.avgSentiment).toFixed(2)}</div>
-                  <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-widest font-bold">Scale -1.0 to 1.0</p>
+              <div className="flex-1 p-4 flex flex-col">
+                <div className="text-sm font-semibold text-[#1A1A1A] tracking-wide mb-3">Avg Sentiment</div>
+                <div className="flex flex-col justify-center flex-1 text-left">
+                  <div className="text-3xl font-[800]">{Number(insights.avgSentiment).toFixed(2)}</div>
+                  <p className="text-xs text-[#666] mt-2 tracking-wide font-medium">Scale -1.0 to 1.0</p>
                 </div>
               </div>
 
               {/* Polarization Index */}
-              <div className="flex-1 p-5 flex flex-col">
-                <div className="uppercase tracking-widest text-xs font-bold border-b-2 border-black pb-2 mb-3 flex justify-between items-center">
+              <div className="flex-1 p-4 flex flex-col">
+                <div className="text-sm font-semibold text-[#1A1A1A] tracking-wide mb-3 flex justify-between items-center">
                   Polarization
-                  <div title="Calculated using Jensen-Shannon Divergence between ideological distributions."><Info className="w-4 h-4 text-gray-400 cursor-help" /></div>
+                  <div title="Calculated using Jensen-Shannon Divergence between ideological distributions."><Info className="w-4 h-4 text-[#D9D9D9] cursor-help" /></div>
                 </div>
-                <div className="flex flex-col justify-center flex-1">
-                  <div className="text-3xl font-black text-red-500">{Number((insights.polarizationScore ?? 0) * 100).toFixed(0)}%</div>
-                  <p className="text-[10px] text-gray-700 mt-1 uppercase tracking-widest font-bold">
+                <div className="flex flex-col justify-center flex-1 text-left">
+                  <div className="text-3xl font-[800] text-red-500">{Number((insights.polarizationScore ?? 0) * 100).toFixed(0)}%</div>
+                  <p className="text-xs text-[#666] mt-2 tracking-wide font-medium">
                     {(insights.polarizationScore ?? 0) < 0.25 ? "Low" : (insights.polarizationScore ?? 0) < 0.60 ? "Moderate" : "High"} Divergence
                   </p>
                 </div>
               </div>
 
               {/* Data Quality Score */}
-              <div className="flex-1 p-5 flex flex-col">
-                <div className="uppercase tracking-widest text-xs font-bold border-b-2 border-black pb-2 mb-3 flex justify-between items-center">
+              <div className="flex-1 p-4 flex flex-col">
+                <div className="text-sm font-semibold text-[#1A1A1A] tracking-wide mb-3 flex justify-between items-center">
                   Data Quality
-                  <div title="Metric combining source diversity, content completeness, and article richness."><Info className="w-4 h-4 text-gray-400 cursor-help" /></div>
+                  <div title="Metric combining source diversity, content completeness, and article richness."><Info className="w-4 h-4 text-[#D9D9D9] cursor-help" /></div>
                 </div>
-                <div className="flex flex-col justify-center flex-1">
-                  <div className="text-3xl font-black text-purple-600">{Number(insights.dataQualityScore * 100).toFixed(0)}</div>
-                  <p className="text-[10px] text-gray-700 mt-1 uppercase tracking-widest font-bold">
+                <div className="flex flex-col justify-center flex-1 text-left">
+                  <div className="text-3xl font-[800] text-purple-600">{Number(insights.dataQualityScore * 100).toFixed(0)}</div>
+                  <p className="text-xs text-[#666] mt-2 tracking-wide font-medium">
                     {insights.dataQualityScore > 0.8 ? "Excellent" : insights.dataQualityScore > 0.6 ? "Good" : "Fair"} Quality
                   </p>
                 </div>
               </div>
 
               {/* Source Reliability */}
-              <div className="flex-1 p-5 flex flex-col">
-                <div className="uppercase tracking-widest text-xs font-bold border-b-2 border-black pb-2 mb-3 flex justify-between items-center">
+              <div className="flex-1 p-4 flex flex-col">
+                <div className="text-sm font-semibold text-[#1A1A1A] tracking-wide mb-3 flex justify-between items-center">
                   Reliability
-                  <span title="Reliability is calculated using weighted publisher credibility scores across the analyzed dataset."><Info className="w-4 h-4 text-gray-400 cursor-help" /></span>
+                  <span title="Reliability is calculated using weighted publisher credibility scores across the analyzed dataset."><Info className="w-4 h-4 text-[#D9D9D9] cursor-help" /></span>
                 </div>
-                <div className="flex flex-col justify-center flex-1">
-                  <div className="text-3xl font-black text-blue-500">
+                <div className="flex flex-col justify-center flex-1 text-left">
+                  <div className="text-3xl font-[800] text-blue-500">
                     {insights.driftMetrics && insights.driftMetrics.source_reliability_confidence ? Number(insights.driftMetrics.source_reliability_confidence * 100).toFixed(0) : "N/A"}%
                   </div>
-                  <div className="mt-2 text-[10px] text-gray-500 flex justify-between gap-1 border-t border-dashed border-gray-300 pt-1.5 font-mono">
+                  <div className="mt-3 text-xs text-[#666] flex justify-between gap-1 font-mono">
                     <span className="text-green-600 font-bold" title="High Credibility">H:{insights.driftMetrics?.credibility_breakdown?.High || 0}</span>
                     <span className="text-yellow-600 font-bold" title="Medium Credibility">M:{insights.driftMetrics?.credibility_breakdown?.Medium || 0}</span>
                     <span className="text-orange-500 font-bold" title="Mixed Credibility">Mx:{insights.driftMetrics?.credibility_breakdown?.Mixed || 0}</span>
@@ -253,20 +253,20 @@ export default function DashboardPage() {
               </div>
 
               {/* Dataset Diversity */}
-              <div className="flex-1 p-5 flex flex-col">
-                <div className="uppercase tracking-widest text-xs font-bold border-b-2 border-black pb-2 mb-3 flex justify-between items-center">
+              <div className="flex-1 p-4 flex flex-col">
+                <div className="text-sm font-semibold text-[#1A1A1A] tracking-wide mb-3 flex justify-between items-center">
                   Diversity
-                  <div title="Measures the breadth of sources and the ideological distribution of the coverage to ensure a representative sample."><Info className="w-4 h-4 text-gray-400 cursor-help flex-shrink-0" /></div>
+                  <div title="Measures the breadth of sources and the ideological distribution of the coverage to ensure a representative sample."><Info className="w-4 h-4 text-[#D9D9D9] cursor-help flex-shrink-0" /></div>
                 </div>
-                <div className="flex flex-col justify-center flex-1 gap-1">
-                  <div className="text-[10px] uppercase tracking-widest font-bold text-gray-700">{insights.datasetMetrics?.diversity_quality_label || "Unknown"}</div>
+                <div className="flex flex-col justify-center flex-1 gap-2 text-left">
+                  <div className="text-xs tracking-wide font-medium text-[#666]">{insights.datasetMetrics?.diversity_quality_label || "Unknown"}</div>
                   <div className="flex justify-between text-xs mt-1">
-                    <span className="text-gray-500">Pubs: <span className="font-mono text-black">{insights.datasetMetrics?.source_diversity || 0}</span></span>
-                    <span className="text-gray-500">Geos: <span className="font-mono text-black" title={(insights.datasetMetrics?.geographic_diversity?.countries || []).join(", ")}>{insights.datasetMetrics?.geographic_diversity?.count || 0}</span></span>
+                    <span className="text-[#666]">Pubs: <span className="font-mono text-[#1A1A1A]">{insights.datasetMetrics?.source_diversity || 0}</span></span>
+                    <span className="text-[#666]">Geos: <span className="font-mono text-[#1A1A1A]" title={(insights.datasetMetrics?.geographic_diversity?.countries || []).join(", ")}>{insights.datasetMetrics?.geographic_diversity?.count || 0}</span></span>
                   </div>
-                  <div className="flex justify-between text-[10px] mt-1 font-mono border-t border-dashed border-gray-300 pt-1.5">
+                  <div className="flex justify-between text-xs mt-1 font-mono">
                     <span className="text-blue-600" title="Left">L:{insights.datasetMetrics?.coverage_imbalance?.LEFT || 0}%</span>
-                    <span className="text-gray-500" title="Center">C:{insights.datasetMetrics?.coverage_imbalance?.CENTER || 0}%</span>
+                    <span className="text-[#666]" title="Center">C:{insights.datasetMetrics?.coverage_imbalance?.CENTER || 0}%</span>
                     <span className="text-red-600" title="Right">R:{insights.datasetMetrics?.coverage_imbalance?.RIGHT || 0}%</span>
                   </div>
                 </div>
@@ -277,27 +277,27 @@ export default function DashboardPage() {
         {/* Narrative & Keywords */}
         {insights && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <Card className="rounded-none lg:col-span-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
-              <CardHeader className="border-b-2 border-black">
-                <CardTitle className="uppercase tracking-widest text-sm font-bold">AI Narrative Summary</CardTitle>
+            <Card className="rounded-[10px] lg:col-span-2 shadow-sm border border-[#D9D9D9] bg-white">
+              <CardHeader className="border-b border-[#D9D9D9] pb-4">
+                <CardTitle className="text-lg font-semibold text-[#1A1A1A] flex items-center gap-2">✨ AI Narrative Summary</CardTitle>
               </CardHeader>
-              <CardContent className="flex flex-col">
-                <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300 pb-4">
+              <CardContent className="flex flex-col pt-6">
+                <p className="text-base leading-[1.8] max-w-[75ch] text-[#1A1A1A] pb-4">
                   {renderWithBoldCitations(insights.narrativeSummary)}
                 </p>
               </CardContent>
             </Card>
-            <Card className="rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
-              <CardHeader className="border-b-2 border-black">
-                <CardTitle className="uppercase tracking-widest text-sm font-bold">Top Keywords discovered</CardTitle>
+            <Card className="rounded-[10px] shadow-sm border border-[#D9D9D9] bg-white">
+              <CardHeader className="border-b border-[#D9D9D9] pb-4">
+                <CardTitle className="text-lg font-semibold text-[#1A1A1A] flex items-center gap-2">🏷️ Top Keywords</CardTitle>
               </CardHeader>
-              <CardContent className="flex flex-col gap-3 pt-4">
-                <p className="text-xs text-gray-500 leading-relaxed font-semibold">
+              <CardContent className="flex flex-col gap-4 pt-6">
+                <p className="text-xs text-[#666] leading-relaxed font-medium">
                   Extracted via Named Entity Recognition (NER). These terms represent the most statistically significant actors and topics anchoring the dataset's underlying narrative bias.
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {insights.topKeywords && (insights.topKeywords as any[]).map((kw: any) => (
-                    <Badge key={kw.word || kw} variant="secondary" className="rounded-none px-3 py-1 bg-white text-gray-700 border border-gray-300 font-normal shadow-none hover:bg-gray-50 transition-colors">
+                    <Badge key={kw.word || kw} variant="secondary" className="rounded-md px-3 py-1 bg-gray-50 text-[#1A1A1A] border border-[#D9D9D9] font-medium shadow-sm hover:bg-gray-100 transition-colors">
                       {kw.word || kw} {kw.count && <span className="ml-1 text-gray-400">({kw.count})</span>}
                     </Badge>
                   ))}
@@ -317,7 +317,7 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card 
                 onClick={() => setFilterBias(filterBias === "LEFT" ? null : "LEFT")}
-                className={`rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-2 border-black cursor-pointer transition-all ${filterBias === 'LEFT' ? 'ring-4 ring-blue-500 bg-blue-100 dark:bg-blue-900/30' : 'bg-blue-50/50 hover:bg-blue-100/50 dark:bg-blue-900/10'}`}
+                className={`rounded-[10px] shadow-sm border border-[#D9D9D9] cursor-pointer transition-all ${filterBias === 'LEFT' ? 'ring-4 ring-blue-500 bg-blue-100 dark:bg-blue-900/30' : 'bg-blue-50/50 hover:bg-blue-100/50 dark:bg-blue-900/10'}`}
               >
                 <CardHeader>
                   <CardTitle className="text-blue-800 dark:text-blue-300 font-[family-name:var(--font-oswald)] uppercase tracking-wider flex justify-between items-center">
@@ -333,7 +333,7 @@ export default function DashboardPage() {
               </Card>
               <Card 
                 onClick={() => setFilterBias(filterBias === "RIGHT" ? null : "RIGHT")}
-                className={`rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-2 border-black cursor-pointer transition-all ${filterBias === 'RIGHT' ? 'ring-4 ring-red-500 bg-red-100 dark:bg-red-900/30' : 'bg-red-50/50 hover:bg-red-100/50 dark:bg-red-900/10'}`}
+                className={`rounded-[10px] shadow-sm border border-[#D9D9D9] cursor-pointer transition-all ${filterBias === 'RIGHT' ? 'ring-4 ring-red-500 bg-red-100 dark:bg-red-900/30' : 'bg-red-50/50 hover:bg-red-100/50 dark:bg-red-900/10'}`}
               >
                 <CardHeader>
                   <CardTitle className="text-red-800 dark:text-red-300 font-[family-name:var(--font-oswald)] uppercase tracking-wider flex justify-between items-center">
@@ -360,7 +360,7 @@ export default function DashboardPage() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
               {Object.entries(insights.entitySentiment).map(([entity, data]: [string, any]) => (
-                <Card key={entity} className="rounded-none border-2 border-black hover:-translate-y-1 transition-transform shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <Card key={entity} className="rounded-[10px] border border-[#D9D9D9] hover:-translate-y-1 transition-transform shadow-sm">
                   <CardHeader className="pb-2 pt-4 flex flex-row justify-between items-center gap-2">
                     <CardTitle className="text-base truncate">{entity}</CardTitle>
                     <Badge variant="outline" className="text-[10px] bg-yellow-100">{data.label}</Badge>
@@ -386,20 +386,20 @@ export default function DashboardPage() {
 
         {/* Charts */}
         <div id="bias-visuals" className="grid grid-cols-1 lg:grid-cols-3 gap-6 scroll-mt-32">
-          <Card className="rounded-none col-span-1 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
-            <CardHeader className="border-b-2 border-black">
+          <Card className="rounded-[10px] col-span-1 shadow-sm border border-[#D9D9D9]">
+            <CardHeader className="border-b border-[#D9D9D9]">
               <CardTitle className="uppercase tracking-widest text-sm font-bold">Sentiment Trend</CardTitle>
             </CardHeader>
             <CardContent className="pt-4"><SentimentOverTime data={articles} /></CardContent>
           </Card>
-          <Card className="rounded-none col-span-1 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
-            <CardHeader className="border-b-2 border-black">
+          <Card className="rounded-[10px] col-span-1 shadow-sm border border-[#D9D9D9]">
+            <CardHeader className="border-b border-[#D9D9D9]">
               <CardTitle className="uppercase tracking-widest text-sm font-bold">Source Origin</CardTitle>
             </CardHeader>
             <CardContent className="pt-4"><SourceDistribution data={sourceDist} /></CardContent>
           </Card>
-          <Card className="rounded-none col-span-1 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-2 border-black">
-            <CardHeader className="border-b-2 border-black">
+          <Card className="rounded-[10px] col-span-1 shadow-sm border border-[#D9D9D9]">
+            <CardHeader className="border-b border-[#D9D9D9]">
               <CardTitle className="uppercase tracking-widest text-sm font-bold">Political Bias Check</CardTitle>
             </CardHeader>
             <CardContent className="pt-4">
@@ -471,7 +471,7 @@ function ArticleChatCard({ art }: { art: any }) {
   }
 
   return (
-    <Card className="rounded-none hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow border-2 border-black flex flex-col">
+    <Card className="rounded-[10px] hover:shadow-sm transition-shadow border border-[#D9D9D9] flex flex-col">
       <CardHeader className="pb-3">
         <div className="flex justify-between items-start gap-4">
           <CardTitle className="text-lg leading-tight line-clamp-2 font-[family-name:var(--font-oswald)]">
@@ -567,7 +567,7 @@ function ArticleChatCard({ art }: { art: any }) {
                 placeholder="What exactly did they outline in this article?" 
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
-                className="flex-1 px-3 py-2 border-2 border-black focus:outline-none font-[family-name:var(--font-geist-sans)] normal-case font-normal tracking-normal text-sm"
+                className="flex-1 px-3 py-2 border border-[#D9D9D9] focus:outline-none font-[family-name:var(--font-geist-sans)] normal-case font-normal tracking-normal text-sm"
               />
               <button 
                 type="submit" 
@@ -579,7 +579,7 @@ function ArticleChatCard({ art }: { art: any }) {
             </form>
             
             {answer && (
-              <div className="bg-white border-2 border-black p-3 text-black text-sm relative">
+              <div className="bg-white border border-[#D9D9D9] p-3 text-black text-sm relative">
                 <span className="absolute -top-3 left-2 bg-white px-1 text-xs font-bold uppercase text-blue-600">AI Response</span>
                 {answer}
               </div>
@@ -595,7 +595,7 @@ function MethodologyReport() {
   const [isOpen, setIsOpen] = useState(false)
   
   return (
-    <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+    <div className="bg-white border border-[#D9D9D9] shadow-sm">
       <button 
         onClick={() => setIsOpen(!isOpen)}
         className="w-full flex justify-between items-center p-4 bg-gray-100 hover:bg-gray-200 transition-colors border-b-2 border-transparent focus:outline-none"
@@ -610,7 +610,7 @@ function MethodologyReport() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-4">
               <section>
-                <h3 className="font-bold uppercase tracking-widest text-black border-b-2 border-black pb-1 mb-2">Bias Model Audit</h3>
+                <h3 className="font-bold uppercase tracking-widest text-black border-b border-[#D9D9D9] pb-1 mb-2">Bias Model Audit</h3>
                 <p><strong>Model:</strong> PoliticalBiasBERT</p>
                 <p className="mt-1">
                   Evaluated against 12 state-of-the-art adversarial benchmarks (including NYT, WSJ, Reuters, AP, Fox, CNN, and zero-shot quote-framing edge cases).
@@ -622,7 +622,7 @@ function MethodologyReport() {
               </section>
 
               <section>
-                <h3 className="font-bold uppercase tracking-widest text-black border-b-2 border-black pb-1 mb-2">Credibility Methodology</h3>
+                <h3 className="font-bold uppercase tracking-widest text-black border-b border-[#D9D9D9] pb-1 mb-2">Credibility Methodology</h3>
                 <p>
                   We calculate a weighted <strong>Source Reliability Score</strong> by mapping scraped domains against a static registry of publisher credibility. 
                   High-tier journalistic organizations (Reuters, AP, BBC) carry a weight of 0.95, whereas partisan blogs or unverified aggregators carry weights of 0.20 to 0.50.
@@ -632,7 +632,7 @@ function MethodologyReport() {
             
             <div className="space-y-4">
               <section>
-                <h3 className="font-bold uppercase tracking-widest text-black border-b-2 border-black pb-1 mb-2">Polarization Methodology</h3>
+                <h3 className="font-bold uppercase tracking-widest text-black border-b border-[#D9D9D9] pb-1 mb-2">Polarization Methodology</h3>
                 <p>
                   The Polarization Index utilizes a mathematical approximation of <strong>Jensen-Shannon Divergence</strong>.
                 </p>
@@ -642,7 +642,7 @@ function MethodologyReport() {
               </section>
 
               <section>
-                <h3 className="font-bold uppercase tracking-widest text-black border-b-2 border-black pb-1 mb-2">Diversity Methodology</h3>
+                <h3 className="font-bold uppercase tracking-widest text-black border-b border-[#D9D9D9] pb-1 mb-2">Diversity Methodology</h3>
                 <p>
                   To prevent the AI from making sweeping claims about the entire media landscape based on a localized subset, we strictly calculate Dataset Diversity.
                   The platform counts unique publishers and traces geographic TLDs to ensure a representative sample exists before declaring strong cross-ideological consensus.
