@@ -37,11 +37,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${sekuyaFont.variable} ${geistMono.variable} ${oswaldFont.variable} ${geistSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col vox-bg">
-        <header className="w-full bg-[#FFF200] border-b-4 border-black px-6 py-2.5 flex items-center justify-between z-50 sticky top-0">
+        <header className="w-full bg-[#FFF200] border-b-4 border-black px-6 py-5 flex items-center justify-between z-50 sticky top-0">
           <a href="/" className="text-3xl font-extrabold text-[#1A1A1A] tracking-tighter uppercase relative flex-1">
             BiasScope
           </a>
           <div className="flex justify-end items-center gap-6 relative z-50">
+            <a href="/subscriptions" className="font-bold tracking-widest text-sm uppercase hover:underline underline-offset-4 decoration-2">Subscriptions</a>
+            <a href="/vault" className="font-bold tracking-widest text-sm uppercase hover:underline underline-offset-4 decoration-2">Vault</a>
             <AuthButton />
           </div>
         </header>

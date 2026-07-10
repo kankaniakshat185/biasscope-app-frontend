@@ -135,7 +135,7 @@ export default function DashboardPage() {
     <div className="bg-[#F6F6F6] font-[family-name:var(--font-geist-sans)] min-h-screen text-[#1A1A1A] flex flex-col">
       
       {/* Sticky Horizontal Nav Bar - Full Width */}
-      <div className="sticky top-[64px] z-40 bg-[#F6F6F6] border-b-2 border-black py-2 px-6 print:hidden hidden md:block w-full">
+      <div className="sticky top-[80px] z-40 bg-[#F6F6F6] border-b-2 border-black py-4 px-6 print:hidden hidden md:block w-full">
         <ul className="flex justify-between items-center text-xs font-bold uppercase tracking-widest text-black max-w-7xl mx-auto w-full">
           <li><a href="#overview" className="hover:underline underline-offset-4 decoration-2">Overview</a></li>
           <li><a href="#bias-visuals" className="hover:underline underline-offset-4 decoration-2">Bias Visuals</a></li>
@@ -209,7 +209,12 @@ export default function DashboardPage() {
               <div className="flex-1 p-5 flex flex-col">
                 <div className="uppercase tracking-widest text-xs font-bold border-b-2 border-black pb-2 mb-3 flex justify-between items-center text-black">
                   Polarization
-                  <div title="Calculated using Jensen-Shannon Divergence between ideological distributions."><Info className="w-4 h-4 text-black cursor-help" /></div>
+                  <div className="group relative flex items-center">
+                  <Info className="w-4 h-4 text-black cursor-help" />
+                  <div className="hidden group-hover:block absolute bottom-full mb-2 right-0 bg-white border-2 border-black p-2 text-xs font-mono font-bold w-48 z-50 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left normal-case tracking-normal">
+                    Calculated using Jensen-Shannon Divergence between ideological distributions.
+                  </div>
+                </div>
                 </div>
                 <div className="flex flex-col justify-center flex-1 text-left">
                   <div className="text-3xl font-[800] text-red-500">{Number((insights.polarizationScore ?? 0) * 100).toFixed(0)}%</div>
@@ -223,7 +228,12 @@ export default function DashboardPage() {
               <div className="flex-1 p-5 flex flex-col">
                 <div className="uppercase tracking-widest text-xs font-bold border-b-2 border-black pb-2 mb-3 flex justify-between items-center text-black">
                   Data Quality
-                  <div title="Metric combining source diversity, content completeness, and article richness."><Info className="w-4 h-4 text-black cursor-help" /></div>
+                  <div className="group relative flex items-center">
+                  <Info className="w-4 h-4 text-black cursor-help" />
+                  <div className="hidden group-hover:block absolute bottom-full mb-2 right-0 bg-white border-2 border-black p-2 text-xs font-mono font-bold w-48 z-50 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left normal-case tracking-normal">
+                    Metric combining source diversity, content completeness, and article richness.
+                  </div>
+                </div>
                 </div>
                 <div className="flex flex-col justify-center flex-1 text-left">
                   <div className="text-3xl font-[800] text-purple-600">{Number(insights.dataQualityScore * 100).toFixed(0)}</div>
@@ -237,7 +247,12 @@ export default function DashboardPage() {
               <div className="flex-1 p-5 flex flex-col">
                 <div className="uppercase tracking-widest text-xs font-bold border-b-2 border-black pb-2 mb-3 flex justify-between items-center text-black">
                   Reliability
-                  <span title="Reliability is calculated using weighted publisher credibility scores across the analyzed dataset."><Info className="w-4 h-4 text-black cursor-help" /></span>
+                  <div className="group relative flex items-center">
+                  <Info className="w-4 h-4 text-black cursor-help" />
+                  <div className="hidden group-hover:block absolute bottom-full mb-2 right-0 bg-white border-2 border-black p-2 text-xs font-mono font-bold w-48 z-50 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left normal-case tracking-normal">
+                    Reliability is calculated using weighted publisher credibility scores across the analyzed dataset.
+                  </div>
+                </div>
                 </div>
                 <div className="flex flex-col justify-center flex-1 text-left">
                   <div className="text-3xl font-[800] text-blue-500">
@@ -256,7 +271,12 @@ export default function DashboardPage() {
               <div className="flex-1 p-5 flex flex-col">
                 <div className="uppercase tracking-widest text-xs font-bold border-b-2 border-black pb-2 mb-3 flex justify-between items-center text-black">
                   Diversity
-                  <div title="Measures the breadth of sources and the ideological distribution of the coverage to ensure a representative sample."><Info className="w-4 h-4 text-black cursor-help flex-shrink-0" /></div>
+                  <div className="group relative flex items-center">
+                  <Info className="w-4 h-4 text-black cursor-help flex-shrink-0" />
+                  <div className="hidden group-hover:block absolute bottom-full mb-2 right-0 bg-white border-2 border-black p-2 text-xs font-mono font-bold w-56 z-50 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-left normal-case tracking-normal">
+                    Measures the breadth of sources and the ideological distribution of the coverage to ensure a representative sample.
+                  </div>
+                </div>
                 </div>
                 <div className="flex flex-col justify-center flex-1 gap-2 text-left">
                   <div className="text-xs tracking-wide font-medium text-[#666]">{insights.datasetMetrics?.diversity_quality_label || "Unknown"}</div>
