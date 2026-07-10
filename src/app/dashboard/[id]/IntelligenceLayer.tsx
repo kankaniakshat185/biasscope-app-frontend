@@ -55,9 +55,9 @@ export default function IntelligenceLayer({ searchId }: { searchId: string }) {
     <div className="mt-12 pt-4">
       <div className="flex justify-between items-end mb-8">
         <div>
-          <h2 className="text-4xl font-[800] tracking-tight font-[family-name:var(--font-sekuya)] text-[#1A1A1A] flex items-center flex-wrap gap-3">
+          <h2 className="text-3xl font-bold tracking-tight font-[family-name:var(--font-sekuya)] uppercase flex items-center flex-wrap gap-3">
             Claim Intelligence 
-            <span className="text-sm bg-yellow-300 px-2 py-1 border border-[#1A1A1A] font-mono tracking-normal leading-none rounded-[4px]">BETA</span>
+            <span className="text-sm bg-yellow-300 px-2 py-1 border-2 border-black font-mono tracking-normal leading-none rounded-none">BETA</span>
           </h2>
           <p className="text-[#666] mt-2 max-w-none text-base">
             BiasScope extracts verifiable facts, clusters them into canonical claims, and detects cross-source events.
@@ -66,7 +66,7 @@ export default function IntelligenceLayer({ searchId }: { searchId: string }) {
       </div>
 
       {/* Debug Metrics */}
-      <div className="bg-gray-100 p-4 border border-[#D9D9D9] mb-8 shadow-sm font-mono text-xs flex flex-wrap gap-6 print:hidden">
+      <div className="bg-gray-100 p-4 border-2 border-black mb-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-mono text-xs flex flex-wrap gap-6 print:hidden">
         <div className="flex items-center gap-2"><Database className="w-4 h-4" /> <span className="font-bold">METRICS:</span></div>
         <div>Articles: {intel.metrics.articlesProcessed}</div>
         <div>Claims: {intel.metrics.claimsExtracted}</div>
@@ -75,13 +75,13 @@ export default function IntelligenceLayer({ searchId }: { searchId: string }) {
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-[#D9D9D9] mb-6 gap-2 print:hidden">
+      <div className="flex border-b-2 border-black mb-6 gap-2 print:hidden">
         {["events", "clusters", "claims"].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 font-semibold text-sm transition-colors rounded-t-md ${
-              activeTab === tab ? 'bg-[#1A1A1A] text-white' : 'text-[#666] hover:bg-gray-100 hover:text-[#1A1A1A]'
+            className={`px-4 py-2 font-bold uppercase tracking-widest text-sm transition-colors rounded-none ${
+              activeTab === tab ? 'bg-black text-white' : 'hover:bg-gray-200'
             }`}
           >
             {tab === "events" ? "Event Explorer" : tab === "clusters" ? "Cluster Explorer" : "Claim Explorer"}
@@ -134,7 +134,7 @@ function EventCard({ event }: { event: any }) {
   const [expanded, setExpanded] = useState(false)
 
   return (
-    <Card className="border border-[#D9D9D9] shadow-sm">
+    <Card className="border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
       <CardHeader className="bg-gray-50 border-b border-black py-3 cursor-pointer" onClick={() => setExpanded(!expanded)}>
         <div className="flex items-start justify-between gap-4">
           <div className="flex flex-col gap-1">
@@ -158,7 +158,7 @@ function EventCard({ event }: { event: any }) {
 
         {/* Canonical Claim — displayed ONCE (Issue 2 fix) */}
         {event.canonicalClaim && (
-          <div className="mt-4 p-3 bg-white border border-gray-200 shadow-sm border-l-4 border-l-purple-500">
+          <div className="mt-4 p-3 bg-white border border-gray-200 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-l-4 border-l-purple-500">
             <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Core Claim</p>
             <p className="text-sm font-semibold text-gray-800">{typeof event.canonicalClaim === 'string' ? event.canonicalClaim : event.canonicalClaim.text}</p>
           </div>
@@ -227,7 +227,7 @@ function EventCard({ event }: { event: any }) {
 
 function ClusterCard({ cluster }: { cluster: any }) {
   return (
-    <Card className="border border-[#D9D9D9] shadow-sm">
+    <Card className="border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
       <CardHeader className="bg-gray-50 border-b border-black py-3">
         <div className="flex justify-between items-start gap-4">
           <div className="flex flex-col gap-1">
@@ -311,7 +311,7 @@ function RawClaimCard({ claim }: { claim: any }) {
   const [expanded, setExpanded] = useState(false)
 
   return (
-    <Card className="border border-[#D9D9D9] hover:shadow-sm transition-all">
+    <Card className="border-2 border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
       <CardHeader className="py-3 cursor-pointer bg-white" onClick={() => setExpanded(!expanded)}>
         <div className="flex justify-between items-start gap-4">
           <CardTitle className="text-base font-bold text-gray-900 leading-tight">
