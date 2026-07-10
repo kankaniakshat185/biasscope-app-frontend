@@ -122,15 +122,8 @@ export default function LandingPage() {
         {/* Trending Chips positioned above search box, left-aligned */}
         {!loading && (
           <div className="w-full max-w-2xl flex justify-start">
-            <div className="w-full md:w-[65%] flex items-center justify-between font-[family-name:var(--font-oswald)] mb-2">
+            <div className="w-full md:w-[50%] flex items-center justify-between font-[family-name:var(--font-oswald)] mb-2">
               <div className="flex gap-2">
-                <button 
-                  type="button"
-                  onClick={() => router.push('/dashboard/demo-elon%20musk')}
-                  className="text-xs font-bold uppercase tracking-widest text-black bg-[#FFF200] border-2 border-black px-3 py-1 hover:bg-[#ffe600] transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-                >
-                  Elon Musk
-                </button>
                 <button 
                   type="button"
                   onClick={() => { setQuery("Artificial Intelligence"); handleSearch(undefined, "Artificial Intelligence"); }}
@@ -169,7 +162,7 @@ export default function LandingPage() {
         {/* Advanced Filters Button positioned below search box, right-aligned */}
         {!loading && (
           <div className="w-full max-w-2xl flex flex-col items-end mt-2">
-            <div className="w-full md:w-[65%] flex gap-4">
+            <div className="w-full md:w-[50%] flex gap-4">
               {(domains || excludeDomains || fromDate || toDate || category) && (
                 <button 
                   type="button" 
