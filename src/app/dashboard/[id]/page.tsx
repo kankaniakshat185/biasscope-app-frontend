@@ -620,57 +620,161 @@ function MethodologyReport() {
         onClick={() => setIsOpen(!isOpen)}
         className="w-full flex justify-between items-center p-4 bg-gray-100 hover:bg-gray-200 transition-colors border-b-2 border-transparent focus:outline-none"
       >
-        <h2 className="text-xl font-bold uppercase tracking-widest font-[family-name:var(--font-oswald)]">Methodology & Trust Report</h2>
+        <h2 className="text-xl font-bold uppercase tracking-widest font-[family-name:var(--font-oswald)]">Methodology & Trust Report (System Logic)</h2>
         <span className="text-2xl font-mono leading-none">{isOpen ? '−' : '+'}</span>
       </button>
       
       {isOpen && (
-        <div className="p-6 space-y-6 text-sm text-gray-800 leading-relaxed font-[family-name:var(--font-geist-sans)]">
+        <div className="p-6 space-y-8 text-sm text-gray-800 leading-relaxed font-[family-name:var(--font-geist-sans)]">
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-4">
-              <section>
-                <h3 className="font-bold uppercase tracking-widest text-black border-b-2 border-black pb-1 mb-2">Bias Model Audit</h3>
-                <p><strong>Model:</strong> PoliticalBiasBERT</p>
-                <p className="mt-1">
-                  Evaluated against 12 state-of-the-art adversarial benchmarks (including NYT, WSJ, Reuters, AP, Fox, CNN, and zero-shot quote-framing edge cases).
-                </p>
-                <div className="bg-gray-50 border border-gray-300 p-2 mt-2 font-mono text-xs">
-                  <div className="text-green-600">Confidence Assessment: HIGH</div>
-                  <div>Accuracy: 98.4% (Precision-Recall verified)</div>
-                </div>
-              </section>
-
-              <section>
-                <h3 className="font-bold uppercase tracking-widest text-black border-b-2 border-black pb-1 mb-2">Credibility Methodology</h3>
-                <p>
-                  We calculate a weighted <strong>Source Reliability Score</strong> by mapping scraped domains against a static registry of publisher credibility. 
-                  High-tier journalistic organizations (Reuters, AP, BBC) carry a weight of 0.95, whereas partisan blogs or unverified aggregators carry weights of 0.20 to 0.50.
-                </p>
-              </section>
+          {/* Section 1: Data Quality Score */}
+          <section className="border-2 border-black p-4 bg-white">
+            <h3 className="font-bold uppercase tracking-widest text-black border-b-2 border-black pb-2 mb-4 text-lg">1. Data Quality Score (DQS)</h3>
+            <p className="mb-3">
+              The Data Quality Score evaluates the structural integrity of the analyzed dataset. It does not judge journalistic credibility, but rather ensures the dataset is robust enough for AI analysis. It is calculated as a weighted sum of three normalized components.
+            </p>
+            <div className="bg-gray-50 border border-gray-300 p-4 font-mono text-xs mb-4">
+              <p className="font-bold mb-2">DQS = (C × 0.40) + (D × 0.30) + (R × 0.30)</p>
+              <ul className="list-disc pl-5 space-y-2">
+                <li><strong>Completeness (C):</strong> 1.0 - (missing_content / total_articles). An article is considered missing if it has fewer than 50 characters.</li>
+                <li><strong>Source Diversity (D):</strong> min(unique_sources / total_articles, 1.0)</li>
+                <li><strong>Content Richness (R):</strong> min(avg_content_length / 1000, 1.0). Measures the depth of the articles, capping at an average of 1,000 characters.</li>
+              </ul>
             </div>
-            
-            <div className="space-y-4">
-              <section>
-                <h3 className="font-bold uppercase tracking-widest text-black border-b-2 border-black pb-1 mb-2">Polarization Methodology</h3>
-                <p>
-                  The Polarization Index utilizes a mathematical approximation of <strong>Jensen-Shannon Divergence</strong>.
-                </p>
-                <p className="mt-1">
-                  We create probability distributions for Left-wing sentiment and Right-wing sentiment in the dataset, and calculate the Kullback-Leibler (KL) divergence of each against a midpoint mixture distribution. 0% indicates identical framing, while 100% indicates completely opposed echo chambers.
-                </p>
-              </section>
-
-              <section>
-                <h3 className="font-bold uppercase tracking-widest text-black border-b-2 border-black pb-1 mb-2">Diversity Methodology</h3>
-                <p>
-                  To prevent the AI from making sweeping claims about the entire media landscape based on a localized subset, we strictly calculate Dataset Diversity.
-                  The platform counts unique publishers and traces geographic TLDs to ensure a representative sample exists before declaring strong cross-ideological consensus.
-                </p>
-              </section>
+            <div className="bg-[#FFF200]/20 border border-[#FFF200] p-3 text-xs">
+              <strong>Example:</strong> If a topic has 10 articles from 5 unique sources, none are missing content, and the average length is 1,200 characters:
+              <br/>C = 1.0 (No missing content)<br/>D = 5 / 10 = 0.5<br/>R = min(1200 / 1000, 1.0) = 1.0
+              <br/><strong>DQS = (1.0 × 0.40) + (0.5 × 0.30) + (1.0 × 0.30) = 0.85 (85%)</strong>
             </div>
-          </div>
-          
+          </section>
+
+          {/* Section 2: Polarization Score */}
+          <section className="border-2 border-black p-4 bg-white">
+            <h3 className="font-bold uppercase tracking-widest text-black border-b-2 border-black pb-2 mb-4 text-lg">2. Polarization Score (JSD)</h3>
+            <p className="mb-3">
+              The Polarization Score utilizes a mathematical approximation of <strong>Jensen-Shannon Divergence (JSD)</strong> to measure how radically the sentiment of Left-leaning media diverges from Right-leaning media on a given topic.
+            </p>
+            <div className="bg-gray-50 border border-gray-300 p-4 font-mono text-xs mb-4">
+              <p className="mb-2">First, we isolate the sentiment scores for all LEFT and RIGHT articles and bin them into three probability distributions:</p>
+              <ul className="list-disc pl-5 space-y-1 mb-2">
+                <li><strong>Negative (P_neg):</strong> Sentiment &lt; -0.2</li>
+                <li><strong>Positive (P_pos):</strong> Sentiment &gt; 0.2</li>
+                <li><strong>Neutral (P_neu):</strong> Remaining scores</li>
+              </ul>
+              <p className="mb-2">Let P = Distribution for Left articles, Q = Distribution for Right articles. We calculate midpoint M = (P + Q) / 2.</p>
+              <p className="font-bold text-blue-800 bg-blue-50 p-2">
+                JSD = 0.5 × KL(P || M) + 0.5 × KL(Q || M)<br/>
+                Polarization Score = min(JSD / ln(2), 1.0)
+              </p>
+            </div>
+            <div className="bg-[#FFF200]/20 border border-[#FFF200] p-3 text-xs">
+              <strong>Example:</strong> If Left-wing media is 100% negative about a topic (P = [1.0, 0, 0]), and Right-wing media is 100% positive (Q = [0, 0, 1.0]), the distributions share no overlap. The JSD reaches its maximum value of ~0.693 (ln(2)). The resulting Polarization Score is scaled to <strong>1.0 (100% Polarized)</strong>.
+            </div>
+          </section>
+
+          {/* Section 3: Diversity Quality Label */}
+          <section className="border-2 border-black p-4 bg-white">
+            <h3 className="font-bold uppercase tracking-widest text-black border-b-2 border-black pb-2 mb-4 text-lg">3. Diversity Label Methodology</h3>
+            <p className="mb-3">
+              To prevent the AI from generating generalized insights based on a localized or homogenous echo chamber, we strictly evaluate geographic and ideological diversity. Geographic origins are traced by mapping publisher TLDs (e.g., .co.uk, .ca, .in) to their respective countries.
+            </p>
+            <div className="bg-gray-50 border border-gray-300 p-4 font-mono text-xs mb-4">
+              <p className="mb-2">We calculate the <strong>Max Ideology</strong> (the highest percentage of articles belonging to a single bias label). The dataset is then classified using the following threshold gates:</p>
+              <ul className="list-disc pl-5 space-y-2">
+                <li><strong>High Diversity:</strong> &ge; 5 unique sources AND &ge; 2 countries AND Max Ideology &le; 60%</li>
+                <li><strong>Moderate Diversity:</strong> &ge; 3 unique sources AND Max Ideology &le; 80%</li>
+                <li><strong>Low Diversity:</strong> Fails to meet the above criteria.</li>
+              </ul>
+            </div>
+            <div className="bg-[#FFF200]/20 border border-[#FFF200] p-3 text-xs">
+              <strong>Example:</strong> A dataset containing 6 articles from 3 US publishers (all Left-leaning) and 2 UK publishers (Center).
+              <br/>- Unique sources: 5, Countries: 2 (US, UK)
+              <br/>- Max Ideology: 60% (3 out of 5 are Left).
+              <br/><strong>Result: Meets all criteria for High Diversity.</strong>
+            </div>
+          </section>
+
+
+          {/* Section 4: Sentiment Analysis */}
+          <section className="border-2 border-black p-4 bg-white">
+            <h3 className="font-bold uppercase tracking-widest text-black border-b-2 border-black pb-2 mb-4 text-lg">4. Sentiment Analysis Methodology</h3>
+            <p className="mb-3">
+              Sentiment is calculated on a per-article basis using a calibrated transformer model. Instead of relying on a simplistic binary output, we extract probability distributions across three classes (Positive, Negative, Neutral) and calculate a calibrated compound score.
+            </p>
+            <div className="bg-gray-50 border border-gray-300 p-4 font-mono text-xs mb-4">
+              <p className="mb-2">For every article, the text is processed by the model to yield probabilities: P_pos, P_neg, P_neu.</p>
+              <p className="font-bold mb-2">Compound Score = P_pos - P_neg</p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li><strong>Neutral Label:</strong> If P_neu &gt; P_pos AND P_neu &gt; P_neg</li>
+                <li><strong>Positive Label:</strong> If P_pos &gt; P_neg</li>
+                <li><strong>Negative Label:</strong> Otherwise</li>
+              </ul>
+            </div>
+            <div className="bg-[#FFF200]/20 border border-[#FFF200] p-3 text-xs">
+              <strong>Example:</strong> An article yields probabilities: P_pos = 0.15, P_neg = 0.60, P_neu = 0.25.
+              <br/>- Compound Score: 0.15 - 0.60 = -0.45
+              <br/><strong>- Label: Negative (since 0.60 &gt; 0.15)</strong>
+            </div>
+          </section>
+
+          {/* Section 5: Source Reliability */}
+          <section className="border-2 border-black p-4 bg-white">
+            <h3 className="font-bold uppercase tracking-widest text-black border-b-2 border-black pb-2 mb-4 text-lg">5. Source Reliability (Credibility)</h3>
+            <p className="mb-3">
+              Source Reliability evaluates the historical journalistic standards of the publishing domain using a static, curated registry of publisher credibility.
+            </p>
+            <div className="bg-gray-50 border border-gray-300 p-4 font-mono text-xs mb-4">
+              <p className="mb-2">The domain is checked against the internal registry:</p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li><strong>High Tier:</strong> Score &ge; 0.85 (e.g., AP, Reuters)</li>
+                <li><strong>Medium Tier:</strong> Score &ge; 0.65</li>
+                <li><strong>Mixed Tier:</strong> Score &ge; 0.45</li>
+                <li><strong>Low Tier:</strong> Score &lt; 0.45 (e.g., Hyper-partisan blogs)</li>
+                <li><strong>Unknown:</strong> Defaults to a score of 0.50.</li>
+              </ul>
+            </div>
+            <div className="bg-[#FFF200]/20 border border-[#FFF200] p-3 text-xs">
+              <strong>Example:</strong> An article from reuters.com is found in the registry with a score of 0.95. It is categorized as <strong>High Tier</strong>. An article from an unknown blog is not found, defaulting to a score of 0.50 (<strong>Unknown Tier</strong>).
+            </div>
+          </section>
+
+          {/* Section 6: Bias Classification */}
+          <section className="border-2 border-black p-4 bg-white">
+            <h3 className="font-bold uppercase tracking-widest text-black border-b-2 border-black pb-2 mb-4 text-lg">6. Bias Classification (Left/Right)</h3>
+            <p className="mb-3">
+              To categorize an article's political leaning, the system utilizes a hybrid approach: a definitive domain registry backed by a Machine Learning text classifier for unknown sources.
+            </p>
+            <div className="bg-gray-50 border border-gray-300 p-4 font-mono text-xs mb-4">
+              <ol className="list-decimal pl-5 space-y-2 mb-3">
+                <li><strong>Registry First:</strong> The domain is checked against the registry. If known, the bias is hardcoded (Confidence = 90%).</li>
+                <li><strong>ML Fallback:</strong> If unknown, the text is passed through PoliticalBiasBERT, which outputs LEFT, CENTER, or RIGHT.</li>
+              </ol>
+              <p className="font-bold">Deviation Score = | Source Bias Value - Article Bias Value |</p>
+              <p className="text-gray-500 mt-1">(Where LEFT=0, CENTER=1, RIGHT=2). Detects anomalous narratives.</p>
+            </div>
+            <div className="bg-[#FFF200]/20 border border-[#FFF200] p-3 text-xs">
+              <strong>Example:</strong> An article by an unknown domain is analyzed by PoliticalBiasBERT, which returns LEFT with a confidence of 0.82. The article is assigned the <strong>LEFT</strong> bias label.
+            </div>
+          </section>
+
+          {/* Section 7: Echo Chamber Detection */}
+          <section className="border-2 border-black p-4 bg-white">
+            <h3 className="font-bold uppercase tracking-widest text-black border-b-2 border-black pb-2 mb-4 text-lg">7. Echo Chamber Detection (Clustering)</h3>
+            <p className="mb-3">
+              "Echo Chambers" (or Events) are detected using unsupervised Machine Learning to group articles covering the exact same specific narrative, rather than just the general topic.
+            </p>
+            <div className="bg-gray-50 border border-gray-300 p-4 font-mono text-xs mb-4">
+              <ul className="list-disc pl-5 space-y-2">
+                <li><strong>Embeddings:</strong> Claims are converted to high-dimensional vectors and clustered via HDBSCAN based on a Cosine Distance Matrix.</li>
+                <li><strong>Cohesion Validation:</strong> The mean pairwise cosine similarity of all articles in the cluster must exceed a strict threshold (0.72).</li>
+                <li><strong>Eligibility Gate:</strong> Validated events must contain at least 2 claims from at least 2 unique sources.</li>
+              </ul>
+            </div>
+            <div className="bg-[#FFF200]/20 border border-[#FFF200] p-3 text-xs">
+              <strong>Example:</strong> HDBSCAN groups 5 articles together. The mean similarity is 0.81 (&ge; 0.72). There are 3 unique sources. The cluster passes all gates and is surfaced as an isolated <strong>Event (Echo Chamber)</strong>.
+            </div>
+          </section>
+
         </div>
       )}
     </div>
