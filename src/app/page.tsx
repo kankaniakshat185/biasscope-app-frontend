@@ -105,9 +105,9 @@ export default function LandingPage() {
       <div className="flex-1 flex flex-col w-full items-center justify-center space-y-4">
         
         {!loading && (
-          <div className="w-full mb-8">
-            <div className="text-center text-md text-black dark:text-gray-500 mx-auto py-3 w-full max-w-[58rem] backdrop-blur-[0.2rem]">
-              The story behind the story - AI analysis of news, sentiment, and bias.
+          <div className="w-full mb-12 -mt-8">
+            <div className="text-center text-2xl font-black font-[family-name:var(--font-oswald)] uppercase tracking-wider text-black dark:text-gray-500 mx-auto py-3 w-full max-w-[58rem]">
+              The story behind the story
             </div>
           </div>
         )}
@@ -162,8 +162,8 @@ export default function LandingPage() {
               className="w-full text-lg h-12 rounded-none border-2 border-black bg-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] focus-visible:ring-0 focus-visible:ring-offset-0"
             />
           </div>
-          <Button type="submit" disabled={!query || loading} className="h-12 bg-black text-white hover:bg-gray-800 rounded-none px-8 font-semibold w-full sm:w-auto uppercase tracking-wide border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-            {loading ? <Loader2 className="animate-spin w-5 h-5" /> : "Analyze"}
+          <Button type="submit" disabled={!query || loading} className="h-12 bg-black text-white hover:bg-gray-800 rounded-none px-8 font-semibold w-full sm:w-auto uppercase tracking-wide border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] disabled:opacity-100 disabled:bg-black disabled:text-white disabled:cursor-not-allowed cursor-pointer">
+            {loading ? <Loader2 className="animate-spin w-5 h-5 text-white" /> : "Analyze"}
           </Button>
         </form>
 
