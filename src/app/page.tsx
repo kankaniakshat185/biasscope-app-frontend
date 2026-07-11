@@ -105,13 +105,10 @@ export default function LandingPage() {
       <div className="flex-1 flex flex-col w-full items-center justify-center space-y-4">
         
         {!loading && (
-          <div className="text-center mb-6 flex flex-col items-center">
-            <h1 className="font-[family-name:var(--font-oswald)] text-6xl md:text-8xl font-black uppercase tracking-tighter leading-[0.9] mb-4">
-              THE STORY<br />BEHIND THE STORY
-            </h1>
-            <p className="text-sm md:text-base text-gray-700 max-w-xl font-medium">
-              Analyze how different news outlets report the same story using AI-powered sentiment, framing, and bias detection.
-            </p>
+          <div className="w-full mb-8">
+            <div className="text-center text-md text-black dark:text-gray-500 mx-auto py-3 w-full max-w-[58rem] backdrop-blur-[0.2rem]">
+              The story behind the story - AI analysis of news, sentiment, and bias.
+            </div>
           </div>
         )}
 
@@ -256,48 +253,48 @@ export default function LandingPage() {
         )}
 
         {!loading && (
-          <div className="w-full max-w-5xl flex flex-col md:flex-row justify-between items-start mt-12 py-8 gap-8 md:gap-0">
+          <div className="w-full max-w-5xl flex flex-col md:flex-row justify-between items-stretch mt-12 py-8 gap-8 md:gap-0">
             {/* Column 1 */}
-            <div className="flex flex-row gap-4 items-start flex-1 px-4 border-b-2 border-black/10 md:border-b-0 md:border-r-[2px] border-black/20 md:last:border-r-0 pb-6 md:pb-0">
+            <div className="flex flex-row gap-3 items-start flex-1 px-2 md:px-4 border-b-2 border-black/10 md:border-b-0 md:border-r-[2px] border-black/20 md:last:border-r-0 pb-6 md:pb-0">
               <div className="w-10 h-10 border-2 border-black flex items-center justify-center shrink-0">
-                <FileText className="w-5 h-5" />
+                <FileText className="w-5 h-5 text-black" />
               </div>
               <div className="flex flex-col gap-1 text-left">
-                <h3 className="font-[family-name:var(--font-oswald)] font-bold text-sm uppercase tracking-wide">Multi-Source Analysis</h3>
-                <p className="text-xs text-gray-600 leading-relaxed">Compare coverage from hundreds of news outlets.</p>
+                <h3 className="font-[family-name:var(--font-oswald)] font-bold text-sm uppercase tracking-wide text-black">Multi-Source Analysis</h3>
+                <p className="font-[family-name:var(--font-oswald)] text-[11px] font-bold text-gray-700 leading-relaxed uppercase tracking-wider">Compare coverage from hundreds of news outlets.</p>
               </div>
             </div>
             
             {/* Column 2 */}
-            <div className="flex flex-row gap-4 items-start flex-1 px-4 border-b-2 border-black/10 md:border-b-0 md:border-r-[2px] border-black/20 md:last:border-r-0 pb-6 md:pb-0">
+            <div className="flex flex-row gap-3 items-start flex-1 px-2 md:px-4 border-b-2 border-black/10 md:border-b-0 md:border-r-[2px] border-black/20 md:last:border-r-0 pb-6 md:pb-0">
               <div className="w-10 h-10 border-2 border-black flex items-center justify-center shrink-0">
-                <Activity className="w-5 h-5" />
+                <Activity className="w-5 h-5 text-black" />
               </div>
               <div className="flex flex-col gap-1 text-left">
-                <h3 className="font-[family-name:var(--font-oswald)] font-bold text-sm uppercase tracking-wide">Sentiment & Tone</h3>
-                <p className="text-xs text-gray-600 leading-relaxed">AI-powered sentiment and tone detection.</p>
+                <h3 className="font-[family-name:var(--font-oswald)] font-bold text-sm uppercase tracking-wide text-black">Sentiment & Tone</h3>
+                <p className="font-[family-name:var(--font-oswald)] text-[11px] font-bold text-gray-700 leading-relaxed uppercase tracking-wider">AI-powered sentiment and tone detection.</p>
               </div>
             </div>
 
             {/* Column 3 */}
-            <div className="flex flex-row gap-4 items-start flex-1 px-4 border-b-2 border-black/10 md:border-b-0 md:border-r-[2px] border-black/20 md:last:border-r-0 pb-6 md:pb-0">
+            <div className="flex flex-row gap-3 items-start flex-1 px-2 md:px-4 border-b-2 border-black/10 md:border-b-0 md:border-r-[2px] border-black/20 md:last:border-r-0 pb-6 md:pb-0">
               <div className="w-10 h-10 border-2 border-black flex items-center justify-center shrink-0">
-                <Target className="w-5 h-5" />
+                <Target className="w-5 h-5 text-black" />
               </div>
               <div className="flex flex-col gap-1 text-left">
-                <h3 className="font-[family-name:var(--font-oswald)] font-bold text-sm uppercase tracking-wide">Bias & Framing</h3>
-                <p className="text-xs text-gray-600 leading-relaxed">Detect bias, framing techniques, and missing perspectives.</p>
+                <h3 className="font-[family-name:var(--font-oswald)] font-bold text-sm uppercase tracking-wide text-black">Bias & Framing</h3>
+                <p className="font-[family-name:var(--font-oswald)] text-[11px] font-bold text-gray-700 leading-relaxed uppercase tracking-wider">Detect bias, framing techniques, and missing perspectives.</p>
               </div>
             </div>
 
             {/* Column 4 */}
-            <div className="flex flex-row gap-4 items-start flex-1 px-4 pb-6 md:pb-0">
+            <div className="flex flex-row gap-3 items-start flex-1 px-2 md:px-4 pb-6 md:pb-0">
               <div className="w-10 h-10 border-2 border-black flex items-center justify-center shrink-0">
-                <ShieldCheck className="w-5 h-5" />
+                <ShieldCheck className="w-5 h-5 text-black" />
               </div>
               <div className="flex flex-col gap-1 text-left">
-                <h3 className="font-[family-name:var(--font-oswald)] font-bold text-sm uppercase tracking-wide">Evidence Backed</h3>
-                <p className="text-xs text-gray-600 leading-relaxed">Every insight is grounded in real data.</p>
+                <h3 className="font-[family-name:var(--font-oswald)] font-bold text-sm uppercase tracking-wide text-black">Evidence Backed</h3>
+                <p className="font-[family-name:var(--font-oswald)] text-[11px] font-bold text-gray-700 leading-relaxed uppercase tracking-wider">Every insight is grounded in real data.</p>
               </div>
             </div>
           </div>
