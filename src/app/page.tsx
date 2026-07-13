@@ -188,7 +188,7 @@ export default function LandingPage() {
               </div>
               
               {showFilters && (
-                <div className="w-full font-[family-name:var(--font-oswald)] bg-white/90 backdrop-blur-sm p-4 border-2 border-black flex flex-col gap-4 animate-in fade-in slide-in-from-top-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] mt-4">
+                <div className="w-full font-[family-name:var(--font-oswald)] bg-white/90 backdrop-blur-sm p-4 border-2 border-black flex flex-col gap-4 animate-in fade-in slide-in-from-top-4 shadow-none mt-4">
                   
                   <div className="flex flex-col sm:flex-row gap-4">
                     <div className="flex-1">
