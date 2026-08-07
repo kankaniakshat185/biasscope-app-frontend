@@ -64,7 +64,12 @@ export default function HistoryPage() {
         const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/history`, { credentials: "include" })
         if (!res.ok) throw new Error("Failed to fetch history")
         const data = await res.json()
-        setSearches(data)
+        // /history now returns { total, limit, offset, searches } instead
+        // of a bare array, so pagination metadata is available if this
+        // page ever needs a "load more" control (default limit is 50,
+        // well above what any current account has, so nothing visibly
+        // changes today).
+        setSearches(data.searches ?? [])
       } catch (err) {
         console.error(err)
       } finally {
