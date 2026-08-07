@@ -15,7 +15,10 @@ export default function SubscriptionsPage() {
     async function fetchSubs() {
       if (!session?.user?.id) return
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/subscriptions/${session.user.id}`)
+        // Route no longer takes a user id in the path — the backend
+        // derives the caller from the session cookie, so this endpoint
+        // can only ever return YOUR OWN subscriptions now.
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/subscriptions`, { credentials: "include" })
         if (res.ok) {
           const data = await res.json()
           setSubscriptions(data)

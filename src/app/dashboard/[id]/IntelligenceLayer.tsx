@@ -17,12 +17,12 @@ export default function IntelligenceLayer({ searchId }: { searchId: string }) {
         let data;
         if (typeof searchId === 'string' && searchId.startsWith('demo-')) {
           const topic = decodeURIComponent(searchId.replace('demo-', ''))
-          res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/demo/${topic}`)
+          res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/demo/${topic}`, { credentials: "include" })
           if (!res.ok) throw new Error("Demo snapshot not found")
           const fullResult = await res.json()
           data = fullResult.intelligence
         } else {
-          res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/results/${searchId}/intelligence`)
+          res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/results/${searchId}/intelligence`, { credentials: "include" })
           if (!res.ok) throw new Error("Failed to fetch intelligence layer")
           data = await res.json()
         }

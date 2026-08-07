@@ -18,7 +18,8 @@ export default function HistoryPage() {
     
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/history/${searchId}`, {
-        method: "DELETE"
+        method: "DELETE",
+        credentials: "include"
       });
       if (res.ok) {
         setSearches(prev => prev.filter(s => s.id !== searchId));
@@ -35,7 +36,7 @@ export default function HistoryPage() {
     if (!confirm("Are you sure you want to completely delete ALL searches? This cannot be undone.")) return;
     setLoading(true);
     try {
-      await Promise.all(searches.map(s => fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/history/${s.id}`, { method: "DELETE" })));
+      await Promise.all(searches.map(s => fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/history/${s.id}`, { method: "DELETE", credentials: "include" })));
       setSearches([]);
     } catch (err) {
       alert("Error deleting searches.");
@@ -58,7 +59,9 @@ export default function HistoryPage() {
 
     const fetchHistory = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/history?userId=${session.user.id}`)
+        // userId query param removed — the backend now derives the caller
+        // from the session cookie instead of trusting a query param.
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/history`, { credentials: "include" })
         if (!res.ok) throw new Error("Failed to fetch history")
         const data = await res.json()
         setSearches(data)

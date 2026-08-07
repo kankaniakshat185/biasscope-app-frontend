@@ -67,10 +67,12 @@ export default function LandingPage() {
     setLoading(true)
 
     try {
-      const payload: any = { 
-        query: searchQuery, 
+      const payload: any = {
+        query: searchQuery,
         category: category || undefined,
-        userId: session?.user?.id || undefined,
+        // userId is no longer sent from the client — the backend derives
+        // the acting user from the session cookie (credentials: "include"
+        // below) instead of trusting whatever this field said.
         domains: domains ? domains.replace(/\s+/g, '') : undefined,
         exclude_domains: excludeDomains ? excludeDomains.replace(/\s+/g, '') : undefined,
         fromDate: fromDate || undefined,
@@ -82,6 +84,7 @@ export default function LandingPage() {
         headers: {
           "Content-Type": "application/json"
         },
+        credentials: "include" as RequestCredentials,
         body: JSON.stringify(payload)
       }
 

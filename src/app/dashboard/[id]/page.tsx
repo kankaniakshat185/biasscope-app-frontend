@@ -9,6 +9,17 @@ import { Loader2, Info, BellRing } from "lucide-react"
 import IntelligenceLayer from "./IntelligenceLayer"
 import { authClient } from "../../../lib/auth-client"
 
+// Mirrors the tier labels returned by get_source_reliability() in
+// app/services/nlp.py on the backend — this is styling only, not a second
+// copy of the domain-to-tier mapping itself (see A3 in AUDIT_TASKS.md).
+const RELIABILITY_STYLES: Record<string, string> = {
+  High: "bg-green-100 text-green-800 border-green-300",
+  Medium: "bg-emerald-100 text-emerald-800 border-emerald-300",
+  Mixed: "bg-yellow-100 text-yellow-800 border-yellow-300",
+  Low: "bg-red-100 text-red-800 border-red-300",
+  Unknown: "bg-gray-200 text-gray-700 border-gray-300",
+}
+
 export default function DashboardPage() {
   const params = useParams()
   const { id } = params
@@ -26,15 +37,19 @@ export default function DashboardPage() {
     setSubscribing(true)
     try {
       if (subscribed) {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/subscriptions?userId=${session.user.id}&topic=${encodeURIComponent(data.query)}`, {
-          method: "DELETE"
+        // userId no longer passed — the backend resolves it from the
+        // session cookie sent via credentials: "include".
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/subscriptions?topic=${encodeURIComponent(data.query)}`, {
+          method: "DELETE",
+          credentials: "include"
         })
         if (res.ok) setSubscribed(false)
       } else {
         const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/subscriptions`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId: session.user.id, topic: data.query })
+          credentials: "include",
+          body: JSON.stringify({ topic: data.query })
         })
         if (res.ok) setSubscribed(true)
       }
@@ -48,7 +63,7 @@ export default function DashboardPage() {
   // Check if initially subscribed
   useEffect(() => {
     if (session?.user?.id && data?.query) {
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/subscriptions/${session.user.id}`)
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/subscriptions`, { credentials: "include" })
         .then(res => res.json())
         .then(subs => {
           if (Array.isArray(subs) && subs.some((s: any) => s.topic === data.query.toLowerCase())) {
@@ -65,12 +80,12 @@ export default function DashboardPage() {
         let res;
         if (typeof id === 'string' && id.startsWith('demo-')) {
           const topic = decodeURIComponent(id.replace('demo-', ''))
-          res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/demo/${topic}`)
+          res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/demo/${topic}`, { credentials: "include" })
           if (!res.ok) throw new Error("We couldn't load the demo snapshot for this topic.")
           const result = await res.json()
           setData(result.search)
         } else {
-          res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/results/${id}`)
+          res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/results/${id}`, { credentials: "include" })
           if (!res.ok) throw new Error("We couldn't find any news articles for this specific topic. Try searching for a broader term or a more recent event.")
           const result = await res.json()
           if (!result || !result.articles || result.articles.length === 0) {
@@ -479,6 +494,7 @@ function ArticleChatCard({ art }: { art: any }) {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/chat-with-article`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ articleId: art.id, message: question })
       })
       const data = await res.json()
@@ -533,21 +549,13 @@ function ArticleChatCard({ art }: { art: any }) {
           </button>
 
           <div className="flex gap-2 items-center">
-            {(() => {
-              const s = art.source.toLowerCase();
-              const high = ["reuters.com", "apnews.com", "bbc.co.uk", "bbc.com", "npr.org", "thehindu.com", "indianexpress.com", "ft.com", "wsj.com", "bloomberg.com", "theguardian.com", "nytimes.com", "washingtonpost.com", "economist.com", "latimes.com", "aljazeera.com", "cbsnews.com", "pbs.org", "propublica.org", "time.com", "scientificamerican.com", "nature.com"];
-              const mixed = ["foxnews.com", "cnn.com", "msnbc.com", "dailymail.co.uk", "nypost.com", "republicworld.com", "opindia.com", "thewire.in", "ndtv.com", "timesofindia", "usatoday.com", "businessinsider.com", "forbes.com", "newsweek.com", "telegraph.co.uk", "vice.com", "buzzfeednews.com", "cnet.com", "gizmodo.com", "slashdot.org", "techradar.com", "simonwillison.net"];
-              const low = ["breitbart.com", "infowars.com", "thegatewaypundit.com", "nationalheraldindia.com", "dailycaller.com", "theblaze.com", "wnd.com", "newsmax.com", "oann.com", "rt.com", "sputniknews.com"];
-              
-              let label = "Unknown Credibility";
-              let color = "bg-gray-200 text-gray-700 border-gray-300";
-              
-              if (high.some((domain: string) => s.includes(domain))) { label = "High Credibility"; color = "bg-green-100 text-green-800 border-green-300"; }
-              else if (mixed.some((domain: string) => s.includes(domain))) { label = "Mixed Credibility"; color = "bg-yellow-100 text-yellow-800 border-yellow-300"; }
-              else if (low.some((domain: string) => s.includes(domain))) { label = "Low Credibility"; color = "bg-red-100 text-red-800 border-red-300"; }
-              
-              return <Badge variant="outline" className={`text-[9px] px-1.5 py-0 uppercase tracking-wider ${color}`}>{label}</Badge>
-            })()}
+            {/* Reliability tier now comes straight from the backend's
+                SOURCE_RELIABILITY registry (app/services/nlp.py) instead of
+                a second, independently-maintained domain list here — the
+                two used to disagree on real domains (e.g. cnn.com, ndtv.com). */}
+            <Badge variant="outline" className={`text-[9px] px-1.5 py-0 uppercase tracking-wider ${RELIABILITY_STYLES[art.reliabilityTier as string] || RELIABILITY_STYLES.Unknown}`}>
+              {(art.reliabilityTier || "Unknown")} Credibility
+            </Badge>
             <span className="font-bold text-black uppercase tracking-wider text-xs flex gap-1 items-center">
               Bias: {art.biasLabel}
               {art.deviationScore > 0 && (

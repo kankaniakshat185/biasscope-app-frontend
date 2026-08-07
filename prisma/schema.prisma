@@ -1,3 +1,24 @@
+// This schema intentionally covers ONLY the Better Auth tables. This app
+// never queries Search/Article/Insight/Claim/etc. directly — all of that
+// data is read through the backend's HTTP API — but this file used to
+// carry a second, stale copy of those models anyway (missing columns the
+// backend had already added, like sourceBias/driftMetrics/entitySentiment)
+// pointed at the SAME physical database as biasscope-hf-backend's schema.
+// That's the "two owners for one schema" drift described in AUDIT_TASKS.md
+// A5: two independent migration histories fighting over shared tables.
+//
+// The backend's prisma/schema.prisma is the single source of truth for
+// Search/Article/Insight and everything else. If this app ever needs to
+// query one of those tables directly, add a `@@ignore`-annotated read-only
+// model here rather than a second authoritative copy.
+//
+// IMPORTANT: only ever run `prisma generate` against this schema (that's
+// all `npm run build` does, and it's pure code-gen — no DB connection).
+// Do NOT run `prisma migrate dev` or `prisma db push` from this repo: since
+// this schema no longer declares Search/Article/Insight, either command
+// would try to DROP those tables out from under the backend that still
+// owns and uses them.
+
 generator client_js {
   provider = "prisma-client-js"
   output   = "../frontend/node_modules/.prisma/client"
@@ -29,7 +50,6 @@ model User {
   
   sessions      Session[]
   accounts      Account[]
-  searches      Search[]
 
   @@map("user")
 }
@@ -78,55 +98,6 @@ model Verification {
   @@map("verification")
 }
 
-// -------------------------------------------------------------
-// Application Specific Tables
-// -------------------------------------------------------------
-
-model Search {
-  id         String    @id @default(uuid())
-  userId     String?
-  user       User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
-  query      String
-  category   String
-  createdAt  DateTime  @default(now())
-
-  articles   Article[]
-  insights   Insight[]
-
-  @@map("search")
-}
-
-model Article {
-  id              String   @id @default(uuid())
-  searchId        String
-  search          Search   @relation(fields: [searchId], references: [id], onDelete: Cascade)
-  title           String
-  content         String?
-  source          String
-  url             String
-  publishedAt     DateTime?
-  sentiment       String?  // positive, negative, neutral
-  sentimentScore  Float?
-  biasLabel       String?  // LEFT, CENTER, RIGHT
-  createdAt       DateTime @default(now())
-
-  @@map("article")
-}
-
-model Insight {
-  id                  String   @id @default(uuid())
-  searchId            String
-  search              Search   @relation(fields: [searchId], references: [id], onDelete: Cascade)
-  avgSentiment        Float
-  topKeywords         Json     // Array of strings or object
-  biasDistribution    Json     // Counts for left/center/right
-  dataQualityScore    Float
-  totalArticles       Int
-  validArticles       Int
-  duplicatesRemoved   Int
-  missingContent      Int
-  narrativeSummary    String?  // Generated AI narrative
-  createdAt           DateTime @default(now())
-
-  @@map("insight")
-}
+// Search/Article/Insight (and the rest of the claim-intelligence graph)
+// intentionally live only in biasscope-hf-backend/prisma/schema.prisma —
+// see the note at the top of this file.

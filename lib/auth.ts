@@ -3,8 +3,26 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { PrismaClient } from "@prisma/client";
 import { Resend } from "resend";
 
-const prisma = new PrismaClient();
+// Standard Next.js hot-reload guard: without this, every dev-server module
+// reload constructs a brand-new PrismaClient (and connection pool) instead
+// of reusing one, which is the usual cause of "too many connections"
+// errors in local development.
+const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
+const prisma = globalForPrisma.prisma ?? new PrismaClient();
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+// Fail loudly at boot if the signing secret is missing, rather than
+// silently signing every session with a hardcoded value that's sitting in
+// plaintext in this public repo.
+const authSecret = process.env.BETTER_AUTH_SECRET;
+if (!authSecret) {
+    throw new Error(
+        "BETTER_AUTH_SECRET is not set. Refusing to start with a fallback secret " +
+        "— set it in the environment before booting the app."
+    );
+}
 
 export const auth = betterAuth({
     database: prismaAdapter(prisma, {
@@ -43,5 +61,22 @@ export const auth = betterAuth({
     },
     baseURL: process.env.BETTER_AUTH_URL || "https://biasscope-app.vercel.app",
     trustedOrigins: ["https://biasscope-app.vercel.app", "http://localhost:3000"],
-    secret: process.env.BETTER_AUTH_SECRET || "default_super_secret_key"
+    secret: authSecret,
+    // The FastAPI backend lives on a different registrable domain
+    // (HuggingFace Spaces) than this app (Vercel), so the session cookie
+    // needs SameSite=None + Secure to be sent on cross-site fetches at all.
+    // Locally, frontend/backend are same-site (both "localhost", different
+    // ports) so the default Lax/insecure cookie already works — only
+    // tighten this in production.
+    //
+    // NOTE: verify `advanced.defaultCookieAttributes` is still the correct
+    // config key for your installed better-auth version — check the
+    // Set-Cookie header in your browser's network tab after a login in
+    // production and confirm it actually carries SameSite=None; Secure.
+    advanced: {
+        defaultCookieAttributes:
+            process.env.NODE_ENV === "production"
+                ? { sameSite: "none", secure: true }
+                : {},
+    },
 });
