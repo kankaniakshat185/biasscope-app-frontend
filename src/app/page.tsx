@@ -15,6 +15,7 @@ export default function LandingPage() {
   const [category, setCategory] = useState("")
   const [loading, setLoading] = useState(false)
   const [progress, setProgress] = useState(0)
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [domains, setDomains] = useState("")
   const [excludeDomains, setExcludeDomains] = useState("")
   const [fromDate, setFromDate] = useState("")
@@ -64,8 +65,9 @@ export default function LandingPage() {
     
     const searchQuery = directQuery || query;
     if (!searchQuery) return
-    
+
     setLoading(true)
+    setErrorMsg(null)
 
     try {
       const payload: any = {
@@ -84,13 +86,31 @@ export default function LandingPage() {
 
       if (!res.ok) {
         const errText = await res.text()
-        throw new Error(`Search failed: ${errText}`)
+        // FastAPI validation errors (422) and HTTPExceptions (404, etc.)
+        // both come back as JSON ({"detail": ...}) — fall back to the raw
+        // text for anything else (a proxy error page, a non-JSON 500).
+        let detail = errText
+        try {
+          const parsed = JSON.parse(errText)
+          detail = typeof parsed.detail === "string" ? parsed.detail : JSON.stringify(parsed.detail)
+        } catch {
+          // not JSON — use errText as-is
+        }
+        throw new Error(detail || `Request failed with status ${res.status}`)
       }
 
       const data = await res.json()
       router.push(`/dashboard/${data.search_id}`)
     } catch (error) {
+      // This used to be silent — console.error(error) + setLoading(false)
+      // with no user-facing message at all, so any failure (a validation
+      // error, a network error, the backend being down) looked identical
+      // to the user: the progress bar flickers on and off and nothing else
+      // happens. Surfacing the actual message is the fix; `router.push`
+      // above means we only reach here on a genuine failure, never on
+      // success.
       console.error(error)
+      setErrorMsg(error instanceof Error ? error.message : "Something went wrong. Please try again.")
       setLoading(false)
     }
   }
@@ -160,6 +180,12 @@ export default function LandingPage() {
               {loading ? <Loader2 className="animate-spin w-5 h-5 text-white" /> : "Analyze"}
             </Button>
           </form>
+
+          {errorMsg && !loading && (
+            <div className="w-full bg-red-50 border-2 border-red-600 text-red-700 px-4 py-3 text-sm font-medium shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+              <span className="font-bold uppercase tracking-wide">Search failed:</span> {errorMsg}
+            </div>
+          )}
 
           {!loading && (
             <div className="w-full flex flex-col items-end">
