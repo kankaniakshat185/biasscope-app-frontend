@@ -224,10 +224,23 @@ export default function DashboardPage() {
                 </div>
                 </div>
                 <div className="flex flex-col justify-center flex-1 text-left">
-                  <div className="text-3xl font-[800] text-red-500">{Number((insights.polarizationScore ?? 0) * 100).toFixed(0)}%</div>
-                  <p className="text-xs text-[#666] mt-2 tracking-wide font-medium">
-                    {(insights.polarizationScore ?? 0) < 0.25 ? "Low" : (insights.polarizationScore ?? 0) < 0.60 ? "Moderate" : "High"} Divergence
-                  </p>
+                  {/* R9: null (not 0) means "no LEFT or no RIGHT articles to
+                      compare" — a real, common case, not "perfectly
+                      balanced coverage." Rendering it as 0% used to make
+                      those indistinguishable. */}
+                  {insights.polarizationScore == null ? (
+                    <>
+                      <div className="text-3xl font-[800] text-gray-400">—</div>
+                      <p className="text-xs text-[#666] mt-2 tracking-wide font-medium">Not enough data (needs both Left and Right coverage)</p>
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-3xl font-[800] text-red-500">{Number(insights.polarizationScore * 100).toFixed(0)}%</div>
+                      <p className="text-xs text-[#666] mt-2 tracking-wide font-medium">
+                        {insights.polarizationScore < 0.25 ? "Low" : insights.polarizationScore < 0.60 ? "Moderate" : "High"} Divergence
+                      </p>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -644,13 +657,16 @@ function MethodologyReport() {
             <div className="bg-gray-50 border border-gray-300 p-4 font-mono text-xs mb-4">
               <p className="font-bold mb-2">DQS = (C × 0.40) + (D × 0.30) + (R × 0.30)</p>
               <ul className="list-disc pl-5 space-y-2">
-                <li><strong>Completeness (C):</strong> 1.0 - (missing_content / total_articles). An article is considered missing if it has fewer than 50 characters.</li>
-                <li><strong>Source Diversity (D):</strong> min(unique_sources / total_articles, 1.0)</li>
+                <li><strong>Completeness (C):</strong> 1.0 - (missing_content / deduplicated_articles). An article is considered missing if it has fewer than 50 characters.</li>
+                <li><strong>Source Diversity (D):</strong> min(unique_sources / deduplicated_articles, 1.0)</li>
                 <li><strong>Content Richness (R):</strong> min(avg_content_length / 1000, 1.0). Measures the depth of the articles, capping at an average of 1,000 characters.</li>
               </ul>
+              <p className="mt-2 text-gray-500">
+                <code>deduplicated_articles</code> is the article count <em>after</em> removing duplicates — i.e. the Data Funnel card&apos;s &quot;Raw Articles&quot; minus its &quot;Duplicates&quot; (deliberately excludes duplicates from these ratios; it does <em>not</em> also subtract &quot;Invalid Text&quot;, since Completeness itself is what measures that).
+              </p>
             </div>
             <div className="bg-[#FFF200]/20 border border-[#FFF200] p-3 text-xs">
-              <strong>Example:</strong> If a topic has 10 articles from 5 unique sources, none are missing content, and the average length is 1,200 characters:
+              <strong>Example:</strong> If a topic has 12 raw articles, 2 are removed as duplicates (10 deduplicated articles remain) — 5 unique sources, none missing content, and the average length is 1,200 characters:
               <br/>C = 1.0 (No missing content)<br/>D = 5 / 10 = 0.5<br/>R = min(1200 / 1000, 1.0) = 1.0
               <br/><strong>DQS = (1.0 × 0.40) + (0.5 × 0.30) + (1.0 × 0.30) = 0.85 (85%)</strong>
             </div>
