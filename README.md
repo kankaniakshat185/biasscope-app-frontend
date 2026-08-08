@@ -72,15 +72,16 @@ The frontend is built as a serverless, edge-ready application:
 ### Component Optimization
 The Entity Sentiment Graph leverages heavily memoized React components to prevent unnecessary re-renders when interacting with dense matrix datasets containing hundreds of data points.
 
-## Resilience Testing
+## Testing
 
-The dashboard is engineered to handle failure states gracefully, ensuring users never see raw stack traces.
+```bash
+npm test          # run the suite once (vitest run)
+npm run test:watch
+```
 
-### Test 1: Empty Dataset Fallbacks
-Simulates an API response with zero valid articles due to extreme domain filtering or rate limiting, verifying that the custom error boundaries intercept and render the user-friendly Neobrutalist error card.
+Vitest + React Testing Library + jsdom, set up specifically to close a real gap: `IntelligenceLayer.tsx` polls the backend for Phase 2 pipeline status (`pending` → `processing` → `complete`/`failed`) and used to render nothing at all — not even a loading state — while extraction was still in progress, because its render-gate checked only the claim count, not the status the backend explicitly returns to disambiguate "still working" from "done, found nothing" (see AUDIT_TASKS.md R5/R16). `src/app/dashboard/[id]/IntelligenceLayer.test.tsx` pins the correct UI for all four status values, including that polling actually stops once status leaves `processing`.
 
-### Test 2: Network Timeout Handling
-Validates the loading UI behavior when the backend NLP processing exceeds the 25-second threshold.
+This is the first (and currently only) component under test — most of this repo's UI logic still has no automated coverage. `vitest.config.ts` uses jsdom + `@vitejs/plugin-react`; `lib/api.ts`'s `api.get` is mocked at the module boundary rather than hitting a real backend.
 
 ## Project Structure
 
