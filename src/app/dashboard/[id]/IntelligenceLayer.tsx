@@ -75,7 +75,36 @@ export default function IntelligenceLayer({ searchId }: { searchId: string }) {
   }
 
   if (!intel || !intel.metrics) return null
-  if (intel.metrics.canonicalClaims === 0 && !loading) return null
+
+  // R5 fix: distinguish "the background pipeline is still running" from
+  // "the pipeline finished and genuinely found nothing" using the
+  // backend's own `status` field — that's exactly what it exists for (see
+  // AUDIT_TASKS.md F4). This used to check only `canonicalClaims === 0`,
+  // which is ALSO true while extraction is still in progress — so this
+  // whole section silently rendered nothing at all, not even a loading
+  // state, for the first 10-30s of every normal search.
+  if (intel.status === "pending" || intel.status === "processing") {
+    return (
+      <div className="flex flex-col items-center justify-center p-12 border-2 border-dashed border-gray-400 mt-8">
+        <Loader2 className="w-8 h-8 animate-spin text-gray-500 mb-4" />
+        <p className="text-gray-500 font-mono text-sm">Extracting claims, clustering evidence, detecting events...</p>
+      </div>
+    )
+  }
+
+  if (intel.status === "failed") {
+    return (
+      <div className="flex flex-col items-center justify-center p-12 border-2 border-dashed border-red-300 bg-red-50 mt-8">
+        <p className="text-red-600 font-mono text-sm font-bold">Claim intelligence pipeline failed for this search.</p>
+        <p className="text-red-500 font-mono text-xs mt-1">The rest of the dashboard above is unaffected.</p>
+      </div>
+    )
+  }
+
+  // Only reachable once status is "complete" (or a demo snapshot, which has
+  // no live status to poll) — canonicalClaims === 0 now genuinely means
+  // "the pipeline ran and found nothing," not "still working on it."
+  if (intel.metrics.canonicalClaims === 0) return null
 
   return (
     <div className="mt-12 pt-4">

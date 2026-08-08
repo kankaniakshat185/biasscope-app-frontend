@@ -545,7 +545,20 @@ function ArticleChatCard({ art }: { art: any }) {
             </Badge>
             <span className="font-bold text-black uppercase tracking-wider text-xs flex gap-1 items-center">
               Bias: {art.biasLabel}
-              {art.deviationScore > 0 && (
+              {/* R6: was `deviationScore > 0`, which fired identically for a
+                  trivial one-notch shift (e.g. a usually-CENTER source
+                  running one LEFT-leaning piece) and a full LEFT<->RIGHT
+                  flip — both got the same alarming "ANOMALY" treatment.
+                  deviationScore only ranges 0-2 (LEFT=0, CENTER=1, RIGHT=2),
+                  so >= 2 restricts the badge to the genuinely extreme case.
+                  Doesn't fix the bigger gap this can't address on its own —
+                  sources outside the ~40-domain SOURCE_BIAS_REGISTRY always
+                  get sourceBias="UNKNOWN", which forces deviationScore to 0
+                  regardless of actual content, so this can never flag the
+                  long tail of unregistered sources at all. A real fix needs
+                  a per-source historical baseline instead of a static
+                  registry — bigger, separate effort. See AUDIT_TASKS.md R6. */}
+              {art.deviationScore >= 2 && (
                 <div className="relative group flex items-center">
                   <span className="bg-red-600 text-white px-1 py-0.5 rounded-sm text-[8px] animate-pulse cursor-pointer">
                     ⚠️ ANOMALY
