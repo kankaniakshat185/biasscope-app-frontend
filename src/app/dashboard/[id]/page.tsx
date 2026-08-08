@@ -197,7 +197,7 @@ export default function DashboardPage() {
                 <div className="uppercase tracking-widest text-xs font-bold border-b-2 border-black pb-2 mb-3 text-black">Data Funnel</div>
                 <div className="text-xs flex flex-col gap-1.5 flex-1 justify-center text-left">
                   <div className="flex justify-between"><span className="text-[#666] font-medium">Raw Articles:</span><span className="font-mono">{insights.totalArticles}</span></div>
-                  <div className="flex justify-between"><span className="text-[#666] font-medium">Duplicates:</span><span className="font-mono text-red-500">-{insights.duplicatesRemoved}</span></div>
+                  <div className="flex justify-between" title="Includes exact duplicate URLs, near-duplicate titles, and articles with no title at all — not purely duplication."><span className="text-[#666] font-medium">Filtered:</span><span className="font-mono text-red-500">-{insights.duplicatesRemoved}</span></div>
                   <div className="flex justify-between"><span className="text-[#666] font-medium">Invalid Text:</span><span className="font-mono text-red-500">-{insights.missingContent}</span></div>
                   <div className="flex justify-between pt-2 mt-1"><span className="font-semibold text-blue-700 tracking-wide">Analyzed:</span><span className="font-mono font-bold text-sm">{insights.validArticles}</span></div>
                 </div>
@@ -662,7 +662,7 @@ function MethodologyReport() {
                 <li><strong>Content Richness (R):</strong> min(avg_content_length / 1000, 1.0). Measures the depth of the articles, capping at an average of 1,000 characters.</li>
               </ul>
               <p className="mt-2 text-gray-500">
-                <code>deduplicated_articles</code> is the article count <em>after</em> removing duplicates — i.e. the Data Funnel card&apos;s &quot;Raw Articles&quot; minus its &quot;Duplicates&quot; (deliberately excludes duplicates from these ratios; it does <em>not</em> also subtract &quot;Invalid Text&quot;, since Completeness itself is what measures that).
+                <code>deduplicated_articles</code> is the article count <em>after</em> removing duplicates — i.e. the Data Funnel card&apos;s &quot;Raw Articles&quot; minus its &quot;Filtered&quot; count (deliberately excludes duplicates from these ratios; it does <em>not</em> also subtract &quot;Invalid Text&quot;, since Completeness itself is what measures that).
               </p>
             </div>
             <div className="bg-[#FFF200]/20 border border-[#FFF200] p-3 text-xs">
