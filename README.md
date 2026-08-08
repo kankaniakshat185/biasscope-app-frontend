@@ -2,7 +2,7 @@
 
 The front-facing user interface for the BiasScope Intelligence platform, designed with a Neobrutalist aesthetic to present complex NLP data clearly and objectively.
 
-[Live Dashboard Deployment](https://biasscope-app-frontend.vercel.app/) • [Backend API Documentation](https://huggingface.co/spaces/kankaniakshat185/biasscope)
+[Live Dashboard Deployment](https://biasscope-app.vercel.app/) • [Backend API Documentation](https://huggingface.co/spaces/kankaniakshat185/biasscope)
 
 <!-- Add a screenshot here once one exists — `docs/dashboard-preview.png`
      was referenced but never committed, so it rendered as a broken image. -->
