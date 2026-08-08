@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card"
 import { Badge } from "../../../components/ui/badge"
 import { Loader2, Database, TrendingUp, ChevronDown, ChevronUp } from "lucide-react"
+import { api } from "../../../lib/api"
 
 export default function IntelligenceLayer({ searchId }: { searchId: string }) {
   const [intel, setIntel] = useState<any>(null)
@@ -11,32 +12,57 @@ export default function IntelligenceLayer({ searchId }: { searchId: string }) {
   const [activeTab, setActiveTab] = useState("events")
 
   useEffect(() => {
-    async function fetchIntel() {
+    // Demo snapshots are static (baked once at generation time, not a live
+    // pipeline) — fetch once and stop. Real searches poll until the
+    // backend's `status` field (set by app/services/pipeline.py as the
+    // Phase 2 pipeline runs) says the extraction/clustering/event-detection
+    // background job is actually done, instead of polling every 10s
+    // forever with no way to know when to stop. See AUDIT_TASKS.md F4.
+    const isDemo = typeof searchId === 'string' && searchId.startsWith('demo-')
+    let cancelled = false
+    let interval: ReturnType<typeof setInterval> | undefined
+
+    async function fetchIntel(): Promise<string | undefined> {
       try {
         let res;
         let data;
-        if (typeof searchId === 'string' && searchId.startsWith('demo-')) {
+        if (isDemo) {
           const topic = decodeURIComponent(searchId.replace('demo-', ''))
-          res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/demo/${topic}`, { credentials: "include" })
+          res = await api.get(`/demo/${topic}`)
           if (!res.ok) throw new Error("Demo snapshot not found")
           const fullResult = await res.json()
           data = fullResult.intelligence
         } else {
-          res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/results/${searchId}/intelligence`, { credentials: "include" })
+          res = await api.get(`/results/${searchId}/intelligence`)
           if (!res.ok) throw new Error("Failed to fetch intelligence layer")
           data = await res.json()
         }
-        setIntel(data)
+        if (!cancelled) setIntel(data)
+        return data?.status
       } catch (err) {
         console.error(err)
+        return undefined
       } finally {
-        setLoading(false)
+        if (!cancelled) setLoading(false)
       }
     }
 
-    fetchIntel()
-    const interval = setInterval(() => { fetchIntel() }, 10000)
-    return () => clearInterval(interval)
+    fetchIntel().then((status) => {
+      if (isDemo || cancelled) return
+      if (status === "processing" || status === "pending") {
+        interval = setInterval(async () => {
+          const nextStatus = await fetchIntel()
+          if ((nextStatus === "complete" || nextStatus === "failed") && interval) {
+            clearInterval(interval)
+          }
+        }, 10000)
+      }
+    })
+
+    return () => {
+      cancelled = true
+      if (interval) clearInterval(interval)
+    }
   }, [searchId])
 
   if (loading && !intel) {

@@ -8,6 +8,7 @@ import { SentimentOverTime, BiasDistribution, SourceDistribution } from "../../.
 import { Loader2, Info, BellRing } from "lucide-react"
 import IntelligenceLayer from "./IntelligenceLayer"
 import { authClient } from "../../../lib/auth-client"
+import { api } from "../../../lib/api"
 
 // Mirrors the tier labels returned by get_source_reliability() in
 // app/services/nlp.py on the backend — this is styling only, not a second
@@ -37,20 +38,11 @@ export default function DashboardPage() {
     setSubscribing(true)
     try {
       if (subscribed) {
-        // userId no longer passed — the backend resolves it from the
-        // session cookie sent via credentials: "include".
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/subscriptions?topic=${encodeURIComponent(data.query)}`, {
-          method: "DELETE",
-          credentials: "include"
-        })
+        // userId no longer passed — the backend resolves it from the session cookie.
+        const res = await api.delete(`/subscriptions?topic=${encodeURIComponent(data.query)}`)
         if (res.ok) setSubscribed(false)
       } else {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/subscriptions`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ topic: data.query })
-        })
+        const res = await api.post("/subscriptions", { topic: data.query })
         if (res.ok) setSubscribed(true)
       }
     } catch (err) {
@@ -63,7 +55,7 @@ export default function DashboardPage() {
   // Check if initially subscribed
   useEffect(() => {
     if (session?.user?.id && data?.query) {
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/subscriptions`, { credentials: "include" })
+      api.get("/subscriptions")
         .then(res => res.json())
         .then(subs => {
           if (Array.isArray(subs) && subs.some((s: any) => s.topic === data.query.toLowerCase())) {
@@ -80,12 +72,12 @@ export default function DashboardPage() {
         let res;
         if (typeof id === 'string' && id.startsWith('demo-')) {
           const topic = decodeURIComponent(id.replace('demo-', ''))
-          res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/demo/${topic}`, { credentials: "include" })
+          res = await api.get(`/demo/${topic}`)
           if (!res.ok) throw new Error("We couldn't load the demo snapshot for this topic.")
           const result = await res.json()
           setData(result.search)
         } else {
-          res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/results/${id}`, { credentials: "include" })
+          res = await api.get(`/results/${id}`)
           if (!res.ok) throw new Error("We couldn't find any news articles for this specific topic. Try searching for a broader term or a more recent event.")
           const result = await res.json()
           if (!result || !result.articles || result.articles.length === 0) {
@@ -491,12 +483,7 @@ function ArticleChatCard({ art }: { art: any }) {
     setAnswer("")
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/chat-with-article`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ articleId: art.id, message: question })
-      })
+      const res = await api.post("/chat-with-article", { articleId: art.id, message: question })
       const data = await res.json()
       setAnswer(data.answer)
     } catch (err) {

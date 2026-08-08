@@ -5,6 +5,7 @@ import { authClient } from "../../lib/auth-client"
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card"
 import { Badge } from "../../components/ui/badge"
 import { Loader2, TrendingUp, AlertTriangle, Clock } from "lucide-react"
+import { api } from "../../lib/api"
 
 export default function SubscriptionsPage() {
   const { data: session, isPending } = authClient.useSession()
@@ -18,7 +19,7 @@ export default function SubscriptionsPage() {
         // Route no longer takes a user id in the path — the backend
         // derives the caller from the session cookie, so this endpoint
         // can only ever return YOUR OWN subscriptions now.
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/subscriptions`, { credentials: "include" })
+        const res = await api.get("/subscriptions")
         if (res.ok) {
           const data = await res.json()
           setSubscriptions(data)

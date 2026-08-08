@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Loader2, FileText, Activity, Target, ShieldCheck } from "lucide-react"
 import { authClient } from "../lib/auth-client"
 import { LoginForm } from "../components/LoginForm"
+import { api } from "../lib/api"
 
 export default function LandingPage() {
   const [query, setQuery] = useState("")
@@ -71,24 +72,15 @@ export default function LandingPage() {
         query: searchQuery,
         category: category || undefined,
         // userId is no longer sent from the client — the backend derives
-        // the acting user from the session cookie (credentials: "include"
-        // below) instead of trusting whatever this field said.
+        // the acting user from the session cookie instead of trusting
+        // whatever this field said.
         domains: domains ? domains.replace(/\s+/g, '') : undefined,
         exclude_domains: excludeDomains ? excludeDomains.replace(/\s+/g, '') : undefined,
         fromDate: fromDate || undefined,
         toDate: toDate || undefined
       };
 
-      const fetchConfig = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        credentials: "include" as RequestCredentials,
-        body: JSON.stringify(payload)
-      }
-
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/search`, fetchConfig)
+      const res = await api.post("/search", payload)
 
       if (!res.ok) {
         const errText = await res.text()

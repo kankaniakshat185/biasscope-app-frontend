@@ -5,6 +5,7 @@ import { authClient } from "../../lib/auth-client"
 import { useRouter } from "next/navigation"
 import { Loader2, ArrowRight, Trash2 } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select"
+import { api } from "../../lib/api"
 
 export default function HistoryPage() {
   const { data: session, isPending } = authClient.useSession()
@@ -17,10 +18,7 @@ export default function HistoryPage() {
     if (!confirm("Are you sure you want to completely delete this search and all its data?")) return;
     
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/history/${searchId}`, {
-        method: "DELETE",
-        credentials: "include"
-      });
+      const res = await api.delete(`/history/${searchId}`);
       if (res.ok) {
         setSearches(prev => prev.filter(s => s.id !== searchId));
       } else {
@@ -36,7 +34,7 @@ export default function HistoryPage() {
     if (!confirm("Are you sure you want to completely delete ALL searches? This cannot be undone.")) return;
     setLoading(true);
     try {
-      await Promise.all(searches.map(s => fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/history/${s.id}`, { method: "DELETE", credentials: "include" })));
+      await Promise.all(searches.map(s => api.delete(`/history/${s.id}`)));
       setSearches([]);
     } catch (err) {
       alert("Error deleting searches.");
@@ -61,7 +59,7 @@ export default function HistoryPage() {
       try {
         // userId query param removed — the backend now derives the caller
         // from the session cookie instead of trusting a query param.
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000"}/history`, { credentials: "include" })
+        const res = await api.get("/history")
         if (!res.ok) throw new Error("Failed to fetch history")
         const data = await res.json()
         // /history now returns { total, limit, offset, searches } instead

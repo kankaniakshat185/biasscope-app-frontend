@@ -2,9 +2,10 @@
 
 The front-facing user interface for the BiasScope Intelligence platform, designed with a Neobrutalist aesthetic to present complex NLP data clearly and objectively.
 
-![Dashboard Preview](docs/dashboard-preview.png)
-
 [Live Dashboard Deployment](https://biasscope-app-frontend.vercel.app/) • [Backend API Documentation](https://huggingface.co/spaces/kankaniakshat185/biasscope)
+
+<!-- Add a screenshot here once one exists — `docs/dashboard-preview.png`
+     was referenced but never committed, so it rendered as a broken image. -->
 
 ## Features
 
@@ -87,14 +88,15 @@ Validates the loading UI behavior when the backend NLP processing exceeds the 25
 ├── src/
 │   ├── app/
 │   │   ├── dashboard/    # Main analytical interface route
-│   │   ├── vault/        # Authenticated snapshot history route
+│   │   ├── history/      # Authenticated snapshot history route (labeled "Vault" in the UI)
+│   │   ├── subscriptions/ # Longitudinal topic-tracking route
+│   │   ├── login/        # Auth entry point
 │   │   └── api/          # Internal Next.js API handlers
 │   ├── components/
 │   │   ├── ui/           # Core design system components
 │   │   └── Charts.tsx    # D3/Recharts data visualizations
 │   └── lib/              # Auth configurations and utilities
-├── public/               # Static assets
-└── docs/                 # Design system specifications
+└── public/               # Static assets
 ```
 
 ## License

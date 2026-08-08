@@ -59,7 +59,6 @@ export function SourceDistribution({ data }: { data: Record<string, number> }) {
 }
 
 export function BiasDistribution({ data }: { data: { LEFT?: number, CENTER?: number, RIGHT?: number, UNKNOWN?: number } }) {
-  console.log("Bias data:", data);
   const chartData = [
     { name: 'Left', value: data.LEFT || 0 },
     { name: 'Center', value: data.CENTER || 0 },
