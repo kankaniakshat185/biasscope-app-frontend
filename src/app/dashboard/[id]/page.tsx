@@ -155,23 +155,25 @@ export default function DashboardPage() {
 
       <div className="max-w-7xl mx-auto space-y-16 w-full px-12 py-10 flex-1">
         
-        {/* Header */}
-        <div id="overview" className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 scroll-mt-32">
+        {/* Header — same bordered/shadowed card treatment as the metrics
+            bar and every other section below, so it doesn't read as a
+            leftover unstyled element sitting above the "real" dashboard. */}
+        <div id="overview" className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 scroll-mt-32">
             <div>
               <h1 className="text-3xl font-bold tracking-tight font-[family-name:var(--font-sekuya)]">Intelligence Dashboard</h1>
               <p className="text-black-500 mt-2 flex flex-row items-center gap-2">
                 Analysis for Topic: <span className="font-semibold text-blue-600 truncate max-w-[200px] md:max-w-[400px]" title={data.query}>{data.query}</span> <span>in <span className="capitalize">{data.category || 'General'}</span></span>
               </p>
             </div>
-            
+
             <div className="flex gap-2 w-full sm:w-auto">
               {session && (
-                <button 
+                <button
                   onClick={handleSubscribe}
                   disabled={subscribing}
                   className={`print:hidden h-12 flex-1 sm:w-48 uppercase tracking-widest font-bold rounded-none px-2 text-[10px] flex items-center justify-center gap-2 border-2 border-black transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none ${
-                    subscribed 
-                      ? "bg-[#FFF200] text-black hover:bg-red-500 hover:text-white group" 
+                    subscribed
+                      ? "bg-[#FFF200] text-black hover:bg-red-500 hover:text-white group"
                       : "bg-white text-black hover:bg-gray-100"
                   }`}
                 >
@@ -180,7 +182,7 @@ export default function DashboardPage() {
                   <span className="hidden group-hover:block truncate">{subscribed ? "Unsubscribe" : ""}</span>
                 </button>
               )}
-              <button 
+              <button
                 onClick={() => window.print()}
                 className="print:hidden h-12 flex-1 sm:w-48 bg-black text-white border-2 border-black rounded-none hover:bg-gray-800 uppercase tracking-widest font-bold px-2 text-[10px] flex items-center justify-center transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
               >
