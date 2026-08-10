@@ -1,105 +1,149 @@
-# BiasScope Dashboard
+# BiasScope Frontend
 
-The front-facing user interface for the BiasScope Intelligence platform, designed with a Neobrutalist aesthetic to present complex NLP data clearly and objectively.
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-[Live Dashboard Deployment](https://biasscope-app.vercel.app/) • [Backend API Documentation](https://huggingface.co/spaces/kankaniakshat185/biasscope)
+The dashboard for [BiasScope](https://biasscope-app.vercel.app/) — a claim-centric news intelligence platform. Search any topic, and instead of a single "bias score," get an interactive breakdown of what publishers across the political spectrum are actually claiming, where they agree, where they contradict each other, and how balanced the resulting coverage set really is.
 
-<!-- Add a screenshot here once one exists — `docs/dashboard-preview.png`
-     was referenced but never committed, so it rendered as a broken image. -->
+> **Looking for the API/pipeline itself?**
+> [**BiasScope HF Backend**](https://github.com/kankaniakshat185/biasscope-hf-backend) — the FastAPI service this app talks to.
+
+[Live App](https://biasscope-app.vercel.app/) • [Methodology & Trust Report](https://biasscope-app.vercel.app/#methodology)
 
 ## Features
 
-- **Strict Neobrutalist UI** — High-contrast, unrounded structural design emphasizing data hierarchy and analytical objectivity.
-- **Interactive Claim Explorer** — Deep-dive interfaces allowing users to trace macro-events down to their foundational claims and original evidence sentences.
-- **Cross-Ideological Consensus Indicators** — Visual badges surfacing claims that possess high multi-publisher corroboration.
-- **NLI Polarization Engine** — Visualizing the degree of direct mathematical contradiction between media sources using DeBERTa-v3 zero-shot Natural Language Inference.
-- **Single URL Inspector** — Dedicated interface for deep-dive validation of isolated news articles, stripping away macro-topic noise.
-- **Multimodal Visual Analysis** — Integrates with Vision LLMs to extract and visualize biases embedded directly within uploaded infographics and media screenshots.
-- **Echo Chamber Visualizations** — Side-by-side comparative views of LLM-generated narrative framing for identical topics, driven by a dual-ingestion GDELT 2.0 and NewsAPI pipeline.
-- **Entity Sentiment Matrices** — Grid-based mapping of Named Entity Recognition (NER) data against aggregated polarization scores.
-- **Secure Vault & History** — Fully authenticated session management via Better Auth, allowing users to retain and manage historical analytical snapshots.
-
-## Advanced Engineering Roadmap
-
-We are actively researching and implementing the following production-grade capabilities:
-- **Client-Side Vector Search via WebAssembly (Wasm):** Migrating high-latency filtering of Echo Chambers directly to the client to achieve sub-millisecond interaction speeds without round-tripping to the backend API.
-- **WebWorker-Offloaded Rendering:** Decoupling the D3.js/Chart.js rendering thread from the main UI thread to guarantee 60fps scrolling even when visualizing thousands of complex claim entities.
-- **Optimistic UI with Conflict Resolution:** Building an intelligent local cache layer with CRDTs (Conflict-free Replicated Data Types) to allow offline-first interaction with previously loaded Snapshots.
-- **Dynamic Methodology Rendering Engine:** Transitioning the static methodology report into a reactive computation graph that dynamically reflects the exact validation thresholds and drift metrics returned by the backend in real-time.
+- **Search-driven intelligence dashboard** — enter a topic, watch a live multi-stage progress indicator (ingestion → cleaning → analysis → validation → narrative) while the backend pipeline runs, then land on a full results page: bias distribution, sentiment breakdown, entity-sentiment graph, and an AI-generated narrative summary.
+- **Claim-level intelligence layer** — a dedicated view over the backend's asynchronous Phase 2 pipeline (`GET /results/:id/intelligence`), polling while extraction/clustering/event-detection complete and rendering the resulting claim clusters and detected events once they're ready, each backed by real evidence rows rather than a black-box score.
+- **Contrastive Echo Chamber cards** — side-by-side, LLM-generated summaries of how left-leaning and right-leaning coverage frame the same story, with hover-popup explanations of what clicking each card actually does (filters the article feed below to that lean).
+- **In-depth Methodology & Trust Report** — a full, code-grounded write-up of every formula the platform uses (Data Quality Score, Jensen-Shannon Divergence polarization, claim deduplication thresholds, HDBSCAN clustering, NLI contradiction detection, LLM cost-cache economics), built directly onto the landing page below the search bar.
+- **Search history & saved results** — every search is tied to your account (or kept anonymous) and revisitable from `/history`, with shareable result links by design — a link to a result is a link to that exact analysis, no re-running required.
+- **Weekly topic subscriptions** — subscribe to a topic from `/subscriptions` to get drift-tracking snapshots as coverage evolves over time (powered by the backend's Celery/Redis job).
+- **Auth via Better Auth** — email/password (with Resend-sent verification email) or Google OAuth, session-cookie based, no separate token to manage on the client.
 
 ## Architecture
 
-<details>
-<summary><b>View Detailed Frontend Architecture Diagram</b></summary>
+The browser never talks to the FastAPI backend directly. Hugging Face Spaces (where the backend is hosted) strips `Access-Control-Allow-Credentials` from cross-origin preflight responses at the platform/proxy level — a documented HF Spaces behavior, not something under this app's control — which silently breaks credentialed (cookie-based) cross-origin requests. Rather than switching to token-based auth to work around a hosting platform's proxy behavior, every API call is routed through a same-origin Next.js Route Handler (`src/app/api/proxy/[...path]/route.ts`) that relays the request server-to-server, where CORS enforcement doesn't apply at all.
 
 ```mermaid
 graph TD
-    A[User Request] --> B[Vercel Edge Network]
-    B --> C{Better Auth Middleware}
-    C -->|Unauthenticated| D[Neobrutalist Login Wall]
-    C -->|Authenticated| E[Next.js App Router]
-    
-    E --> F[React Server Components]
-    F --> G[Data Fetching Layer]
-    G --> H[BiasScope Core Engine API]
-    
-    F --> I[Client Components]
-    I --> J[Lucide Icons]
-    I --> K[D3 / Recharts Data Viz]
-    I --> L[Shadcn UI State]
+    User[Browser] -->|1: fetch same-origin, cookie attached| Proxy["/api/proxy/[...path]\nNext.js Route Handler"]
+    Proxy -->|2: server-to-server HTTPS, cookie forwarded| Backend["FastAPI backend\n(Hugging Face Spaces)"]
+    Backend -->|3: JSON response| Proxy
+    Proxy -->|4: relayed response| User
+
+    User -->|auth: sign up / sign in| BetterAuth["/api/auth/[...all]\nBetter Auth handler"]
+    BetterAuth --> AuthDB[(Postgres: user / session / account)]
+    BetterAuth -.->|OAuth| Google["Google OAuth"]
+    BetterAuth -.->|verification email| Resend["Resend"]
+
+    subgraph "App Router pages"
+        Landing["/  — search + Methodology & Trust Report"]
+        Dashboard["/dashboard/[id]  — results + IntelligenceLayer"]
+        History["/history  — past searches"]
+        Subscriptions["/subscriptions  — weekly topic tracking"]
+    end
+
+    Landing -->|POST /search| Proxy
+    Dashboard -->|GET /results/:id\nGET /results/:id/intelligence, polled| Proxy
+    History -->|GET /history| Proxy
+    Subscriptions -->|GET/POST /subscriptions| Proxy
 ```
-</details>
 
-The frontend is built as a serverless, edge-ready application:
+**Stack notes:**
+- **Charts:** [Recharts](https://recharts.org/) (`src/components/Charts.tsx`) for bias distribution, sentiment breakdown, and entity-sentiment graphs.
+- **UI primitives:** [shadcn/ui](https://ui.shadcn.com/) components (`src/components/ui/`) on top of Radix-derived [Base UI](https://base-ui.com/), styled with Tailwind CSS v4.
+- **Fonts:** `Sekuya` (the display/heading face used across headers, hero text, and the tagline footer), `Oswald`, `Geist`, and `Geist Mono` — loaded via `next/font/google` in `src/app/layout.tsx`. Note: the global Tailwind `font-sans` token is remapped to Sekuya (`globals.css`), so any page needing normal body copy explicitly overrides with `font-[family-name:var(--font-geist-sans)]`.
+- **State:** no global client store — page-level `useState`/`useEffect` plus the URL (`/dashboard/[id]`) as the source of truth for which result is being viewed.
 
-| Layer | Components |
-|-------|------------|
-| Edge Delivery | Next.js App Router deployed globally on Vercel |
-| State & Caching | Native Next.js caching, aggressive UI debouncing, React Server Components |
-| Authentication | Better Auth stateless session management via Edge Middleware |
-| Styling & Viz | Tailwind CSS, Shadcn UI custom brutalist theme, Vision UI placeholders |
+## Local Setup & Installation
 
-## Performance & Optimization
+Requires Node.js 20+ and a running instance of the [backend](https://github.com/kankaniakshat185/biasscope-hf-backend) (local or the deployed Space). Auth needs its own Postgres database — this can be the same database the backend uses, or a separate one; Better Auth manages its own tables via Prisma migrations.
 
-### Rendering Metrics
-
-| Metric | Value |
-|--------|-------|
-| Time to First Byte (TTFB) | < 50ms |
-| First Contentful Paint | 0.8s |
-| Lighthouse Performance | 98/100 |
-
-### Component Optimization
-The Entity Sentiment Graph leverages heavily memoized React components to prevent unnecessary re-renders when interacting with dense matrix datasets containing hundreds of data points.
-
-## Testing
-
+### 1. Clone and install
 ```bash
-npm test          # run the suite once (vitest run)
-npm run test:watch
+git clone https://github.com/kankaniakshat185/biasscope-app-frontend.git
+cd biasscope-app-frontend
+npm install
 ```
 
-Vitest + React Testing Library + jsdom, set up specifically to close a real gap: `IntelligenceLayer.tsx` polls the backend for Phase 2 pipeline status (`pending` → `processing` → `complete`/`failed`) and used to render nothing at all — not even a loading state — while extraction was still in progress, because its render-gate checked only the claim count, not the status the backend explicitly returns to disambiguate "still working" from "done, found nothing" (see AUDIT_TASKS.md R5/R16). `src/app/dashboard/[id]/IntelligenceLayer.test.tsx` pins the correct UI for all four status values, including that polling actually stops once status leaves `processing`.
+### 2. Configure environment variables
+Create `.env.local`:
+```env
+# Server-only — the proxy relays to this. Never exposed to the browser.
+BACKEND_URL="http://127.0.0.1:8000"
 
-This is the first (and currently only) component under test — most of this repo's UI logic still has no automated coverage. `vitest.config.ts` uses jsdom + `@vitejs/plugin-react`; `lib/api.ts`'s `api.get` is mocked at the module boundary rather than hitting a real backend.
+# Better Auth
+DATABASE_URL="postgresql://user:password@host:port/dbname?sslmode=require"
+BETTER_AUTH_SECRET="a-long-random-string"
+BETTER_AUTH_URL="http://localhost:3000"
+
+# Google OAuth (optional — email/password works without it)
+GOOGLE_CLIENT_ID="your_google_client_id"
+GOOGLE_CLIENT_SECRET="your_google_client_secret"
+
+# Resend — sends the email-verification link on sign-up
+RESEND_API_KEY="your_resend_api_key"
+```
+
+### 3. Sync the auth schema
+```bash
+npx prisma generate
+npx prisma db push
+```
+
+### 4. Run the app
+```bash
+npm run dev
+```
+Open `http://localhost:3000`. Make sure the backend is running at the URL you set for `BACKEND_URL`, or every search will fail at the proxy layer.
 
 ## Project Structure
 
 ```text
+biasscope-app-frontend/
 ├── src/
 │   ├── app/
-│   │   ├── dashboard/    # Main analytical interface route
-│   │   ├── history/      # Authenticated snapshot history route (labeled "Vault" in the UI)
-│   │   ├── subscriptions/ # Longitudinal topic-tracking route
-│   │   ├── login/        # Auth entry point
-│   │   └── api/          # Internal Next.js API handlers
+│   │   ├── page.tsx                    # Landing page: search + full Methodology & Trust Report
+│   │   ├── layout.tsx                  # Root layout, fonts, header/nav, AuthButton
+│   │   ├── globals.css                 # Tailwind v4 theme tokens, font-sans override
+│   │   ├── login/page.tsx              # Sign in / sign up
+│   │   ├── history/page.tsx            # Past searches for the current user
+│   │   ├── subscriptions/page.tsx      # Weekly topic-drift subscriptions
+│   │   ├── dashboard/[id]/
+│   │   │   ├── page.tsx                # Full results view: bias, sentiment, narrative, Echo Chambers
+│   │   │   ├── IntelligenceLayer.tsx   # Claim clusters / events, polls Phase 2 status
+│   │   │   └── IntelligenceLayer.test.tsx
+│   │   └── api/
+│   │       ├── proxy/[...path]/route.ts  # Same-origin relay to the FastAPI backend
+│   │       └── auth/[...all]/route.ts    # Better Auth's catch-all handler
 │   ├── components/
-│   │   ├── ui/           # Core design system components
-│   │   └── Charts.tsx    # D3/Recharts data visualizations
-│   └── lib/              # Auth configurations and utilities
-└── public/               # Static assets
+│   │   ├── AuthButton.tsx
+│   │   ├── LoginForm.tsx
+│   │   ├── Charts.tsx                  # Recharts wrappers
+│   │   └── ui/                         # shadcn/ui primitives (button, card, input, select, badge)
+│   └── lib/
+│       ├── api.ts                      # Typed fetch helpers, API_BASE_URL = "/api/proxy"
+│       ├── auth-client.ts              # Better Auth client hooks
+│       └── utils.ts                    # cn() (clsx + tailwind-merge)
+├── prisma/
+│   └── schema.prisma                   # Better Auth's user/session/account/verification tables
+├── vitest.config.ts
+├── vitest.setup.ts
+├── eslint.config.mjs
+└── package.json
 ```
 
-## License
+## Testing & Code Quality
 
-MIT
+```bash
+npm run lint          # eslint
+npx tsc --noEmit       # type check
+npm test               # vitest run — unit/component tests (Vitest + React Testing Library)
+npm run test:watch
+```
+
+## Privacy & License
+
+See [`PRIVACY.md`](./PRIVACY.md) for what data this app collects and why. Licensed under the [MIT License](./LICENSE).
