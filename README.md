@@ -51,10 +51,20 @@ graph TD
     Subscriptions -->|GET/POST /subscriptions| Proxy
 ```
 
-**Stack notes:**
-- **Charts:** [Recharts](https://recharts.org/) (`src/components/Charts.tsx`) for bias distribution, sentiment breakdown, and entity-sentiment graphs.
-- **UI primitives:** [shadcn/ui](https://ui.shadcn.com/) components (`src/components/ui/`) on top of Radix-derived [Base UI](https://base-ui.com/), styled with Tailwind CSS v4.
-- **Fonts:** `Sekuya` (the display/heading face used across headers, hero text, and the tagline footer), `Oswald`, `Geist`, and `Geist Mono` — loaded via `next/font/google` in `src/app/layout.tsx`. Note: the global Tailwind `font-sans` token is remapped to Sekuya (`globals.css`), so any page needing normal body copy explicitly overrides with `font-[family-name:var(--font-geist-sans)]`.
+## Tech Stack
+
+| | |
+|---|---|
+| **Framework** | Next.js 16 (App Router), React 19, TypeScript |
+| **Styling & UI** | Tailwind CSS v4, shadcn/ui on top of Base UI, `lucide-react` |
+| **Charts** | Recharts |
+| **Auth** | Better Auth (email/password + Google OAuth), Resend (verification email) |
+| **Data** | PostgreSQL, Prisma (client for Better Auth's own tables) |
+| **Hosting** | Vercel |
+| **Testing & quality** | Vitest, React Testing Library, ESLint |
+
+**Notes:**
+- **Fonts:** `Sekuya` (the display/heading face used across headers, hero text, and the tagline footer), `Oswald`, `Geist`, and `Geist Mono` — loaded via `next/font/google` in `src/app/layout.tsx`. The global Tailwind `font-sans` token is remapped to Sekuya (`globals.css`), so any page needing normal body copy explicitly overrides with `font-[family-name:var(--font-geist-sans)]`.
 - **State:** no global client store — page-level `useState`/`useEffect` plus the URL (`/dashboard/[id]`) as the source of truth for which result is being viewed.
 
 ## Local Setup & Installation
